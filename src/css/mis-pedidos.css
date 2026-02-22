@@ -1,0 +1,99 @@
+.pedido-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    background: #f8fafc;
+}
+
+.pedido-id { font-weight: 700; color: #222; }
+.pedido-fecha { font-size: 0.85rem; color: #888; }
+.pedido-total { font-weight: 700; color: #2563eb; }
+
+.pedido-estado {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.estado-pendiente { background: #fef3c7; color: #92400e; }
+.estado-enviado { background: #dbeafe; color: #1e40af; }
+.estado-entregado { background: #d1fae5; color: #065f46; }
+
+.pedido-items { padding: 1rem 1.5rem; }
+
+.pedido-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.95rem;
+}
+
+.pedido-item:last-child { border-bottom: none; }
+
+.pedido-vacio {
+    text-align: center;
+    padding: 3rem;
+    color: #888;
+}
+
+.timeline {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.timeline-paso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    position: relative;
+}
+
+.timeline-paso::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: #e5e7eb;
+    z-index: 0;
+}
+
+.timeline-paso:last-child::after { display: none; }
+
+.timeline-circulo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+.timeline-circulo.activo { background: #2563eb; color: #fff; }
+.timeline-circulo.completado { background: #22c55e; color: #fff; }
+
+.timeline-label {
+    font-size: 0.75rem;
+    color: #888;
+    text-align: center;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos</title>
+    <link rel="stylesheet" href="/src/css/styles.css">
+    <link rel="stylesheet" href="/src/css/mis-pedidos.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/src/views/index.html" class="nav-logo">Tienda Online</a>
+            <div class="nav-acciones">
+                <a href="/src/views/carrito.html" class="btn-carrito">
+                    🛒 Carrito <span id="contadorCarrito">0</span>
+                </a>
+                <div class="perfil-menu">
+                    <button class="btn-perfil" id="btnPerfil">
+                        <span id="nombreUsuario"></span> ▾
+                    </button>
+                    <div class="perfil-dropdown" id="perfilDropdown">
+                        <a href="/src/views/mis-pedidos.html">Mis pedidos</a>
+                        <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <a href="/src/views/index.html" class="btn-volver">← Seguir comprando</a>
+        <h2 style="margin-bottom: 1.5rem;">Mis Pedidos</h2>
+        <div id="listaPedidos"></div>
+    </main>
+
+    <script src="/src/js/mis-pedidos.js"></script>
+</body>
+</html>

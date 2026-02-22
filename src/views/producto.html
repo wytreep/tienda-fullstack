@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto</title>
+    <link rel="stylesheet" href="/src/css/styles.css">
+    <link rel="stylesheet" href="/src/css/producto.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/src/views/index.html" class="nav-logo">Tienda Online</a>
+            <div class="nav-acciones">
+                <a href="/src/views/carrito.html" class="btn-carrito">
+                    🛒 Carrito <span id="contadorCarrito">0</span>
+                </a>
+                <div class="perfil-menu">
+                    <button class="btn-perfil" id="btnPerfil">
+                        <span id="nombreUsuario"></span> ▾
+                    </button>
+                    <div class="perfil-dropdown" id="perfilDropdown">
+                        <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <a href="/src/views/index.html" class="btn-volver">← Volver a productos</a>
+        <div class="producto-detalle" id="productoDetalle">
+            <p>Cargando producto...</p>
+        </div>
+    </main>
+
+    <script src="/src/js/producto.js"></script>
+</body>
+</html>

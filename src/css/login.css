@@ -1,0 +1,130 @@
+        body {
+            background: #fff;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 2.5rem 2rem 2rem 2rem;
+            max-width: 350px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo {
+            width: 90px;
+            margin-bottom: 1.5rem;
+        }
+        .login-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #222;
+        }
+        .login-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .login-form input {
+            padding: 0.7rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #fafbfc;
+            transition: border 0.2s;
+        }
+        .login-form input:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+        .login-form button {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.8rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .login-form button:hover {
+            background: #1d4ed8;
+        }
+        .register-link {
+            margin-top: 1.2rem;
+            font-size: 0.97rem;
+            color: #555;
+            text-align: center;
+        }
+        .register-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        .remember-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: -5px;
+}
+
+.remember-group input {
+    width: auto;
+    cursor: pointer;
+}
+
+.remember-group label {
+    font-size: 0.9rem;
+    color: #555;
+    cursor: pointer;
+    font-weight: normal;
+}
+.cuenta-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cuenta-item:hover {
+    background: #f3f4f6;
+}
+
+.cuenta-nombre {
+    font-weight: 500;
+    color: #222;
+    font-size: 0.95rem;
+}
+
+.cuenta-email {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.btn-eliminar-cuenta {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 2px 6px;
+}

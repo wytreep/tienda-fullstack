@@ -1,0 +1,124 @@
+.btn-volver {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-volver:hover { text-decoration: underline; }
+
+.producto-detalle {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.producto-detalle-imagen {
+    width: 100%;
+    height: 350px;
+    border-radius: 10px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    color: #d1d5db;
+    overflow: hidden;
+}
+
+.producto-detalle-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.producto-detalle-info h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.producto-detalle-categoria {
+    color: #2563eb;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.producto-detalle-precio {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 1rem;
+}
+
+.producto-detalle-descripcion {
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.producto-detalle-stock {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+}
+
+.cantidad-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.cantidad-selector button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cantidad-selector button:hover { background: #f3f4f6; }
+
+.cantidad-selector span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    min-width: 30px;
+    text-align: center;
+}
+
+.btn-agregar-carrito {
+    width: 100%;
+    padding: 14px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-agregar-carrito:hover { background: #1d4ed8; }
+
+.btn-agregar-carrito:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .producto-detalle {
+        grid-template-columns: 1fr;
+    }
+}

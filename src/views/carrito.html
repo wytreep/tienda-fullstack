@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito</title>
+    <link rel="stylesheet" href="/src/css/styles.css">
+    <link rel="stylesheet" href="/src/css/carrito.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/src/views/index.html" class="nav-logo">Tienda Online</a>
+            <div class="nav-acciones">
+                <a href="/src/views/carrito.html" class="btn-carrito">
+                    🛒 Carrito <span id="contadorCarrito">0</span>
+                </a>
+                <div class="perfil-menu">
+                    <button class="btn-perfil" id="btnPerfil">
+                        <span id="nombreUsuario"></span> ▾
+                    </button>
+                    <div class="perfil-dropdown" id="perfilDropdown">
+                        <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <a href="/src/views/index.html" class="btn-volver">← Seguir comprando</a>
+        <div class="carrito-container">
+            <div class="carrito-items" id="carritoItems"></div>
+            <div class="carrito-resumen" id="carritoResumen"></div>
+        </div>
+    </main>
+
+    <script src="/src/js/carrito.js"></script>
+</body>
+</html>
