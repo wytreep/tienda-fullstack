@@ -1,4 +1,4 @@
-const API = "http://localhost:3000"
+const API = "https://mi-servidor-2mff.onrender.com"
 
 document.getElementById("adminLoginForm").addEventListener("submit", async function(e) {
     e.preventDefault()

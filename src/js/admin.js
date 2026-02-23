@@ -2,7 +2,7 @@
 console.log("admin.js cargando...")
 console.log("token:", localStorage.getItem("token"))
 console.log("usuario:", localStorage.getItem("usuario"))
-const API = "http://localhost:3000"
+const API = "https://mi-servidor-2mff.onrender.com"
 const token = localStorage.getItem("token")
 const usuario = JSON.parse(localStorage.getItem("usuario"))
 
