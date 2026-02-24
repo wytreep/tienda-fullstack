@@ -1,3 +1,4 @@
+console.log("cambiar-password.js cargado") 
 const API = "https://mi-servidor-2mff.onrender.com"
 
 function mostrarToast(mensaje, error = false) {
