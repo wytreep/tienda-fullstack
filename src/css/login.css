@@ -94,32 +94,52 @@
     font-weight: normal;
 }
 #cuentasGuardadas {
-    max-height: 140px;
+    max-height: 130px;
     overflow-y: auto;
     margin-bottom: 1rem;
-    border: 1px solid #e5e7eb;
+    width: 100%;
     border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
     padding: 6px;
 }
 
 #cuentasGuardadas p {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #888;
-    margin-bottom: 4px;
-    padding: 0 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 6px 2px;
 }
 
 .cuenta-item {
-    padding: 6px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    border-radius: 6px;
     margin-bottom: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: #fff;
+    border: 1px solid #f1f5f9;
+}
+
+.cuenta-item:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
 }
 
 .cuenta-nombre {
+    font-weight: 600;
+    color: #222;
     font-size: 0.85rem;
 }
 
 .cuenta-email {
     font-size: 0.75rem;
+    color: #94a3b8;
 }
 
 .btn-eliminar-cuenta {
@@ -127,6 +147,12 @@
     border: none;
     color: #ef4444;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.btn-eliminar-cuenta:hover {
+    background: #fee2e2;
 }
