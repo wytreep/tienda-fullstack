@@ -93,31 +93,33 @@
     cursor: pointer;
     font-weight: normal;
 }
-.cuenta-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
+#cuentasGuardadas {
+    max-height: 140px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
     border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    margin-bottom: 6px;
-    cursor: pointer;
-    transition: background 0.2s;
+    border-radius: 8px;
+    padding: 6px;
 }
 
-.cuenta-item:hover {
-    background: #f3f4f6;
+#cuentasGuardadas p {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 4px;
+    padding: 0 4px;
+}
+
+.cuenta-item {
+    padding: 6px 10px;
+    margin-bottom: 2px;
 }
 
 .cuenta-nombre {
-    font-weight: 500;
-    color: #222;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .cuenta-email {
-    font-size: 0.8rem;
-    color: #888;
+    font-size: 0.75rem;
 }
 
 .btn-eliminar-cuenta {
