@@ -25,7 +25,7 @@ document.getElementById("btnCerrarSesion").addEventListener("click", function() 
 })
 
 document.getElementById("btnCambiarPassword").addEventListener("click", function() {
-    window.location.href = "/src/views/cambiar-password.html"
+    window.location.href = "login/cambiar-password.html"
 })
 
 document.getElementById("btnCambiarCuenta").addEventListener("click", function() {
