@@ -83,7 +83,7 @@ async function cargarProductos(busqueda = "", categoria = "") {
         console.error("Error:", datos)
         return
     }
-    let productos = await respuesta.json()
+        let productos = datos  // Usar los datos ya leídos
 
     const selectCategoria = document.getElementById("filtroCategoria")
     const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))]
