@@ -22,6 +22,52 @@ document.getElementById("btnCerrarSesion").addEventListener("click", function() 
     localStorage.removeItem("usuario")
     window.location.href = "/src/views/login.html"
 })
+document.getElementById("btnCambiarPassword").addEventListener("click", function() {
+    window.location.href = "/src/views/cambiar-password.html"
+})
+
+document.getElementById("btnCambiarCuenta").addEventListener("click", function() {
+    const cuentas = JSON.parse(localStorage.getItem("cuentas") || "[]")
+    const lista = document.getElementById("listaCuentasModal")
+
+    if (cuentas.length === 0) {
+        alert("No tienes cuentas guardadas")
+        return
+    }
+
+    lista.innerHTML = ""
+    cuentas.forEach(function(cuenta) {
+        const item = document.createElement("div")
+        item.className = "cuenta-modal-item"
+        item.innerHTML = `
+            <div>
+                <div class="cuenta-modal-nombre">${cuenta.nombre}</div>
+                <div class="cuenta-modal-email">${cuenta.email}</div>
+            </div>
+        `
+        item.addEventListener("click", async function() {
+            const respuesta = await fetch(API + "/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: cuenta.email, password: cuenta.password })
+            })
+            const datos = await respuesta.json()
+            if (respuesta.ok) {
+                localStorage.setItem("token", datos.token)
+                localStorage.setItem("usuario", JSON.stringify(datos.usuario))
+                window.location.reload()
+            }
+        })
+        lista.appendChild(item)
+    })
+
+    document.getElementById("modalCuentas").classList.add("activo")
+    document.getElementById("perfilDropdown").classList.remove("activo")
+})
+
+document.getElementById("btnCancelarCuentas").addEventListener("click", function() {
+    document.getElementById("modalCuentas").classList.remove("activo")
+})
 
 // Obtener ID del producto de la URL
 const params = new URLSearchParams(window.location.search)

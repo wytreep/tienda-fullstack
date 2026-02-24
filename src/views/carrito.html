@@ -19,9 +19,12 @@
                     <button class="btn-perfil" id="btnPerfil">
                         <span id="nombreUsuario"></span> ▾
                     </button>
-                    <div class="perfil-dropdown" id="perfilDropdown">
-                        <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
-                    </div>
+                  <div class="perfil-dropdown" id="perfilDropdown">
+                    <a href="mis-pedidos.html">Mis pedidos</a>
+                    <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
+                    <a href="../login/cambiar-password.html" id="btnCambiarPassword">Cambiar contraseña</a>
+                    <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
+                  </div>
                 </div>
             </div>
         </div>
@@ -34,7 +37,15 @@
             <div class="carrito-resumen" id="carritoResumen"></div>
         </div>
     </main>
-
+<div class="modal-overlay" id="modalCuentas">
+    <div class="modal">
+        <h3>Cambiar cuenta</h3>
+        <div id="listaCuentasModal" style="margin: 1rem 0;"></div>
+        <div class="modal-botones">
+            <button class="btn-cancelar" id="btnCancelarCuentas">Cancelar</button>
+        </div>
+    </div>
+</div>
     <script src="/src/js/carrito.js"></script>
 </body>
 </html>
