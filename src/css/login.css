@@ -130,20 +130,27 @@
     border: 1px solid #f1f5f9;
 }
 
-.cuenta-item:hover {
-    background: #eff6ff;
-    border-color: #bfdbfe;
+.cuenta-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .cuenta-nombre {
-    font-weight: 600;
+    font-weight: 500;
     color: #222;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .cuenta-email {
-    font-size: 0.75rem;
-    color: #94a3b8;
+    font-size: 0.72rem;
+    color: #888;
 }
 
 .btn-eliminar-cuenta {
