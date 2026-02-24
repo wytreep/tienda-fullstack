@@ -73,10 +73,18 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
 
 // Cargar productos
 async function cargarProductos(busqueda = "", categoria = "") {
+        document.getElementById("loader").style.display = "flex"
+    document.getElementById("productosGrid").style.display = "none"
+
     const respuesta = await fetch(API + "/productos", {
         headers: { "authorization": token }
     })
     let productos = await respuesta.json()
+
+    document.getElementById("loader").style.display = "none"
+    document.getElementById("productosGrid").style.display = "grid"
+
+
 
     const selectCategoria = document.getElementById("filtroCategoria")
     const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))]
