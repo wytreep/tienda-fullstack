@@ -115,16 +115,16 @@ function renderProducto(producto) {
     `
 }
 
+let stockDisponible = 0
+
 function cambiarCantidad(valor) {
-    let stockDisponible = 0
     cantidad = Math.max(1, Math.min(stockDisponible, cantidad + valor))
     document.getElementById("cantidad").textContent = cantidad
 }
 
 function agregarAlCarrito(id, nombre, precio, stock) {
-    let stockDisponible = 0
-    if (cantidad > stock) {
-        alert("No hay suficiente stock")
+    if (cantidad > stockDisponible) {
+        mostrarToast("No hay suficiente stock")
         return
     }
 
@@ -139,7 +139,7 @@ function agregarAlCarrito(id, nombre, precio, stock) {
 
     localStorage.setItem("carrito", JSON.stringify(carrito))
     actualizarCarrito()
-   mostrarToast("✓ Producto agregado al carrito")
+    mostrarToast("✓ Producto agregado al carrito")
 }
 
 function mostrarToast(mensaje) {
