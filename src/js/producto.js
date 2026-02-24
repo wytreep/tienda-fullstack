@@ -87,6 +87,7 @@ async function cargarProducto() {
 function renderProducto(producto) {
     const contenedor = document.getElementById("productoDetalle")
     const sinStock = producto.stock === 0
+    stockDisponible = producto.stock
 
     contenedor.innerHTML = `
         <div class="producto-detalle-imagen">
@@ -115,11 +116,13 @@ function renderProducto(producto) {
 }
 
 function cambiarCantidad(valor) {
-    cantidad = Math.max(1, cantidad + valor)
+    let stockDisponible = 0
+    cantidad = Math.max(1, Math.min(stockDisponible, cantidad + valor))
     document.getElementById("cantidad").textContent = cantidad
 }
 
 function agregarAlCarrito(id, nombre, precio, stock) {
+    let stockDisponible = 0
     if (cantidad > stock) {
         alert("No hay suficiente stock")
         return
