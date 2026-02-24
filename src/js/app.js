@@ -73,16 +73,9 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
 
 // Cargar productos
 async function cargarProductos(busqueda = "", categoria = "") {
-    const respuesta = await fetch(API + "/mis-pedidos", {
+    const respuesta = await fetch(API + "/productos", {
         headers: { "authorization": token }
     })
-    const datos = await respuesta.json()
-    console.log("Respuesta del servidor:", datos)
-    
-    if (!respuesta.ok) {
-        console.error("Error:", datos)
-        return
-    }
     let productos = await respuesta.json()
 
     const selectCategoria = document.getElementById("filtroCategoria")
@@ -109,7 +102,6 @@ async function cargarProductos(busqueda = "", categoria = "") {
     renderProductos(productos)
     actualizarCarrito()
 }
-
 function renderProductos(productos) {
     const grid = document.getElementById("productosGrid")
     grid.innerHTML = ""
