@@ -34,17 +34,10 @@ async function cargarPedidos() {
     const respuesta = await fetch(API + "/mis-pedidos", {
         headers: { "authorization": token }
     })
-    const datos = await respuesta.json()
-    console.log("Respuesta del servidor:", datos)
-    
-    if (!respuesta.ok) {
-        console.error("Error:", datos)
-        return
-    }
     const pedidos = await respuesta.json()
     const contenedor = document.getElementById("listaPedidos")
 
-    if (pedidos.length === 0) {
+    if (!Array.isArray(pedidos) || pedidos.length === 0) {
         contenedor.innerHTML = `
             <div class="pedido-vacio">
                 <p style="font-size:3rem">📦</p>
@@ -57,12 +50,11 @@ async function cargarPedidos() {
 
     const pasos = ["Pendiente", "Enviado", "Entregado"]
     const iconos = ["⏳", "🚚", "✅"]
-    const indiceActual = (estado) => estadoIndex(estado)
 
     contenedor.innerHTML = ""
     pedidos.forEach(function(pedido) {
-        const items = typeof pedido.items === "string" ? JSON.parse(pedido.items) : pedido.items
-        const idx = indiceActual(pedido.estado)
+        const items = pedido.items || []
+        const idx = estadoIndex(pedido.estado)
 
         const timelineHTML = pasos.map(function(paso, i) {
             let clase = ""
@@ -104,5 +96,4 @@ async function cargarPedidos() {
     const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
     document.getElementById("contadorCarrito").textContent = total
 }
-
 document.addEventListener("DOMContentLoaded", cargarPedidos)
