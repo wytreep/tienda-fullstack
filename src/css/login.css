@@ -103,6 +103,10 @@
     border: 1px solid #e5e7eb;
     padding: 6px;
 }
+#listaCuentas {
+    max-height: 120px;
+    overflow-y: auto;
+}
 
 #cuentasGuardadas p {
     font-size: 0.75rem;
