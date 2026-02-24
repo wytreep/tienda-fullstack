@@ -34,6 +34,13 @@ async function cargarPedidos() {
     const respuesta = await fetch(API + "/mis-pedidos", {
         headers: { "authorization": token }
     })
+    const datos = await respuesta.json()
+    console.log("Respuesta del servidor:", datos)
+    
+    if (!respuesta.ok) {
+        console.error("Error:", datos)
+        return
+    }
     const pedidos = await respuesta.json()
     const contenedor = document.getElementById("listaPedidos")
 

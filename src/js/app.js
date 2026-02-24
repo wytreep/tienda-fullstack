@@ -25,7 +25,7 @@ document.getElementById("btnCerrarSesion").addEventListener("click", function() 
 })
 
 document.getElementById("btnCambiarPassword").addEventListener("click", function() {
-    window.location.href = "login/cambiar-password.html"
+    window.location.href = "/src/views/cambiar-password.html"
 })
 
 document.getElementById("btnCambiarCuenta").addEventListener("click", function() {
@@ -73,9 +73,16 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
 
 // Cargar productos
 async function cargarProductos(busqueda = "", categoria = "") {
-    const respuesta = await fetch(API + "/productos", {
+    const respuesta = await fetch(API + "/mis-pedidos", {
         headers: { "authorization": token }
     })
+    const datos = await respuesta.json()
+    console.log("Respuesta del servidor:", datos)
+    
+    if (!respuesta.ok) {
+        console.error("Error:", datos)
+        return
+    }
     let productos = await respuesta.json()
 
     const selectCategoria = document.getElementById("filtroCategoria")
