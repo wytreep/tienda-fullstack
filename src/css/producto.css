@@ -1,204 +1,275 @@
-.btn-volver {
-    display: inline-block;
-    margin-bottom: 1.5rem;
-    color: #2563eb;
-    text-decoration: none;
-    font-weight: 500;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.btn-volver:hover { text-decoration: underline; }
-
-.producto-detalle {
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
     background: #fff;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    padding: 2rem;
+    color: #111;
+    min-height: 100vh;
+}
+
+.main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 2rem 4rem;
+}
+
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+    transition: color 0.2s;
+}
+
+.btn-volver:hover { color: #111; }
+
+/* Detalle producto */
+.producto-detalle {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: 4rem;
     align-items: start;
 }
 
+@media (max-width: 768px) {
+    .producto-detalle { grid-template-columns: 1fr; gap: 2rem; }
+}
+
 .producto-detalle-imagen {
-    width: 100%;
-    height: 350px;
-    border-radius: 10px;
-    background: #f3f4f6;
+    aspect-ratio: 1;
+    background: #f8fafc;
+    border-radius: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 5rem;
-    color: #d1d5db;
+    font-size: 6rem;
     overflow: hidden;
+    border: 1px solid #f0f0f0;
 }
 
 .producto-detalle-imagen img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 24px;
 }
 
-.producto-detalle-info h1 {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
+.producto-detalle-info {
+    padding-top: 1rem;
 }
 
 .producto-detalle-categoria {
-    color: #2563eb;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6366f1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+}
+
+.producto-detalle-info h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
     margin-bottom: 1rem;
+    color: #111;
 }
 
 .producto-detalle-precio {
     font-size: 2rem;
     font-weight: 700;
-    color: #222;
-    margin-bottom: 1rem;
+    color: #111;
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
 }
 
 .producto-detalle-descripcion {
-    color: #555;
+    font-size: 1rem;
+    color: #666;
     line-height: 1.7;
     margin-bottom: 1.5rem;
 }
 
 .producto-detalle-stock {
-    font-size: 0.9rem;
-    color: #888;
-    margin-bottom: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 6px 12px;
+    background: #f0fdf4;
+    color: #16a34a;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
 }
 
+.producto-detalle-stock.sin-stock {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* Selector cantidad */
 .cantidad-selector {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0;
     margin-bottom: 1.5rem;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    width: fit-content;
+    overflow: hidden;
 }
 
 .cantidad-selector button {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    background: #fff;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: none;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: background 0.2s;
+    color: #111;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.cantidad-selector button:hover { background: #f3f4f6; }
+.cantidad-selector button:hover { background: #e5e7eb; }
 
 .cantidad-selector span {
-    font-size: 1.1rem;
-    font-weight: 600;
-    min-width: 30px;
+    min-width: 48px;
     text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111;
 }
 
+/* Botón agregar */
 .btn-agregar-carrito {
     width: 100%;
-    padding: 14px;
-    background: #2563eb;
+    padding: 16px;
+    background: #111;
     color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: 14px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
 }
 
-.btn-agregar-carrito:hover { background: #1d4ed8; }
+.btn-agregar-carrito:hover {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
 
 .btn-agregar-carrito:disabled {
-    background: #d1d5db;
+    background: #e5e7eb;
+    color: #aaa;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
-@media (max-width: 768px) {
-    .producto-detalle {
-        grid-template-columns: 1fr;
-    }
-}
-
+/* Reseñas */
 .resenas-seccion {
-    margin-top: 2rem;
-    background: #fff;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    padding: 2rem;
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid #f0f0f0;
 }
 
 .resenas-seccion h2 {
-    font-size: 1.3rem;
-    margin-bottom: 1.5rem;
-    color: #222;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 2rem;
+    color: #111;
 }
 
 .resena-form {
     background: #f8fafc;
-    border-radius: 8px;
+    border-radius: 16px;
     padding: 1.5rem;
-    margin-bottom: 2rem;
-    border: 1px solid #e5e7eb;
+    margin-bottom: 2.5rem;
+    border: 1px solid #f0f0f0;
 }
 
 .resena-form h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
     margin-bottom: 1rem;
-    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .estrellas-selector {
     display: flex;
-    gap: 0.3rem;
+    gap: 0.25rem;
     margin-bottom: 1rem;
 }
 
 .estrella {
-    font-size: 2rem;
-    color: #d1d5db;
+    font-size: 1.75rem;
+    color: #e5e7eb;
     cursor: pointer;
-    transition: color 0.1s;
+    transition: all 0.1s;
 }
 
 .estrella.activa { color: #f59e0b; }
-.estrella:hover { color: #f59e0b; }
+.estrella:hover { color: #f59e0b; transform: scale(1.1); }
 
 .resena-form textarea {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 16px;
+    background: #fff;
     border: 1px solid #e5e7eb;
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 0.95rem;
     font-family: inherit;
     resize: vertical;
     margin-bottom: 1rem;
+    color: #111;
+    outline: none;
+    transition: all 0.2s;
 }
 
 .resena-form textarea:focus {
-    outline: none;
-    border-color: #2563eb;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
 }
 
 .btn-resena {
     padding: 10px 24px;
-    background: #2563eb;
+    background: #111;
     color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: 500;
-    transition: background 0.2s;
+    font-size: 0.875rem;
+    transition: all 0.2s;
 }
 
-.btn-resena:hover { background: #1d4ed8; }
+.btn-resena:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
 
 .resena-card {
-    padding: 1rem 0;
-    border-bottom: 1px solid #f3f4f6;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .resena-card:last-child { border-bottom: none; }
@@ -207,46 +278,59 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
 }
 
-.resena-autor { font-weight: 600; color: #222; }
-.resena-fecha { font-size: 0.8rem; color: #888; }
+.resena-autor {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #111;
+}
+
+.resena-fecha {
+    font-size: 0.8rem;
+    color: #aaa;
+}
 
 .resena-estrellas {
     color: #f59e0b;
-    font-size: 1rem;
-    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
 }
 
-.resena-comentario { color: #555; font-size: 0.95rem; }
+.resena-comentario {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
 
 .resenas-vacio {
     text-align: center;
-    color: #888;
-    padding: 2rem;
+    color: #aaa;
+    padding: 3rem;
+    font-size: 0.95rem;
 }
 
-/* Modo oscuro */
-body.dark .resenas-seccion {
-    background: #1e293b;
-    border-color: #334155;
-}
-
-body.dark .resenas-seccion h2 { color: #e2e8f0; }
-
-body.dark .resena-form {
-    background: #0f172a;
-    border-color: #334155;
-}
-
-body.dark .resena-form h3 { color: #94a3b8; }
-body.dark .resena-form textarea {
-    background: #1e293b;
-    border-color: #334155;
-    color: #e2e8f0;
-}
-
+/* Dark mode */
+body.dark { background: #0a0a0a; color: #e2e8f0; }
+body.dark .btn-volver { color: #555; }
+body.dark .btn-volver:hover { color: #e2e8f0; }
+body.dark .producto-detalle-imagen { background: #141414; border-color: rgba(255,255,255,0.06); }
+body.dark .producto-detalle-info h1 { color: #fff; }
+body.dark .producto-detalle-precio { color: #fff; }
+body.dark .producto-detalle-descripcion { color: #888; }
+body.dark .cantidad-selector { background: #1a1a1a; border-color: rgba(255,255,255,0.08); }
+body.dark .cantidad-selector button { color: #e2e8f0; }
+body.dark .cantidad-selector button:hover { background: rgba(255,255,255,0.06); }
+body.dark .cantidad-selector span { color: #e2e8f0; }
+body.dark .btn-agregar-carrito { background: #fff; color: #111; }
+body.dark .btn-agregar-carrito:hover { background: #e5e7eb; box-shadow: 0 8px 24px rgba(255,255,255,0.1); }
+body.dark .resenas-seccion { border-top-color: rgba(255,255,255,0.06); }
+body.dark .resenas-seccion h2 { color: #fff; }
+body.dark .resena-form { background: #141414; border-color: rgba(255,255,255,0.06); }
+body.dark .resena-form h3 { color: #555; }
+body.dark .resena-form textarea { background: #1a1a1a; border-color: rgba(255,255,255,0.08); color: #e2e8f0; }
+body.dark .btn-resena { background: #fff; color: #111; }
+body.dark .resena-card { border-bottom-color: rgba(255,255,255,0.06); }
 body.dark .resena-autor { color: #e2e8f0; }
-body.dark .resena-comentario { color: #94a3b8; }
-body.dark .resena-card { border-bottom-color: #334155; }
+body.dark .resena-comentario { color: #888; }
