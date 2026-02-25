@@ -9,24 +9,24 @@
     <link rel="stylesheet" href="/src/css/darkmode.css">
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="/src/views/index.html" class="nav-logo">Tienda Online</a>
+            <a href="/src/views/index.html" class="nav-logo">Tienda</a>
             <div class="nav-acciones">
                 <button class="btn-darkmode" id="btnDarkMode">🌙</button>
                 <a href="/src/views/carrito.html" class="btn-carrito">
-                    🛒 Carrito <span id="contadorCarrito">0</span>
+                    🛒 <span id="contadorCarrito">0</span>
                 </a>
                 <div class="perfil-menu">
                     <button class="btn-perfil" id="btnPerfil">
                         <span id="nombreUsuario"></span> ▾
                     </button>
-                  <div class="perfil-dropdown" id="perfilDropdown">
-                    <a href="mis-pedidos.html">Mis pedidos</a>
-                    <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
-                    <a href="../login/cambiar-password.html" id="btnCambiarPassword">Cambiar contraseña</a>
-                    <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
-                  </div>
+                    <div class="perfil-dropdown" id="perfilDropdown">
+                        <a href="/src/views/mis-pedidos.html">Mis pedidos</a>
+                        <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
+                        <a href="#" id="btnCambiarPassword">Cambiar contraseña</a>
+                        <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,21 +34,24 @@
 
     <main class="main">
         <a href="/src/views/index.html" class="btn-volver">← Seguir comprando</a>
+        <h1 class="page-title">Tu carrito</h1>
         <div class="carrito-container">
             <div class="carrito-items" id="carritoItems"></div>
             <div class="carrito-resumen" id="carritoResumen"></div>
         </div>
     </main>
-<div class="modal-overlay" id="modalCuentas">
-    <div class="modal">
-        <h3>Cambiar cuenta</h3>
-        <div id="listaCuentasModal" style="margin: 1rem 0;"></div>
-        <div class="modal-botones">
-            <button class="btn-cancelar" id="btnCancelarCuentas">Cancelar</button>
+
+    <div class="modal-overlay" id="modalCuentas">
+        <div class="modal">
+            <h3>Cambiar cuenta</h3>
+            <div id="listaCuentasModal" style="margin: 1rem 0;"></div>
+            <div class="modal-botones">
+                <button class="btn-cancelar" id="btnCancelarCuentas">Cancelar</button>
+            </div>
         </div>
     </div>
-</div>
-    <script src="/src/js/carrito.js"></script>
+
     <script src="/src/js/darkmode.js"></script>
+    <script src="/src/js/carrito.js"></script>
 </body>
 </html>
