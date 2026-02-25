@@ -162,5 +162,93 @@ function actualizarCarrito() {
     const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
     document.getElementById("contadorCarrito").textContent = total
 }
+let calificacionSeleccionada = 0
+
+document.querySelectorAll(".estrella").forEach(function(estrella) {
+    estrella.addEventListener("mouseover", function() {
+        const valor = parseInt(this.dataset.valor)
+        document.querySelectorAll(".estrella").forEach(function(e, i) {
+            e.classList.toggle("activa", i < valor)
+        })
+    })
+
+    estrella.addEventListener("mouseout", function() {
+        document.querySelectorAll(".estrella").forEach(function(e, i) {
+            e.classList.toggle("activa", i < calificacionSeleccionada)
+        })
+    })
+
+    estrella.addEventListener("click", function() {
+        calificacionSeleccionada = parseInt(this.dataset.valor)
+        document.querySelectorAll(".estrella").forEach(function(e, i) {
+            e.classList.toggle("activa", i < calificacionSeleccionada)
+        })
+    })
+})
+
+async function enviarResena() {
+    if (calificacionSeleccionada === 0) {
+        mostrarToast("Selecciona una calificación", true)
+        return
+    }
+
+    const comentario = document.getElementById("comentarioResena").value.trim()
+    if (!comentario) {
+        mostrarToast("Escribe un comentario", true)
+        return
+    }
+
+    const respuesta = await fetch(API + "/resenas", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({
+            producto_id: productoId,
+            calificacion: calificacionSeleccionada,
+            comentario
+        })
+    })
+
+    const datos = await respuesta.json()
+
+    if (respuesta.ok) {
+        mostrarToast("✓ Reseña publicada")
+        document.getElementById("comentarioResena").value = ""
+        calificacionSeleccionada = 0
+        document.querySelectorAll(".estrella").forEach(e => e.classList.remove("activa"))
+        cargarResenas()
+    } else {
+        mostrarToast(datos.error, true)
+    }
+}
+
+async function cargarResenas() {
+    const respuesta = await fetch(API + "/resenas/" + productoId, {
+        headers: { "authorization": token }
+    })
+    const resenas = await respuesta.json()
+    const lista = document.getElementById("listaResenas")
+
+    if (resenas.length === 0) {
+        lista.innerHTML = "<div class='resenas-vacio'>No hay reseñas aún. ¡Sé el primero!</div>"
+        return
+    }
+
+    lista.innerHTML = resenas.map(function(r) {
+        const estrellas = "★".repeat(r.calificacion) + "☆".repeat(5 - r.calificacion)
+        return `
+            <div class="resena-card">
+                <div class="resena-header">
+                    <span class="resena-autor">${r.nombre}</span>
+                    <span class="resena-fecha">${new Date(r.created_at).toLocaleDateString()}</span>
+                </div>
+                <div class="resena-estrellas">${estrellas}</div>
+                <p class="resena-comentario">${r.comentario}</p>
+            </div>
+        `
+    }).join("")
+}
 
 document.addEventListener("DOMContentLoaded", cargarProducto)
