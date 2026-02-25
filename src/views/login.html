@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="/src/css/darkmode.css">
 </head>
 <body>
- <div id="cuentasGuardadas" style="display:none;">
+
+<div id="cuentasGuardadas" style="display:none;">
     <p style="color:#555; font-size:0.8rem; margin-bottom:0.4rem;">Cuentas guardadas:</p>
     <div id="listaCuentas"></div>
 </div>
@@ -19,7 +20,7 @@
             <form class="login-form" id="loginForm">
             <input type="email" name="email" placeholder="Correo electrónico" required autocomplete="email">
             <input type="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
-           <div class="form-group remember-group">
+        <div class="form-group remember-group">
     <input type="checkbox" id="recordarme" name="recordarme">
     <label for="recordarme">Recordar mi cuenta</label>
 </div>
@@ -29,7 +30,8 @@
             ¿No tienes cuenta? <a href="/src/views/registro.html">Regístrate</a>
         </div>
     </div>
+    <button class="btn-darkmode-login" id="btnDarkModeLogin">🌙</button>
+    <script src="../js/darkmode-login.js"></script>
     <script src="/src/js/login.js"></script>
-    <script src="/src/js/darkmode.js"></script>
 </body>
 </html>

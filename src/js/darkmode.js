@@ -1,6 +1,6 @@
 const btnDarkMode = document.getElementById("btnDarkMode")
 
-if (localStorage.getItem("darkmode") === "true") {
+if (localStorage.getItem("darkmode-tienda") === "true") {
     document.body.classList.add("dark")
     btnDarkMode.textContent = "☀️"
 }
@@ -8,6 +8,6 @@ if (localStorage.getItem("darkmode") === "true") {
 btnDarkMode.addEventListener("click", function() {
     document.body.classList.toggle("dark")
     const isDark = document.body.classList.contains("dark")
-    localStorage.setItem("darkmode", isDark)
+    localStorage.setItem("darkmode-tienda", isDark)
     btnDarkMode.textContent = isDark ? "☀️" : "🌙"
 })

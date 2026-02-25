@@ -10,12 +10,15 @@
 <body>
     <div class="admin-layout">
         <aside class="sidebar">
-<div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>            <nav class="sidebar-nav">
+<div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>           
+            <nav class="sidebar-nav">
                 <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard')">📊 Dashboard</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('productos')">📦 Productos</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos')">🛒 Pedidos</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('usuarios')">👥 Usuarios</a>
             </nav>
+            <div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>
+                <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙</button>
             <button class="btn-cerrar-admin" id="btnCerrarSesion">Cerrar sesión</button>
         </aside>
 
@@ -161,6 +164,7 @@
     </div>
 
 <script src="/src/js/admin.js"></script>
-<script src="/src/js/darkmode.js"></script>
+<script src="../js/darkmode-admin.js"></script>
+
 </body>
 </html>

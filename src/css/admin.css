@@ -284,3 +284,31 @@ body {
 .btn-eliminar { background: #fee2e2; color: #dc2626; }
 .btn-eliminar:hover { background: #fecaca; }
 
+.btn-darkmode-admin {
+    background: none;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin: 0 1.5rem 1rem;
+    transition: all 0.2s;
+}
+
+.btn-darkmode-admin:hover { background: #334155; }
+
+/* Modo oscuro admin */
+body.dark .admin-main { background: #0f172a; }
+body.dark .admin-header { border-bottom-color: #334155; }
+body.dark .admin-header h1 { color: #e2e8f0; }
+body.dark .stat-card { background: #1e293b; border-color: #334155; }
+body.dark .stat-label { color: #94a3b8; }
+body.dark .form-card { background: #1e293b; border-color: #334155; }
+body.dark .form-group label { color: #94a3b8; }
+body.dark .form-group input,
+body.dark .form-group textarea { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+body.dark .admin-table { background: #1e293b; border-color: #334155; }
+body.dark .admin-table th { background: #0f172a; color: #94a3b8; border-bottom-color: #334155; }
+body.dark .admin-table td { border-bottom-color: #334155; color: #e2e8f0; }
+body.dark .seccion-header h2 { color: #e2e8f0; }
