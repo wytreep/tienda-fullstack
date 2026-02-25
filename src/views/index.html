@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Online</title>
+    <link rel="stylesheet" href="/src/css/styles.css">
+    <link rel="stylesheet" href="/src/css/darkmode.css">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/src/views/index.html" class="nav-logo">Tienda</a>
+            <div class="nav-acciones">
+                <button class="btn-darkmode" id="btnDarkMode">🌙</button>
+                <a href="/src/views/carrito.html" class="btn-carrito">
+                    🛒 <span id="contadorCarrito">0</span>
+                </a>
+                <div class="perfil-menu">
+                    <button class="btn-perfil" id="btnPerfil">
+                        <span id="nombreUsuario"></span> ▾
+                    </button>
+                    <div class="perfil-dropdown" id="perfilDropdown">
+                        <a href="/src/views/mis-pedidos.html">Mis pedidos</a>
+                        <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
+                        <a href="#" id="btnCambiarPassword">Cambiar contraseña</a>
+                        <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-badge">✨ Nuevos productos disponibles</div>
+        <h1>Descubre lo que<br><span>necesitas hoy</span></h1>
+        <p>Los mejores productos al mejor precio, con envío rápido y seguro.</p>
+    </section>
+
+    <div class="filtros-container">
+        <div class="filtros">
+            <input type="text" id="buscador" placeholder="🔍  Buscar productos...">
+            <select id="filtroCategoria">
+                <option value="">Todas las categorías</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="productos-section">
+        <div id="loader" class="loader-container">
+            <div class="loader"></div>
+            <p>Cargando productos...</p>
+        </div>
+        <div class="productos-grid" id="productosGrid" style="display:none"></div>
+    </div>
+
+    <div class="modal-overlay" id="modalCuentas">
+        <div class="modal">
+            <h3>Cambiar cuenta</h3>
+            <div id="listaCuentasModal" style="margin: 1rem 0;"></div>
+            <div class="modal-botones">
+                <button class="btn-cancelar" id="btnCancelarCuentas">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/src/js/darkmode.js"></script>
+    <script src="/src/js/app.js"></script>
+</body>
+</html>
