@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activar cuenta - Tienda</title>
+    <link rel="stylesheet" href="/src/css/login.css">
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1" style="background:#4f46e5"></div>
+        <div class="orb orb-2" style="background:#7c3aed"></div>
+        <div class="orb orb-3" style="background:#1d4ed8"></div>
+    </div>
+
+    <div class="login-wrapper">
+        <div class="login-container" id="contenido">
+            <div class="logo-container">
+                <div style="font-size:2.5rem; margin-bottom:0.75rem;">🎉</div>
+                <div class="login-title">Activar cuenta</div>
+                <div class="login-subtitle" id="subtitulo">Cargando...</div>
+            </div>
+
+            <form class="login-form" id="activarForm" style="display:none">
+                <input type="text" id="nombre" placeholder="Tu nombre completo" required>
+                <input type="password" id="password" placeholder="Crea tu contraseña" required>
+                <input type="password" id="confirmar" placeholder="Confirmar contraseña" required>
+                <button type="submit">Activar mi cuenta</button>
+            </form>
+
+            <div class="register-link" id="linkVolver" style="display:none">
+                <a href="/src/views/login.html">← Ir al login</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/src/js/activar.js"></script>
+</body>
+</html>

@@ -10,13 +10,14 @@
 <body>
     <div class="admin-layout">
         <aside class="sidebar">
-<div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>           
+            <div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>           
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard')">📊 Dashboard</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('productos')">📦 Productos</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos')">🛒 Pedidos</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('usuarios')">👥 Usuarios</a>
             </nav>
+            <a href="#" class="nav-item" onclick="mostrarSeccion('invitaciones')">📨 Invitaciones</a>
             <div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>
                 <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙</button>
             <button class="btn-cerrar-admin" id="btnCerrarSesion">Cerrar sesión</button>
@@ -90,7 +91,7 @@
                 <div id="vistaFormulario" style="display:none">
                     <div class="seccion-header">
                         <h2 id="formTitulo">Agregar producto</h2>
-<button class="btn-volver-admin" onclick="cancelarFormProducto()">← Volver</button>                    </div>
+                        <button class="btn-volver-admin" onclick="cancelarFormProducto()">← Volver</button>                    </div>
                     <div class="form-card">
                         <input type="hidden" id="productoId">
                         <div class="form-grid">
@@ -158,6 +159,48 @@
                         </tr>
                     </thead>
                     <tbody id="tbodyUsuarios"></tbody>
+                </table>
+            </section>
+            <section id="seccion-invitaciones" class="seccion">
+                <div class="seccion-header">
+                    <h2>Invitar administrador</h2>
+                </div>
+
+                <div class="form-card" style="max-width:500px">
+                    <div class="form-group">
+                        <label>Email del nuevo administrador</label>
+                        <input type="email" id="emailInvitacion" placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="form-botones">
+                        <button class="btn-primary" onclick="generarInvitacion()">Generar link de invitación</button>
+                    </div>
+                </div>
+
+                <div id="linkGenerado" style="display:none; margin-top:1rem;">
+                    <div class="form-card" style="max-width:500px">
+                        <label style="font-size:0.8rem; color:#888; font-weight:600; text-transform:uppercase; letter-spacing:0.3px">Link generado — expira en 24 horas</label>
+                        <div style="display:flex; gap:0.5rem; margin-top:0.75rem; align-items:center;">
+                            <input type="text" id="linkInvitacion" readonly style="flex:1; background:#f8fafc; font-size:0.8rem;">
+                            <button class="btn-primary" onclick="copiarLink()" style="white-space:nowrap">Copiar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="seccion-header" style="margin-top:2rem">
+                    <h2>Solicitudes de cambio</h2>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Admin</th>
+                            <th>Email</th>
+                            <th>Campo</th>
+                            <th>Valor nuevo</th>
+                            <th>Fecha</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodySolicitudes"></tbody>
                 </table>
             </section>
         </main>

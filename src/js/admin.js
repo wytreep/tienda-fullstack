@@ -31,6 +31,7 @@ function mostrarSeccion(nombre) {
     if (nombre === "productos") cargarProductos()
     if (nombre === "pedidos") cargarPedidos()
     if (nombre === "usuarios") cargarUsuarios()
+    if (nombre === "invitaciones") cargarSolicitudes()
 }
 
 // Dashboard
@@ -219,6 +220,85 @@ async function cambiarRol(id, rolActual) {
     })
     cargarUsuarios()
     mostrarToast("✓ Rol actualizado")
+}
+async function generarInvitacion() {
+    const email = document.getElementById("emailInvitacion").value.trim()
+    if (!email) {
+        mostrarToast("Escribe un email", true)
+        return
+    }
+
+    const respuesta = await fetch(API + "/invitaciones", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ email })
+    })
+
+    const datos = await respuesta.json()
+
+    if (respuesta.ok) {
+        document.getElementById("linkGenerado").style.display = "block"
+        document.getElementById("linkInvitacion").value = datos.link
+        mostrarToast("✓ Link generado correctamente")
+    } else {
+        mostrarToast(datos.error, true)
+    }
+}
+
+function copiarLink() {
+    const link = document.getElementById("linkInvitacion")
+    link.select()
+    document.execCommand("copy")
+    mostrarToast("✓ Link copiado")
+}
+
+async function cargarSolicitudes() {
+    const respuesta = await fetch(API + "/solicitudes-cambio", {
+        headers: { "authorization": token }
+    })
+    const solicitudes = await respuesta.json()
+    const tbody = document.getElementById("tbodySolicitudes")
+
+    if (!solicitudes.length) {
+        tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;color:#888'>No hay solicitudes pendientes</td></tr>"
+        return
+    }
+
+    tbody.innerHTML = solicitudes.map(function(s) {
+        const valor = s.campo === "password" ? "••••••••" : s.valor_nuevo
+        return `
+            <tr>
+                <td>${s.nombre}</td>
+                <td>${s.email}</td>
+                <td>${s.campo}</td>
+                <td>${valor}</td>
+                <td>${new Date(s.created_at).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn-edit" onclick="responderSolicitud(${s.id}, 'aprobado')">✓ Aprobar</button>
+                    <button class="btn-delete" onclick="responderSolicitud(${s.id}, 'rechazado')">✕ Rechazar</button>
+                </td>
+            </tr>
+        `
+    }).join("")
+}
+
+async function responderSolicitud(id, estado) {
+    const respuesta = await fetch(API + "/solicitudes-cambio/" + id, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ estado })
+    })
+
+    if (respuesta.ok) {
+        mostrarToast(estado === "aprobado" ? "✓ Solicitud aprobada" : "Solicitud rechazada")
+        cargarSolicitudes()
+    }
 }
 
 function mostrarToast(mensaje) {
