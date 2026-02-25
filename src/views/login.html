@@ -5,33 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión | Tienda Online</title>
     <link rel="stylesheet" href="/src/css/login.css">
-    <link rel="stylesheet" href="/src/css/darkmode.css">
 </head>
 <body>
-    <div class="login-container">
-        <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="Logo Tienda" class="logo">
-        <div class="login-title">Iniciar sesión</div>
+    <div class="bg-gradient"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
-        <div id="cuentasGuardadas" style="display:none;">
-            <p style="color:#555; font-size:0.8rem; margin-bottom:0.4rem;">Cuentas guardadas:</p>
-            <div id="listaCuentas"></div>
-        </div>
-
-        <form class="login-form" id="loginForm">
-            <input type="email" name="email" placeholder="Correo electrónico" required autocomplete="email">
-            <input type="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
-            <div class="form-group remember-group">
-                <input type="checkbox" id="recordarme" name="recordarme">
-                <label for="recordarme">Recordar mi cuenta</label>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="logo-container">
+                <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="Logo" class="logo">
+                <div class="login-title">Bienvenido</div>
+                <div class="login-subtitle">Inicia sesión para continuar</div>
             </div>
-            <button type="submit">Entrar</button>
-        </form>
-        <div class="register-link">
-            ¿No tienes cuenta? <a href="/src/views/registro.html">Regístrate</a>
+
+            <div id="cuentasGuardadas" style="display:none;">
+                <p>Cuentas guardadas</p>
+                <div id="listaCuentas"></div>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <input type="email" name="email" placeholder="Correo electrónico" required autocomplete="email">
+                <input type="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
+                <div class="remember-group">
+                    <input type="checkbox" id="recordarme" name="recordarme">
+                    <label for="recordarme">Recordar mi cuenta</label>
+                </div>
+                <button type="submit">Entrar</button>
+            </form>
+
+            <div class="register-link">
+                ¿No tienes cuenta? <a href="/src/views/registro.html">Regístrate</a>
+            </div>
         </div>
     </div>
+
     <button class="btn-darkmode-login" id="btnDarkModeLogin">🌙</button>
-    <script src="../js/darkmode-login.js"></script>
+    <script src="/src/js/darkmode-login.js"></script>
     <script src="/src/js/login.js"></script>
 </body>
 </html>

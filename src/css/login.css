@@ -1,222 +1,351 @@
-        body {
-            background: #fff;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-container {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            padding: 2.5rem 2rem 2rem 2rem;
-            max-width: 350px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .logo {
-            width: 90px;
-            margin-bottom: 1.5rem;
-        }
-        .login-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: #222;
-        }
-        .login-form {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .login-form input {
-            padding: 0.7rem 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 1rem;
-            background: #fafbfc;
-            transition: border 0.2s;
-        }
-        .login-form input:focus {
-            border-color: #2563eb;
-            outline: none;
-        }
-        .login-form button {
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 0.8rem 0;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .login-form button:hover {
-            background: #1d4ed8;
-        }
-        .register-link {
-            margin-top: 1.2rem;
-            font-size: 0.97rem;
-            color: #555;
-            text-align: center;
-        }
-        .register-link a {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        .remember-group {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: #000;
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: -5px;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.remember-group input {
-    width: auto;
-    cursor: pointer;
+/* Fondo animado */
+.bg-gradient {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, #1a1a2e 0%, #000 50%),
+                radial-gradient(ellipse at 80% 20%, #0d1117 0%, transparent 60%);
+    z-index: 0;
 }
 
-.remember-group label {
-    font-size: 0.9rem;
-    color: #555;
-    cursor: pointer;
-    font-weight: normal;
+.bg-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
 }
-#cuentasGuardadas {
-    max-height: 130px;
-    overflow-y: auto;
-    margin-bottom: 1rem;
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: flotar 8s ease-in-out infinite;
+}
+
+.orb-1 {
+    width: 400px;
+    height: 400px;
+    background: #2563eb;
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 300px;
+    height: 300px;
+    background: #7c3aed;
+    bottom: -50px;
+    right: -50px;
+    animation-delay: 3s;
+}
+
+.orb-3 {
+    width: 200px;
+    height: 200px;
+    background: #0891b2;
+    top: 50%;
+    left: 50%;
+    animation-delay: 5s;
+}
+
+@keyframes flotar {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* Contenedor */
+.login-wrapper {
+    position: relative;
+    z-index: 1;
     width: 100%;
-    border-radius: 8px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    padding: 6px;
+    max-width: 420px;
+    padding: 2rem;
 }
+
+.login-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 2.5rem;
+    animation: aparecer 0.6s ease forwards;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Logo */
+.logo-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    filter: brightness(0) invert(1);
+}
+
+.login-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.login-subtitle {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.4);
+}
+
+/* Cuentas guardadas */
+#cuentasGuardadas {
+    margin-bottom: 1.5rem;
+}
+
+#cuentasGuardadas p {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
 #listaCuentas {
     max-height: 120px;
     overflow-y: auto;
 }
 
-#cuentasGuardadas p {
-    font-size: 0.75rem;
-    color: #888;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 4px 6px 2px;
-}
-
 .cuenta-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 7px 10px;
-    border-radius: 6px;
-    margin-bottom: 2px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    margin-bottom: 4px;
     cursor: pointer;
-    transition: background 0.2s;
-    background: #fff;
-    border: 1px solid #f1f5f9;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.03);
 }
 
-.cuenta-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 8px;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    margin-bottom: 3px;
-    cursor: pointer;
-    transition: background 0.2s;
+.cuenta-item:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
 }
 
 .cuenta-nombre {
+    font-size: 0.85rem;
     font-weight: 500;
-    color: #222;
-    font-size: 0.8rem;
+    color: #fff;
 }
 
 .cuenta-email {
-    font-size: 0.72rem;
-    color: #888;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
 }
 
 .btn-eliminar-cuenta {
     background: none;
     border: none;
-    color: #ef4444;
+    color: rgba(255,100,100,0.6);
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     padding: 2px 6px;
-    border-radius: 4px;
-    transition: background 0.2s;
+    transition: color 0.2s;
 }
 
-.btn-eliminar-cuenta:hover {
-    background: #fee2e2;
+.btn-eliminar-cuenta:hover { color: #ef4444; }
+
+/* Formulario */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
+
+.input-group {
+    position: relative;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.login-form input::placeholder {
+    color: rgba(255,255,255,0.3);
+}
+
+.login-form input:focus {
+    border-color: rgba(99,102,241,0.6);
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+/* Recordar cuenta */
+.remember-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.remember-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #6366f1;
+    cursor: pointer;
+}
+
+.remember-group label {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+}
+
+/* Botón */
+.login-form button[type="submit"] {
+    padding: 14px;
+    background: linear-gradient(135deg, #6366f1, #2563eb);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+    letter-spacing: 0.3px;
+}
+
+.login-form button[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+}
+
+.login-form button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* Link registro */
+.register-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.4);
+}
+
+.register-link a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.register-link a:hover { color: #818cf8; }
+
+/* Botón modo oscuro */
 .btn-darkmode-login {
     position: fixed;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 6px 10px;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 8px 12px;
     cursor: pointer;
     font-size: 1rem;
+    color: #fff;
+    transition: all 0.2s;
+    z-index: 10;
 }
 
-body.dark .login-container {
-    background: #1e293b;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+.btn-darkmode-login:hover {
+    background: rgba(255,255,255,0.15);
 }
 
-body.dark .login-title { color: #e2e8f0; }
-body.dark .login-form input {
-    background: #0f172a;
-    border-color: #334155;
-    color: #e2e8f0;
+/* Modo claro */
+body.light {
+    background: #f8fafc;
 }
 
-body.dark .register-link { color: #94a3b8; }
-body.dark .register-link a { color: #60a5fa; }
-body.dark body { background: #0f172a; }
+body.light .bg-orbs { opacity: 0.06; }
 
-body.dark #cuentasGuardadas {
-    background: #1e293b;
-    border-color: #334155;
+body.light .login-container {
+    background: #fff;
+    border-color: #e5e7eb;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
 }
 
-body.dark #cuentasGuardadas p {
-    color: #94a3b8;
+body.light .login-title { color: #111; }
+body.light .login-subtitle { color: #888; }
+
+body.light .login-form input[type="email"],
+body.light .login-form input[type="password"] {
+    background: #f3f4f6;
+    border-color: #e5e7eb;
+    color: #111;
 }
 
-body.dark .cuenta-item {
-    background: #0f172a;
-    border-color: #334155;
+body.light .login-form input::placeholder { color: #aaa; }
+body.light .login-form input:focus {
+    background: #fff;
+    border-color: #6366f1;
 }
 
-body.dark .cuenta-item:hover {
-    background: #334155;
+body.light .cuenta-item {
+    background: #f8fafc;
+    border-color: #e5e7eb;
 }
 
-body.dark .cuenta-nombre {
-    color: #e2e8f0;
-}
+body.light .cuenta-item:hover { background: #f1f5f9; }
+body.light .cuenta-nombre { color: #111; }
+body.light .cuenta-email { color: #888; }
+body.light #cuentasGuardadas p { color: #888; }
+body.light .remember-group label { color: #666; }
+body.light .register-link { color: #666; }
 
-body.dark .cuenta-email {
-    color: #94a3b8;
+body.light .btn-darkmode-login {
+    background: rgba(0,0,0,0.06);
+    border-color: #e5e7eb;
+    color: #333;
 }
