@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto</title>
+    <link rel="stylesheet" href="/src/css/styles.css">
+    <link rel="stylesheet" href="/src/css/producto.css">
+    <link rel="stylesheet" href="/src/css/darkmode.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/src/views/index.html" class="nav-logo">Tienda Online</a>
+            <div class="nav-acciones">
+                <button class="btn-darkmode" id="btnDarkMode">🌙</button>
+                <a href="/src/views/carrito.html" class="btn-carrito">
+                    🛒 Carrito <span id="contadorCarrito">0</span>
+                </a>
+                <div class="perfil-menu">
+                    <button class="btn-perfil" id="btnPerfil">
+                        <span id="nombreUsuario"></span> ▾
+                    </button>
+                <div class="perfil-dropdown" id="perfilDropdown">
+                    <a href="mis-pedidos.html">Mis pedidos</a>
+                    <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
+                    <a href="../login/cambiar-password.html" id="btnCambiarPassword">Cambiar contraseña</a>
+                    <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <a href="/src/views/index.html" class="btn-volver">← Volver a productos</a>
+        <div class="producto-detalle" id="productoDetalle">
+            <p>Cargando producto...</p>
+        </div>
+        
+    </main>
+<div class="resenas-seccion" id="resenasSeccion">
+    <h2>Reseñas del producto</h2>
+    
+    <div class="resena-form" id="resenaForm">
+        <h3>Deja tu reseña</h3>
+        <div class="estrellas-selector" id="estrellasSelector">
+            <span class="estrella" data-valor="1">★</span>
+            <span class="estrella" data-valor="2">★</span>
+            <span class="estrella" data-valor="3">★</span>
+            <span class="estrella" data-valor="4">★</span>
+            <span class="estrella" data-valor="5">★</span>
+        </div>
+        <textarea id="comentarioResena" placeholder="Escribe tu comentario..." rows="3"></textarea>
+        <button class="btn-resena" onclick="enviarResena()">Publicar reseña</button>
+    </div>
+
+    <div id="listaResenas"></div>
+</div>
+<div class="modal-overlay" id="modalCuentas">
+    <div class="modal">
+        <h3>Cambiar cuenta</h3>
+        <div id="listaCuentasModal" style="margin: 1rem 0;"></div>
+        <div class="modal-botones">
+            <button class="btn-cancelar" id="btnCancelarCuentas">Cancelar</button>
+        </div>
+    </div>
+</div>
+    <script src="/src/js/producto.js"></script>
+    <script src="/src/js/darkmode.js"></script>
+</body>
+</html>

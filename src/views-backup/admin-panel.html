@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin</title>
+    <link rel="stylesheet" href="/src/css/admin.css">
+    <link rel="stylesheet" href="/src/css/darkmode.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+<div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>           
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard')">📊 Dashboard</a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('productos')">📦 Productos</a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos')">🛒 Pedidos</a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('usuarios')">👥 Usuarios</a>
+            </nav>
+            <div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>
+                <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙</button>
+            <button class="btn-cerrar-admin" id="btnCerrarSesion">Cerrar sesión</button>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 id="tituloSeccion">Dashboard </h1>
+                <h2 id="adminNombre"></h2>
+            </div>
+
+            <!-- Dashboard -->
+            <section id="seccion-dashboard" class="seccion activo">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icono">📦</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="statProductos">0</div>
+                            <div class="stat-label">Productos </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">🛒</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="statPedidos">0</div>
+                            <div class="stat-label">Pedidos </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="statUsuarios">0</div>
+                            <div class="stat-label">Usuarios </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="statVentas">$0</div>
+                            <div class="stat-label">Total ventas </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Productos -->
+            <section id="seccion-productos" class="seccion">
+                
+                <!-- Vista tabla -->
+                <div id="vistaTabla">
+                    <div class="seccion-header">
+                        <h2>Gestión de productos</h2>
+                        <button class="btn-primary" onclick="mostrarFormProducto()">+ Agregar producto</button>
+                    </div>
+                    <table class="admin-table" id="tablaProductos">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Categoría</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyProductos"></tbody>
+                    </table>
+                </div>
+
+                <!-- Vista formulario -->
+                <div id="vistaFormulario" style="display:none">
+                    <div class="seccion-header">
+                        <h2 id="formTitulo">Agregar producto</h2>
+<button class="btn-volver-admin" onclick="cancelarFormProducto()">← Volver</button>                    </div>
+                    <div class="form-card">
+                        <input type="hidden" id="productoId">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" id="pNombre" placeholder="Nombre del producto">
+                            </div>
+                            <div class="form-group">
+                                <label>Precio</label>
+                                <input type="number" id="pPrecio" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Stock</label>
+                                <input type="number" id="pStock" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Categoría</label>
+                                <input type="text" id="pCategoria" placeholder="Categoría">
+                            </div>
+                            <div class="form-group full">
+                                <label>Descripción</label>
+                                <textarea id="pDescripcion" rows="3" placeholder="Descripción del producto"></textarea>
+                            </div>
+                            <div class="form-group full">
+                                <label>Imagen</label>
+                                <input type="file" id="pImagen" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="form-botones">
+                            <button class="btn-secondary" onclick="cancelarFormProducto()">Cancelar</button>
+                            <button class="btn-primary" onclick="guardarProducto()">Guardar producto</button>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            <!-- Pedidos -->
+            <section id="seccion-pedidos" class="seccion">
+                <h2>Pedidos</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Usuario</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyPedidos"></tbody>
+                </table>
+            </section>
+
+            <!-- Usuarios -->
+            <section id="seccion-usuarios" class="seccion">
+                <h2>Usuarios</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyUsuarios"></tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+<script src="/src/js/admin.js"></script>
+<script src="../js/darkmode-admin.js"></script>
+
+</body>
+</html>
