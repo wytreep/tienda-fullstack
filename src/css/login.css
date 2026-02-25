@@ -349,3 +349,6 @@ body.light .btn-darkmode-login {
     border-color: #e5e7eb;
     color: #333;
 }
+body.light .logo {
+    filter: none;
+}
