@@ -330,14 +330,65 @@ async function cargarResenas() {
                 <td style="color:#f59e0b">${estrellas}</td>
                 <td>${r.comentario}</td>
                 <td>${new Date(r.created_at).toLocaleDateString()}</td>
-                <td>
+                <td style="display:flex; gap:0.5rem; flex-wrap:wrap">
+                    <button class="btn-edit" onclick="toggleLikeAdmin(${r.id}, this)">👍 Like</button>
+                    <button class="btn-edit" onclick="toggleRespuestaAdmin(${r.id})">💬 Responder</button>
                     <button class="btn-delete" onclick="eliminarResena(${r.id})">Eliminar</button>
+                </td>
+            </tr>
+            <tr id="form-admin-respuesta-${r.id}" style="display:none">
+                <td colspan="6" style="padding:0.75rem 1rem; background:#f8fafc">
+                    <div style="display:flex; gap:0.5rem; align-items:center">
+                        <input type="text" id="input-admin-respuesta-${r.id}" 
+                            placeholder="Escribe tu respuesta como admin..." 
+                            style="flex:1; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:0.875rem; outline:none">
+                        <button class="btn-primary" onclick="enviarRespuestaAdmin(${r.id})">Enviar</button>
+                    </div>
                 </td>
             </tr>
         `
     }).join("")
 }
 
+async function toggleLikeAdmin(resenaId, btn) {
+    const respuesta = await fetch(API + "/resenas/" + resenaId + "/like", {
+        method: "POST",
+        headers: { "authorization": token }
+    })
+    const datos = await respuesta.json()
+    if (respuesta.ok) {
+        btn.style.color = datos.liked ? "#2563eb" : ""
+        mostrarToast(datos.liked ? "👍 Like agregado" : "Like quitado")
+    }
+}
+
+function toggleRespuestaAdmin(resenaId) {
+    const form = document.getElementById("form-admin-respuesta-" + resenaId)
+    form.style.display = form.style.display === "none" ? "table-row" : "none"
+}
+
+async function enviarRespuestaAdmin(resenaId) {
+    const comentario = document.getElementById("input-admin-respuesta-" + resenaId).value.trim()
+    if (!comentario) {
+        mostrarToast("Escribe una respuesta", true)
+        return
+    }
+
+    const respuesta = await fetch(API + "/resenas/" + resenaId + "/respuestas", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ comentario })
+    })
+
+    if (respuesta.ok) {
+        mostrarToast("✓ Respuesta enviada")
+        document.getElementById("input-admin-respuesta-" + resenaId).value = ""
+        document.getElementById("form-admin-respuesta-" + resenaId).style.display = "none"
+    }
+}
 async function eliminarResena(id) {
     if (!confirm("¿Eliminar esta reseña?")) return
     const r = await fetch(API + "/resenas/" + id, {

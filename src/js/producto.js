@@ -338,9 +338,12 @@ async function toggleLike(resenaId, btn) {
     })
     const datos = await respuesta.json()
     if (respuesta.ok) {
-        btn.classList.toggle("liked", datos.liked)
-        const count = btn.querySelector(".likes-count")
-        count.textContent = parseInt(count.textContent) + (datos.liked ? 1 : -1)
+        const btnActual = document.querySelector(`[onclick="toggleLike(${resenaId}, this)"]`)
+        if (btnActual) {
+            btnActual.classList.toggle("liked", datos.liked)
+            const count = btnActual.querySelector(".like-count")
+            count.textContent = parseInt(count.textContent) + (datos.liked ? 1 : -1)
+        }
     }
 }
 
