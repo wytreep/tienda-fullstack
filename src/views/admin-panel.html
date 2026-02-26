@@ -17,6 +17,7 @@
                 <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos', event)">🛒 Pedidos</a>
                 <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios', event)">👥 Usuarios</a>
                 <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones', event)">📨 Invitaciones</a>
+                <a href="#" class="nav-item" id="navConfiguracion" onclick="mostrarSeccion('configuracion', event)">⚙️ Configuración</a>
             </nav>
             <button class="btn-cerrar-admin" id="btnCerrarSesion">Cerrar sesión</button>
         </aside>
@@ -202,6 +203,30 @@
                     <tbody id="tbodySolicitudes"></tbody>
                 </table>
             </section>
+            <!-- Configuración -->
+<section id="seccion-configuracion" class="seccion">
+    <div class="seccion-header">
+        <h2>Mi configuración</h2>
+    </div>
+    <div class="form-card" style="max-width:500px">
+        <div class="form-group">
+            <label>Solicitar cambio de nombre</label>
+            <input type="text" id="nuevoNombre" placeholder="Nuevo nombre">
+        </div>
+        <div class="form-botones">
+            <button class="btn-primary" onclick="solicitarCambio('nombre', 'nuevoNombre')">Solicitar cambio</button>
+        </div>
+    </div>
+    <div class="form-card" style="max-width:500px; margin-top:1rem">
+        <div class="form-group">
+            <label>Solicitar cambio de contraseña</label>
+            <input type="password" id="nuevaPassword" placeholder="Nueva contraseña">
+        </div>
+        <div class="form-botones">
+            <button class="btn-primary" onclick="solicitarCambio('password', 'nuevaPassword')">Solicitar cambio</button>
+        </div>
+    </div>
+</section>
         </main>
     </div>
 

@@ -33,11 +33,38 @@ function mostrarSeccion(nombre, event) {
         nombre.charAt(0).toUpperCase() + nombre.slice(1)
     if (event) event.target.classList.add("activo")
 
+    if (nombre === "configuracion") {} // no necesita cargar datos
     if (nombre === "dashboard") cargarEstadisticas()
     if (nombre === "productos") cargarProductos()
     if (nombre === "pedidos") cargarPedidos()
     if (nombre === "usuarios") cargarUsuarios()
     if (nombre === "invitaciones") cargarSolicitudes()
+}
+
+async function solicitarCambio(campo, inputId) {
+    const valor_nuevo = document.getElementById(inputId).value.trim()
+    if (!valor_nuevo) {
+        mostrarToast("Escribe un valor", true)
+        return
+    }
+
+    const respuesta = await fetch(API + "/solicitudes-cambio", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ campo, valor_nuevo })
+    })
+
+    const datos = await respuesta.json()
+
+    if (respuesta.ok) {
+        mostrarToast("✓ Solicitud enviada al superadmin")
+        document.getElementById(inputId).value = ""
+    } else {
+        mostrarToast(datos.error, true)
+    }
 }
 
 // Dashboard
