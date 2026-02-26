@@ -47,6 +47,19 @@ window.addEventListener("scroll", function() {
     document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 20)
 })
 
+function mostrarPanel(panel) {
+    document.getElementById("vistaOpciones").style.display = "none"
+    document.getElementById("panelNombre").style.display = "none"
+    document.getElementById("panelPassword").style.display = "none"
+    document.getElementById("panel" + panel.charAt(0).toUpperCase() + panel.slice(1)).style.display = "block"
+}
+
+function volverOpciones() {
+    document.getElementById("vistaOpciones").style.display = "block"
+    document.getElementById("panelNombre").style.display = "none"
+    document.getElementById("panelPassword").style.display = "none"
+}
+
 function mostrarToast(mensaje, error = false) {
     let toast = document.getElementById("toast")
     if (!toast) {

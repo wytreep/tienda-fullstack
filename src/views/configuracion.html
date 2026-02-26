@@ -77,6 +77,20 @@
         .config-info-label { color: #888; }
         .config-info-valor { font-weight: 500; color: #111; }
 
+        .config-opcion {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .config-opcion:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        body.dark .config-opcion:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
         .page-title {
             font-size: 2rem;
             font-weight: 700;
@@ -171,7 +185,6 @@
                     </button>
                     <div class="perfil-dropdown" id="perfilDropdown">
                         <a href="/src/views/mis-pedidos.html">Mis pedidos</a>
-                        <a href="/src/views/configuracion.html">⚙️ Configuración</a>
                         <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
                         <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
                     </div>
@@ -181,7 +194,7 @@
     </nav>
 
     <main class="config-main">
-        <a href="/src/views/index.html" class="btn-volver">← Volver</a>
+            <a href="/src/views/index.html" class="btn-volver">← Volver</a>
         <h1 class="page-title">Configuración</h1>
 
         <!-- Info actual -->
@@ -201,38 +214,73 @@
             </div>
         </div>
 
-        <!-- Cambiar nombre -->
-        <div class="config-card">
-            <h2>Cambiar nombre</h2>
-            <div class="form-group">
-                <label>Nuevo nombre</label>
-                <input type="text" id="nuevoNombre" placeholder="Tu nombre completo">
+        <!-- Opciones -->
+        <div id="vistaOpciones">
+            <div class="config-card config-opcion" onclick="mostrarPanel('nombre')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; color:#111; font-size:0.95rem">Cambiar nombre</div>
+                        <div style="font-size:0.8rem; color:#888; margin-top:2px">Actualiza tu nombre de perfil</div>
+                    </div>
+                    <span style="color:#aaa; font-size:1.2rem">›</span>
+                </div>
             </div>
-            <button class="btn-guardar" onclick="cambiarNombre()">Guardar nombre</button>
+            <div class="config-card config-opcion" onclick="mostrarPanel('password')">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; color:#111; font-size:0.95rem">Cambiar contraseña</div>
+                        <div style="font-size:0.8rem; color:#888; margin-top:2px">Actualiza tu contraseña de acceso</div>
+                    </div>
+                    <span style="color:#aaa; font-size:1.2rem">›</span>
+                </div>
+            </div>
+            <div class="config-card config-opcion" onclick="cerrarSesion()" style="cursor:pointer">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:600; color:#ef4444; font-size:0.95rem">Cerrar sesión</div>
+                        <div style="font-size:0.8rem; color:#888; margin-top:2px">Salir de tu cuenta</div>
+                    </div>
+                    <span style="color:#aaa; font-size:1.2rem">›</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Cambiar contraseña -->
-        <div class="config-card">
-            <h2>Cambiar contraseña</h2>
-            <div class="form-group">
-                <label>Contraseña actual</label>
-                <input type="password" id="passwordActual" placeholder="Tu contraseña actual">
+        <!-- Panel cambiar nombre -->
+        <div id="panelNombre" style="display:none">
+            <div class="config-card">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+                    <button onclick="volverOpciones()" style="background:none;border:none;cursor:pointer;color:#888;font-size:1.2rem">←</button>
+                    <h2 style="margin:0;border:none;padding:0">Cambiar nombre</h2>
+                </div>
+                <div class="form-group">
+                    <label>Nuevo nombre</label>
+                    <input type="text" id="nuevoNombre" placeholder="Tu nombre completo">
+                </div>
+                <button class="btn-guardar" onclick="cambiarNombre()">Guardar nombre</button>
             </div>
-            <div class="form-group">
-                <label>Nueva contraseña</label>
-                <input type="password" id="passwordNueva" placeholder="Nueva contraseña">
-            </div>
-            <div class="form-group">
-                <label>Confirmar contraseña</label>
-                <input type="password" id="passwordConfirmar" placeholder="Repite la nueva contraseña">
-            </div>
-            <button class="btn-guardar" onclick="cambiarPassword()">Guardar contraseña</button>
         </div>
 
-        <!-- Cerrar sesión -->
-        <div class="config-card">
-            <h2>Sesión</h2>
-            <button class="btn-danger" onclick="cerrarSesion()">Cerrar sesión</button>
+        <!-- Panel cambiar contraseña -->
+        <div id="panelPassword" style="display:none">
+            <div class="config-card">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+                    <button onclick="volverOpciones()" style="background:none;border:none;cursor:pointer;color:#888;font-size:1.2rem">←</button>
+                    <h2 style="margin:0;border:none;padding:0">Cambiar contraseña</h2>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña actual</label>
+                    <input type="password" id="passwordActual" placeholder="Tu contraseña actual">
+                </div>
+                <div class="form-group">
+                    <label>Nueva contraseña</label>
+                    <input type="password" id="passwordNueva" placeholder="Nueva contraseña">
+                </div>
+                <div class="form-group">
+                    <label>Confirmar contraseña</label>
+                    <input type="password" id="passwordConfirmar" placeholder="Repite la nueva contraseña">
+                </div>
+                <button class="btn-guardar" onclick="cambiarPassword()">Guardar contraseña</button>
+            </div>
         </div>
     </main>
 
