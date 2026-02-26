@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración</title>
+    <link rel="stylesheet" href="/src/css/styles.css">
+    <link rel="stylesheet" href="/src/css/darkmode.css">
+    <style>
+        .config-main {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 80px 2rem 4rem;
+        }
+
+        .config-card {
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #f0f0f0;
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+        }
+
+        .config-card h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .config-card .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .config-card label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .config-card input {
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #111;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .config-card input:focus {
+            border-color: #6366f1;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+
+        .config-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f8fafc;
+            font-size: 0.9rem;
+        }
+
+        .config-info:last-child { border-bottom: none; }
+        .config-info-label { color: #888; }
+        .config-info-valor { font-weight: 500; color: #111; }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 2rem;
+            color: #111;
+        }
+
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+
+        .btn-volver:hover { color: #111; }
+
+        .btn-guardar {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #6366f1, #2563eb);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-guardar:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+        }
+
+        .btn-danger {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #ef4444;
+            border: 1px solid #fee2e2;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-danger:hover { background: #fef2f2; }
+
+        body.dark .config-card {
+            background: #141414;
+            border-color: rgba(255,255,255,0.06);
+            box-shadow: none;
+        }
+
+        body.dark .config-card h2 {
+            color: #fff;
+            border-bottom-color: rgba(255,255,255,0.06);
+        }
+
+        body.dark .config-card input {
+            background: #1a1a1a;
+            border-color: rgba(255,255,255,0.08);
+            color: #e2e8f0;
+        }
+
+        body.dark .config-info { border-bottom-color: rgba(255,255,255,0.04); }
+        body.dark .config-info-label { color: #555; }
+        body.dark .config-info-valor { color: #e2e8f0; }
+        body.dark .page-title { color: #fff; }
+        body.dark .btn-volver { color: #555; }
+        body.dark .btn-volver:hover { color: #e2e8f0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/src/views/index.html" class="nav-logo">Tienda</a>
+            <div class="nav-acciones">
+                <button class="btn-darkmode" id="btnDarkMode">🌙</button>
+                <a href="/src/views/carrito.html" class="btn-carrito">
+                    🛒 <span id="contadorCarrito">0</span>
+                </a>
+                <div class="perfil-menu">
+                    <button class="btn-perfil" id="btnPerfil">
+                        <span id="nombreUsuario"></span> ▾
+                    </button>
+                    <div class="perfil-dropdown" id="perfilDropdown">
+                        <a href="/src/views/mis-pedidos.html">Mis pedidos</a>
+                        <a href="/src/views/configuracion.html">⚙️ Configuración</a>
+                        <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
+                        <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="config-main">
+        <a href="/src/views/index.html" class="btn-volver">← Volver</a>
+        <h1 class="page-title">Configuración</h1>
+
+        <!-- Info actual -->
+        <div class="config-card">
+            <h2>Mi cuenta</h2>
+            <div class="config-info">
+                <span class="config-info-label">Nombre</span>
+                <span class="config-info-valor" id="infoNombre">—</span>
+            </div>
+            <div class="config-info">
+                <span class="config-info-label">Email</span>
+                <span class="config-info-valor" id="infoEmail">—</span>
+            </div>
+            <div class="config-info">
+                <span class="config-info-label">Rol</span>
+                <span class="config-info-valor" id="infoRol">—</span>
+            </div>
+        </div>
+
+        <!-- Cambiar nombre -->
+        <div class="config-card">
+            <h2>Cambiar nombre</h2>
+            <div class="form-group">
+                <label>Nuevo nombre</label>
+                <input type="text" id="nuevoNombre" placeholder="Tu nombre completo">
+            </div>
+            <button class="btn-guardar" onclick="cambiarNombre()">Guardar nombre</button>
+        </div>
+
+        <!-- Cambiar contraseña -->
+        <div class="config-card">
+            <h2>Cambiar contraseña</h2>
+            <div class="form-group">
+                <label>Contraseña actual</label>
+                <input type="password" id="passwordActual" placeholder="Tu contraseña actual">
+            </div>
+            <div class="form-group">
+                <label>Nueva contraseña</label>
+                <input type="password" id="passwordNueva" placeholder="Nueva contraseña">
+            </div>
+            <div class="form-group">
+                <label>Confirmar contraseña</label>
+                <input type="password" id="passwordConfirmar" placeholder="Repite la nueva contraseña">
+            </div>
+            <button class="btn-guardar" onclick="cambiarPassword()">Guardar contraseña</button>
+        </div>
+
+        <!-- Cerrar sesión -->
+        <div class="config-card">
+            <h2>Sesión</h2>
+            <button class="btn-danger" onclick="cerrarSesion()">Cerrar sesión</button>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="modalCuentas">
+        <div class="modal">
+            <h3>Cambiar cuenta</h3>
+            <div id="listaCuentasModal" style="margin: 1rem 0;"></div>
+            <div class="modal-botones">
+                <button class="btn-cancelar" id="btnCancelarCuentas">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/src/js/darkmode.js"></script>
+    <script src="/src/js/configuracion.js"></script>
+</body>
+</html>
