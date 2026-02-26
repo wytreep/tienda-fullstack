@@ -130,6 +130,27 @@ async function solicitarCambio(campo, inputId) {
         }).join("")
     }
 
+        let ultimaRevision = new Date().toISOString()
+
+    async function verificarCancelaciones() {
+        const r = await fetch(API + "/pedidos", {
+            headers: { "authorization": token }
+        })
+        const pedidos = await r.json()
+        const cancelados = pedidos.filter(p => 
+            p.estado === "cancelado" && 
+            new Date(p.created_at) > new Date(ultimaRevision)
+        )
+
+        cancelados.forEach(function(p) {
+            mostrarToast(`❌ Pedido #${p.id} de ${p.usuario} fue cancelado`, true)
+        })
+
+        if (cancelados.length) ultimaRevision = new Date().toISOString()
+    }
+
+    setInterval(verificarCancelaciones, 10000)
+
     async function cargarVentas() {
         const r = await fetch(API + "/pedidos", {
             headers: { "authorization": token }
@@ -273,10 +294,13 @@ async function cargarPedidos() {
             <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
             <td>${new Date(p.created_at).toLocaleDateString()}</td>
             <td>
-                <select onchange="cambiarEstadoPedido(${p.id}, this.value)">
-                    <option ${p.estado === 'pendiente' ? 'selected' : ''}>pendiente</option>
-                    <option ${p.estado === 'enviado' ? 'selected' : ''}>enviado</option>
-                    <option ${p.estado === 'entregado' ? 'selected' : ''}>entregado</option>
+                <select class="select-estado" onchange="cambiarEstadoPedido(${p.id}, this.value)">
+                    <option ${p.estado === 'pendiente' ? 'selected' : ''} value="pendiente">Pendiente</option>
+                    <option ${p.estado === 'procesando' ? 'selected' : ''} value="procesando">Procesando</option>
+                    <option ${p.estado === 'empacado' ? 'selected' : ''} value="empacado">Empacado</option>
+                    <option ${p.estado === 'enviado' ? 'selected' : ''} value="enviado">Enviado</option>
+                    <option ${p.estado === 'entregado' ? 'selected' : ''} value="entregado">Entregado</option>
+                    <option ${p.estado === 'cancelado' ? 'selected' : ''} value="cancelado">Cancelado</option>
                 </select>
             </td>
         `

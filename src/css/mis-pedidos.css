@@ -196,3 +196,27 @@ body.dark .timeline { background: #1a1a1a; border-top-color: rgba(255,255,255,0.
 body.dark .timeline-circulo { background: #333; }
 body.dark .timeline-label { color: #555; }
 body.dark .pedido-vacio { background: #141414; border-color: rgba(255,255,255,0.06); }
+
+.btn-cancelar-pedido {
+    padding: 4px 12px;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 8px;
+    color: #ef4444;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancelar-pedido:hover { background: #fee2e2; }
+
+.estado-cancelado {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+body.dark .btn-cancelar-pedido {
+    background: rgba(239,68,68,0.1);
+    border-color: rgba(239,68,68,0.2);
+}
