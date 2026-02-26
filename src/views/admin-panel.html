@@ -15,6 +15,7 @@
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard', event)">📊 Dashboard</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('productos', event)">📦 Productos</a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('resenas', event)">⭐ Reseñas</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos', event)">🛒 Pedidos</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('ventas', event)">💰 Ventas</a>
                 <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios', event)">👥 Usuarios</a>
@@ -160,6 +161,25 @@
                         </tr>
                     </thead>
                     <tbody id="tbodyPedidos"></tbody>
+                </table>
+            </section>
+                        <!-- Reseñas -->
+            <section id="seccion-resenas" class="seccion">
+                <div class="seccion-header">
+                    <h2>Reseñas de productos</h2>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Usuario</th>
+                            <th>Calificación</th>
+                            <th>Comentario</th>
+                            <th>Fecha</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyResenas"></tbody>
                 </table>
             </section>
 

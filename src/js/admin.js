@@ -64,6 +64,7 @@ function mostrarSeccion(nombre, event) {
     if (nombre === "configuracion") {} // no necesita cargar datos
     if (nombre === "dashboard") cargarEstadisticas()
     if (nombre === "productos") cargarProductos()
+    if (nombre === "resenas") cargarResenas()
     if (nombre === "pedidos") cargarPedidos()
     if (nombre === "ventas") cargarVentas()
     if (nombre === "usuarios") cargarUsuarios()
@@ -306,6 +307,47 @@ async function cargarPedidos() {
         `
         tbody.appendChild(tr)
     })
+}
+
+async function cargarResenas() {
+    const r = await fetch(API + "/resenas", {
+        headers: { "authorization": token }
+    })
+    const resenas = await r.json()
+    const tbody = document.getElementById("tbodyResenas")
+
+    if (!resenas.length) {
+        tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;color:#888'>No hay reseñas</td></tr>"
+        return
+    }
+
+    tbody.innerHTML = resenas.map(function(r) {
+        const estrellas = "★".repeat(r.calificacion) + "☆".repeat(5 - r.calificacion)
+        return `
+            <tr>
+                <td>${r.producto}</td>
+                <td>${r.usuario}</td>
+                <td style="color:#f59e0b">${estrellas}</td>
+                <td>${r.comentario}</td>
+                <td>${new Date(r.created_at).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn-delete" onclick="eliminarResena(${r.id})">Eliminar</button>
+                </td>
+            </tr>
+        `
+    }).join("")
+}
+
+async function eliminarResena(id) {
+    if (!confirm("¿Eliminar esta reseña?")) return
+    const r = await fetch(API + "/resenas/" + id, {
+        method: "DELETE",
+        headers: { "authorization": token }
+    })
+    if (r.ok) {
+        mostrarToast("✓ Reseña eliminada")
+        cargarResenas()
+    }
 }
 
 async function cambiarEstadoPedido(id, estado) {
