@@ -25,13 +25,13 @@ document.getElementById("btnCerrarSesion").addEventListener("click", function() 
 })
 
 // Navegación
-function mostrarSeccion(nombre) {
+function mostrarSeccion(nombre, event) {
     document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activo"))
     document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("activo"))
     document.getElementById("seccion-" + nombre).classList.add("activo")
     document.getElementById("tituloSeccion").textContent =
         nombre.charAt(0).toUpperCase() + nombre.slice(1)
-    event.target.classList.add("activo")
+    if (event) event.target.classList.add("activo")
 
     if (nombre === "dashboard") cargarEstadisticas()
     if (nombre === "productos") cargarProductos()

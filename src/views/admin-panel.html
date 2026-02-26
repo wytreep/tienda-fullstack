@@ -5,30 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Admin</title>
     <link rel="stylesheet" href="/src/css/admin.css">
-    <link rel="stylesheet" href="/src/css/darkmode.css">
 </head>
 <body>
     <div class="admin-layout">
         <aside class="sidebar">
-            <div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>           
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard')">📊 Dashboard</a>
-                <a href="#" class="nav-item" onclick="mostrarSeccion('productos')">📦 Productos</a>
-                <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos')">🛒 Pedidos</a>
-                <a href="#" class="nav-item" onclick="mostrarSeccion('usuarios')">👥 Usuarios</a>
-                <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios')">👥 Usuarios</a>
-                <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones')">📨 Invitaciones</a>
-            </nav>
-            <a href="#" class="nav-item" onclick="mostrarSeccion('invitaciones')">📨 Invitaciones</a>
             <div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>
-                <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙</button>
+            <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙 Modo oscuro</button>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard', event)">📊 Dashboard</a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('productos', event)">📦 Productos</a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos', event)">🛒 Pedidos</a>
+                <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios', event)">👥 Usuarios</a>
+                <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones', event)">📨 Invitaciones</a>
+            </nav>
             <button class="btn-cerrar-admin" id="btnCerrarSesion">Cerrar sesión</button>
         </aside>
 
         <main class="admin-main">
             <div class="admin-header">
-                <h1 id="tituloSeccion">Dashboard </h1>
-                <h2 id="adminNombre"></h2>
+                <h1 id="tituloSeccion">Dashboard</h1>
             </div>
 
             <!-- Dashboard -->
@@ -38,28 +33,28 @@
                         <div class="stat-icono">📦</div>
                         <div class="stat-info">
                             <div class="stat-valor" id="statProductos">0</div>
-                            <div class="stat-label">Productos </div>
+                            <div class="stat-label">Productos</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icono">🛒</div>
                         <div class="stat-info">
                             <div class="stat-valor" id="statPedidos">0</div>
-                            <div class="stat-label">Pedidos </div>
+                            <div class="stat-label">Pedidos</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icono">👥</div>
                         <div class="stat-info">
                             <div class="stat-valor" id="statUsuarios">0</div>
-                            <div class="stat-label">Usuarios </div>
+                            <div class="stat-label">Usuarios</div>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icono">💰</div>
                         <div class="stat-info">
                             <div class="stat-valor" id="statVentas">$0</div>
-                            <div class="stat-label">Total ventas </div>
+                            <div class="stat-label">Total ventas</div>
                         </div>
                     </div>
                 </div>
@@ -67,14 +62,12 @@
 
             <!-- Productos -->
             <section id="seccion-productos" class="seccion">
-                
-                <!-- Vista tabla -->
                 <div id="vistaTabla">
                     <div class="seccion-header">
                         <h2>Gestión de productos</h2>
                         <button class="btn-primary" onclick="mostrarFormProducto()">+ Agregar producto</button>
                     </div>
-                    <table class="admin-table" id="tablaProductos">
+                    <table class="admin-table">
                         <thead>
                             <tr>
                                 <th>Imagen</th>
@@ -88,12 +81,11 @@
                         <tbody id="tbodyProductos"></tbody>
                     </table>
                 </div>
-
-                <!-- Vista formulario -->
                 <div id="vistaFormulario" style="display:none">
                     <div class="seccion-header">
                         <h2 id="formTitulo">Agregar producto</h2>
-                        <button class="btn-volver-admin" onclick="cancelarFormProducto()">← Volver</button>                    </div>
+                        <button class="btn-volver-admin" onclick="cancelarFormProducto()">← Volver</button>
+                    </div>
                     <div class="form-card">
                         <input type="hidden" id="productoId">
                         <div class="form-grid">
@@ -128,11 +120,13 @@
                         </div>
                     </div>
                 </div>
-
             </section>
+
             <!-- Pedidos -->
             <section id="seccion-pedidos" class="seccion">
-                <h2>Pedidos</h2>
+                <div class="seccion-header">
+                    <h2>Gestión de pedidos</h2>
+                </div>
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -148,9 +142,11 @@
                 </table>
             </section>
 
-            <!-- Usuarios -->
+            <!-- Usuarios (solo superadmin) -->
             <section id="seccion-usuarios" class="seccion">
-                <h2>Usuarios</h2>
+                <div class="seccion-header">
+                    <h2>Gestión de usuarios</h2>
+                </div>
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -163,11 +159,12 @@
                     <tbody id="tbodyUsuarios"></tbody>
                 </table>
             </section>
+
+            <!-- Invitaciones (solo superadmin) -->
             <section id="seccion-invitaciones" class="seccion">
                 <div class="seccion-header">
                     <h2>Invitar administrador</h2>
                 </div>
-
                 <div class="form-card" style="max-width:500px">
                     <div class="form-group">
                         <label>Email del nuevo administrador</label>
@@ -177,7 +174,6 @@
                         <button class="btn-primary" onclick="generarInvitacion()">Generar link de invitación</button>
                     </div>
                 </div>
-
                 <div id="linkGenerado" style="display:none; margin-top:1rem;">
                     <div class="form-card" style="max-width:500px">
                         <div class="form-group">
@@ -209,8 +205,7 @@
         </main>
     </div>
 
-<script src="/src/js/admin.js"></script>
-<script src="../js/darkmode-admin.js"></script>
-
+    <script src="/src/js/admin.js"></script>
+    <script src="/src/js/darkmode-admin.js"></script>
 </body>
 </html>
