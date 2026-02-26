@@ -6,7 +6,7 @@ const API = "https://mi-servidor-2mff.onrender.com"
 const token = localStorage.getItem("token")
 const usuario = JSON.parse(localStorage.getItem("usuario"))
 
-if (!token || !usuario || usuario.rol !== "admin") {
+if (!token || !usuario || (usuario.rol !== "admin" && usuario.rol !== "superadmin")) {
     window.location.href = "admin-login.html"
 }
 
