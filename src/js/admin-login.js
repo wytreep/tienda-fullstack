@@ -16,7 +16,8 @@ document.getElementById("adminLoginForm").addEventListener("submit", async funct
         const datos = await respuesta.json()
 
         if (respuesta.ok) {
-            if (datos.usuario.rol !== "admin") {
+            if (datos.usuario.rol !== "admin" && datos.usuario.rol !== "superadmin")  
+            {
                 alert("No tienes permisos de administrador")
                 return
             }
