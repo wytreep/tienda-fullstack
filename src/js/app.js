@@ -72,83 +72,83 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
 })
 
 // Cargar productos
-async function cargarProductos(busqueda = "", categoria = "") {
-        document.getElementById("loader").style.display = "flex"
-    document.getElementById("productosGrid").style.display = "none"
+    async function cargarProductos(busqueda = "", categoria = "") {
+            document.getElementById("loader").style.display = "flex"
+        document.getElementById("productosGrid").style.display = "none"
 
-    const respuesta = await fetch(API + "/productos", {
-        headers: { "authorization": token }
-    })
-    let productos = await respuesta.json()
-
-    document.getElementById("loader").style.display = "none"
-    document.getElementById("productosGrid").style.display = "grid"
-
-
-
-    const selectCategoria = document.getElementById("filtroCategoria")
-    const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))]
-    selectCategoria.innerHTML = '<option value="">Todas las categorías</option>'
-    categorias.forEach(function(cat) {
-        const option = document.createElement("option")
-        option.value = cat
-        option.textContent = cat
-        if (cat === categoria) option.selected = true
-        selectCategoria.appendChild(option)
-    })
-
-    if (busqueda && typeof busqueda === "string") {
-        productos = productos.filter(p =>
-            p.nombre.toLowerCase().includes(busqueda.toLowerCase())
-        )
-    }
-
-    if (categoria) {
-        productos = productos.filter(p => p.categoria === categoria)
-    }
-
-    renderProductos(productos)
-    actualizarCarrito()
-}
-function renderProductos(productos) {
-    const grid = document.getElementById("productosGrid")
-    grid.innerHTML = ""
-
-    if (productos.length === 0) {
-        grid.innerHTML = "<p style='color:#aaa; text-align:center; padding:3rem'>No se encontraron productos</p>"
-        return
-    }
-
-    productos.forEach(function(producto) {
-        const card = document.createElement("div")
-        card.className = "producto-card"
-        card.innerHTML = `
-            <div class="producto-imagen">
-                ${producto.imagen
-                    ? `<img src="${API}${producto.imagen}" alt="${producto.nombre}">`
-                    : "📦"}
-            </div>
-            <div class="producto-info">
-                ${producto.categoria ? `<div class="producto-categoria">${producto.categoria}</div>` : ""}
-                <div class="producto-nombre">${producto.nombre}</div>
-                <div class="producto-precio">$${Number(producto.precio).toLocaleString()}</div>
-                <div class="producto-stock">${producto.stock > 0 ? producto.stock + ' disponibles' : 'Sin stock'}</div>
-            </div>
-        `
-        card.addEventListener("click", function() {
-            window.location.href = `/src/views/producto.html?id=${producto.id}`
+        const respuesta = await fetch(API + "/productos", {
+            headers: { "authorization": token }
         })
-        grid.appendChild(card)
-    })
+        let productos = await respuesta.json()
 
-    observarProductos()
-}
+        document.getElementById("loader").style.display = "none"
+        document.getElementById("productosGrid").style.display = "grid"
 
-function actualizarCarrito() {
-    const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
-    const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
-    document.getElementById("contadorCarrito").textContent = total
-}
+
+
+        const selectCategoria = document.getElementById("filtroCategoria")
+        const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))]
+        selectCategoria.innerHTML = '<option value="">Todas las categorías</option>'
+        categorias.forEach(function(cat) {
+            const option = document.createElement("option")
+            option.value = cat
+            option.textContent = cat
+            if (cat === categoria) option.selected = true
+            selectCategoria.appendChild(option)
+        })
+
+        if (busqueda && typeof busqueda === "string") {
+            productos = productos.filter(p =>
+                p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+            )
+        }
+
+        if (categoria) {
+            productos = productos.filter(p => p.categoria === categoria)
+        }
+
+        renderProductos(productos)
+        actualizarCarrito()
+    }
+    function renderProductos(productos) {
+        const grid = document.getElementById("productosGrid")
+        grid.innerHTML = ""
+
+        if (productos.length === 0) {
+            grid.innerHTML = "<p style='color:#aaa; text-align:center; padding:3rem'>No se encontraron productos</p>"
+            return
+        }
+
+        productos.forEach(function(producto) {
+            const card = document.createElement("div")
+            card.className = "producto-card"
+            card.innerHTML = `
+                <div class="producto-imagen">
+                    ${producto.imagen
+                        ? `<img src="${API}${producto.imagen}" alt="${producto.nombre}">`
+                        : "📦"}
+                </div>
+                <div class="producto-info">
+                    ${producto.categoria ? `<div class="producto-categoria">${producto.categoria}</div>` : ""}
+                    <div class="producto-nombre">${producto.nombre}</div>
+                    <div class="producto-precio">$${Number(producto.precio).toLocaleString()}</div>
+                    <div class="producto-stock">${producto.stock > 0 ? producto.stock + ' disponibles' : 'Sin stock'}</div>
+                </div>
+            `
+            card.addEventListener("click", function() {
+                window.location.href = `/src/views/producto.html?id=${producto.id}`
+            })
+            grid.appendChild(card)
+        })
+
+        observarProductos()
+    }
+
+    function actualizarCarrito() {
+        const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
+        const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
+        document.getElementById("contadorCarrito").textContent = total
+    }
 
 document.getElementById("buscador").addEventListener("input", function() {
     const categoria = document.getElementById("filtroCategoria").value

@@ -60,10 +60,12 @@ function mostrarSeccion(nombre, event) {
         nombre.charAt(0).toUpperCase() + nombre.slice(1)
     if (event) event.target.classList.add("activo")
 
+
     if (nombre === "configuracion") {} // no necesita cargar datos
     if (nombre === "dashboard") cargarEstadisticas()
     if (nombre === "productos") cargarProductos()
     if (nombre === "pedidos") cargarPedidos()
+    if (nombre === "ventas") cargarVentas()
     if (nombre === "usuarios") cargarUsuarios()
     if (nombre === "invitaciones") cargarSolicitudes()
 }
@@ -95,17 +97,68 @@ async function solicitarCambio(campo, inputId) {
 }
 
 // Dashboard
-async function cargarEstadisticas() {
-    const r = await fetch(API + "/estadisticas", {
-        headers: { "authorization": token }
-    })
-    const stats = await r.json()
-    document.getElementById("statProductos").textContent = stats.productos
-    document.getElementById("statPedidos").textContent = stats.pedidos
-    document.getElementById("statUsuarios").textContent = stats.usuarios
-    document.getElementById("statVentas").textContent = "$" + Number(stats.ventas).toLocaleString()
-}
+    async function cargarEstadisticas() {
+        const r = await fetch(API + "/estadisticas", {
+            headers: { "authorization": token }
+        })
+        const stats = await r.json()
+        document.getElementById("statProductos").textContent = stats.productos
+        document.getElementById("statPedidos").textContent = stats.pedidos
+        document.getElementById("statUsuarios").textContent = stats.usuarios
+        document.getElementById("statVentas").textContent = "$" + Number(stats.ventas).toLocaleString()
+        cargarPedidosRecientes()
+    }
 
+    async function cargarPedidosRecientes() {
+        const r = await fetch(API + "/pedidos", {
+            headers: { "authorization": token }
+        })
+        const pedidos = await r.json()
+        const tbody = document.getElementById("tbodyPedidosRecientes")
+        const recientes = pedidos.slice(0, 5)
+
+        tbody.innerHTML = recientes.map(function(p) {
+            return `
+                <tr>
+                    <td>#${p.id}</td>
+                    <td>${p.usuario}</td>
+                    <td>$${Number(p.total).toLocaleString()}</td>
+                    <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
+                    <td>${new Date(p.created_at).toLocaleDateString()}</td>
+                </tr>
+            `
+        }).join("")
+    }
+
+    async function cargarVentas() {
+        const r = await fetch(API + "/pedidos", {
+            headers: { "authorization": token }
+        })
+        const pedidos = await r.json()
+
+        const total = pedidos.reduce((sum, p) => sum + Number(p.total), 0)
+        const promedio = pedidos.length ? total / pedidos.length : 0
+        const entregados = pedidos.filter(p => p.estado === "entregado").length
+        const pendientes = pedidos.filter(p => p.estado === "pendiente").length
+
+        document.getElementById("ventaTotal").textContent = "$" + total.toLocaleString()
+        document.getElementById("ventaPromedio").textContent = "$" + Math.round(promedio).toLocaleString()
+        document.getElementById("ventaEntregados").textContent = entregados
+        document.getElementById("ventaPendientes").textContent = pendientes
+
+        const tbody = document.getElementById("tbodyVentas")
+        tbody.innerHTML = pedidos.map(function(p) {
+            return `
+                <tr>
+                    <td>#${p.id}</td>
+                    <td>${p.usuario}</td>
+                    <td>$${Number(p.total).toLocaleString()}</td>
+                    <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
+                    <td>${new Date(p.created_at).toLocaleDateString()}</td>
+                </tr>
+            `
+        }).join("")
+    }
 // Productos
 async function cargarProductos() {
     const r = await fetch(API + "/productos", {
