@@ -16,6 +16,8 @@
                 <a href="#" class="nav-item" onclick="mostrarSeccion('productos')">📦 Productos</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos')">🛒 Pedidos</a>
                 <a href="#" class="nav-item" onclick="mostrarSeccion('usuarios')">👥 Usuarios</a>
+                <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios')">👥 Usuarios</a>
+                <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones')">📨 Invitaciones</a>
             </nav>
             <a href="#" class="nav-item" onclick="mostrarSeccion('invitaciones')">📨 Invitaciones</a>
             <div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>
@@ -178,14 +180,15 @@
 
                 <div id="linkGenerado" style="display:none; margin-top:1rem;">
                     <div class="form-card" style="max-width:500px">
-                        <label style="font-size:0.8rem; color:#888; font-weight:600; text-transform:uppercase; letter-spacing:0.3px">Link generado — expira en 24 horas</label>
-                        <div style="display:flex; gap:0.5rem; margin-top:0.75rem; align-items:center;">
-                            <input type="text" id="linkInvitacion" readonly style="flex:1; background:#f8fafc; font-size:0.8rem;">
-                            <button class="btn-primary" onclick="copiarLink()" style="white-space:nowrap">Copiar</button>
+                        <div class="form-group">
+                            <label>Link generado — expira en 24 horas</label>
+                            <div style="display:flex; gap:0.5rem; align-items:center;">
+                                <input type="text" id="linkInvitacion" readonly>
+                                <button class="btn-primary" onclick="copiarLink()">Copiar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="seccion-header" style="margin-top:2rem">
                     <h2>Solicitudes de cambio</h2>
                 </div>

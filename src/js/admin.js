@@ -9,6 +9,12 @@ const usuario = JSON.parse(localStorage.getItem("usuario"))
 if (!token || !usuario || (usuario.rol !== "admin" && usuario.rol !== "superadmin")) {
     window.location.href = "admin-login.html"
 }
+const esSuperAdmin = usuario.rol === "superadmin"
+
+if (!esSuperAdmin) {
+    document.getElementById("navInvitaciones").style.display = "none"
+    document.getElementById("navUsuarios").style.display = "none"
+}
 
 document.getElementById("adminNombre").textContent = "Admin " + usuario.nombre
 
@@ -192,19 +198,24 @@ async function cargarUsuarios() {
     const tbody = document.getElementById("tbodyUsuarios")
     tbody.innerHTML = ""
 
-    usuarios.forEach(function(u) {
-        const tr = document.createElement("tr")
-        tr.innerHTML = `
-            <td>${u.nombre}</td>
-            <td>${u.email}</td>
-            <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
-            <td>
-                <button class="btn-accion btn-editar" onclick="cambiarRol(${u.id}, '${u.rol}')">
-                    ${u.rol === 'admin' ? 'Quitar admin' : 'Hacer admin'}
-                </button>
-            </td>
-        `
-        tbody.appendChild(tr)
+        usuarios.forEach(function(u) {
+            const tr = document.createElement("tr")
+            const esMiCuenta = u.id === usuario.id
+            const esSuperAdminUsuario = u.rol === "superadmin"
+
+            tr.innerHTML = `
+                <td>${u.nombre}</td>
+                <td>${u.email}</td>
+                <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
+                <td>
+                    ${!esMiCuenta && !esSuperAdminUsuario ? `
+                        <button class="btn-rol" onclick="cambiarRol(${u.id}, '${u.rol}')">
+                            ${u.rol === 'admin' ? 'Quitar admin' : 'Hacer admin'}
+                        </button>
+                    ` : "-"}
+                </td>
+            `
+            tbody.appendChild(tr)
     })
 }
 
