@@ -236,19 +236,98 @@ async function cargarResenas() {
         return
     }
 
-    lista.innerHTML = resenas.map(function(r) {
+    lista.innerHTML = ""
+
+    for (const r of resenas) {
         const estrellas = "★".repeat(r.calificacion) + "☆".repeat(5 - r.calificacion)
-        return `
-            <div class="resena-card">
-                <div class="resena-header">
-                    <span class="resena-autor">${r.nombre}</span>
-                    <span class="resena-fecha">${new Date(r.created_at).toLocaleDateString()}</span>
+
+        // Obtener likes y respuestas
+        const [likesRes, respuestasRes] = await Promise.all([
+            fetch(API + "/resenas/" + r.id + "/likes", { headers: { "authorization": token } }),
+            fetch(API + "/resenas/" + r.id + "/respuestas", { headers: { "authorization": token } })
+        ])
+        const likesData = await likesRes.json()
+        const respuestas = await respuestasRes.json()
+
+        const respuestasHTML = respuestas.map(function(resp) {
+            return `
+                <div class="resena-respuesta ${resp.es_admin ? 'respuesta-admin' : ''}">
+                    <div class="respuesta-autor">
+                        ${resp.es_admin ? '🏪 Tienda' : resp.nombre}
+                        ${resp.es_admin ? '<span class="badge-admin">Admin</span>' : ''}
+                    </div>
+                    <div class="respuesta-texto">${resp.comentario}</div>
+                    <div class="respuesta-fecha">${new Date(resp.created_at).toLocaleDateString()}</div>
                 </div>
-                <div class="resena-estrellas">${estrellas}</div>
-                <p class="resena-comentario">${r.comentario}</p>
+            `
+        }).join("")
+
+        const div = document.createElement("div")
+        div.className = "resena-card"
+        div.innerHTML = `
+            <div class="resena-header">
+                <span class="resena-autor">${r.nombre}</span>
+                <span class="resena-fecha">${new Date(r.created_at).toLocaleDateString()}</span>
+            </div>
+            <div class="resena-estrellas">${estrellas}</div>
+            <p class="resena-comentario">${r.comentario}</p>
+            <div class="resena-acciones">
+                <button class="btn-like ${likesData.liked ? 'liked' : ''}" onclick="toggleLike(${r.id}, this)">
+                    👍 <span class="likes-count">${likesData.total}</span>
+                </button>
+                <button class="btn-responder" onclick="toggleRespuesta(${r.id})">
+                    💬 Responder
+                </button>
+            </div>
+            <div class="respuestas-container" id="respuestas-${r.id}">
+                ${respuestasHTML}
+                <div class="respuesta-form" id="form-respuesta-${r.id}" style="display:none">
+                    <input type="text" placeholder="Escribe tu respuesta..." id="input-respuesta-${r.id}">
+                    <button onclick="enviarRespuesta(${r.id})">Enviar</button>
+                </div>
             </div>
         `
-    }).join("")
+        lista.appendChild(div)
+    }
+}
+
+async function toggleLike(resenaId, btn) {
+    const respuesta = await fetch(API + "/resenas/" + resenaId + "/like", {
+        method: "POST",
+        headers: { "authorization": token }
+    })
+    const datos = await respuesta.json()
+    if (respuesta.ok) {
+        btn.classList.toggle("liked", datos.liked)
+        const count = btn.querySelector(".likes-count")
+        count.textContent = parseInt(count.textContent) + (datos.liked ? 1 : -1)
+    }
+}
+
+function toggleRespuesta(resenaId) {
+    const form = document.getElementById("form-respuesta-" + resenaId)
+    form.style.display = form.style.display === "none" ? "flex" : "none"
+}
+
+async function enviarRespuesta(resenaId) {
+    const input = document.getElementById("input-respuesta-" + resenaId)
+    const comentario = input.value.trim()
+    if (!comentario) return
+
+    const respuesta = await fetch(API + "/resenas/" + resenaId + "/respuestas", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ comentario })
+    })
+
+    if (respuesta.ok) {
+        mostrarToast("✓ Respuesta publicada")
+        input.value = ""
+        cargarResenas()
+    }
 }
 
 document.addEventListener("DOMContentLoaded", cargarProducto)
