@@ -11,9 +11,10 @@ if (!token || !usuario || (usuario.rol !== "admin" && usuario.rol !== "superadmi
 }
 const esSuperAdmin = usuario.rol === "superadmin"
 
-if (!esSuperAdmin) {
-    document.getElementById("navInvitaciones").style.display = "none"
-    document.getElementById("navUsuarios").style.display = "none"
+if (esSuperAdmin) {
+    document.getElementById("configDirecta").style.display = "block"
+} else {
+    document.getElementById("configSolicitud").style.display = "block"
 }
 
 document.getElementById("adminNombre").textContent = "Admin " + usuario.nombre
@@ -23,6 +24,32 @@ document.getElementById("btnCerrarSesion").addEventListener("click", function() 
     localStorage.removeItem("usuario")
     window.location.href = "admin-login.html"
 })
+
+//Cambio directo (superadmin)
+async function cambiarDatoDirecto(campo, inputId) {
+    const valor = document.getElementById(inputId).value.trim()
+    if (!valor) {
+        mostrarToast("Escribe un valor", true)
+        return
+    }
+
+    const respuesta = await fetch(API + "/auth/cambiar-dato", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ campo, valor })
+    })
+
+    const datos = await respuesta.json()
+    if (respuesta.ok) {
+        mostrarToast("✓ " + datos.mensaje)
+        document.getElementById(inputId).value = ""
+    } else {
+        mostrarToast(datos.error, true)
+    }
+}
 
 // Navegación
 function mostrarSeccion(nombre, event) {

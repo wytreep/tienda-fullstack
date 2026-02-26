@@ -203,27 +203,54 @@
                     <tbody id="tbodySolicitudes"></tbody>
                 </table>
             </section>
-            <!-- Configuración -->
+<!-- Configuración -->
 <section id="seccion-configuracion" class="seccion">
     <div class="seccion-header">
         <h2>Mi configuración</h2>
     </div>
-    <div class="form-card" style="max-width:500px">
-        <div class="form-group">
-            <label>Solicitar cambio de nombre</label>
-            <input type="text" id="nuevoNombre" placeholder="Nuevo nombre">
+
+    <!-- Solo superadmin ve esto -->
+    <div id="configDirecta" style="display:none">
+        <div class="form-card" style="max-width:500px">
+            <div class="form-group">
+                <label>Cambiar nombre</label>
+                <input type="text" id="superNombre" placeholder="Nuevo nombre">
+            </div>
+            <div class="form-botones">
+                <button class="btn-primary" onclick="cambiarDatoDirecto('nombre', 'superNombre')">Guardar</button>
+            </div>
         </div>
-        <div class="form-botones">
-            <button class="btn-primary" onclick="solicitarCambio('nombre', 'nuevoNombre')">Solicitar cambio</button>
+        <div class="form-card" style="max-width:500px; margin-top:1rem">
+            <div class="form-group">
+                <label>Cambiar contraseña</label>
+                <input type="password" id="superPassword" placeholder="Nueva contraseña">
+            </div>
+            <div class="form-botones">
+                <button class="btn-primary" onclick="cambiarDatoDirecto('password', 'superPassword')">Guardar</button>
+            </div>
         </div>
     </div>
-    <div class="form-card" style="max-width:500px; margin-top:1rem">
-        <div class="form-group">
-            <label>Solicitar cambio de contraseña</label>
-            <input type="password" id="nuevaPassword" placeholder="Nueva contraseña">
+
+    <!-- Solo admin de bajo nivel ve esto -->
+    <div id="configSolicitud" style="display:none">
+        <p style="color:#888; font-size:0.9rem; margin-bottom:1.5rem">Los cambios requieren aprobación del superadmin.</p>
+        <div class="form-card" style="max-width:500px">
+            <div class="form-group">
+                <label>Solicitar cambio de nombre</label>
+                <input type="text" id="nuevoNombre" placeholder="Nuevo nombre">
+            </div>
+            <div class="form-botones">
+                <button class="btn-primary" onclick="solicitarCambio('nombre', 'nuevoNombre')">Solicitar cambio</button>
+            </div>
         </div>
-        <div class="form-botones">
-            <button class="btn-primary" onclick="solicitarCambio('password', 'nuevaPassword')">Solicitar cambio</button>
+        <div class="form-card" style="max-width:500px; margin-top:1rem">
+            <div class="form-group">
+                <label>Solicitar cambio de contraseña</label>
+                <input type="password" id="nuevaPassword" placeholder="Nueva contraseña">
+            </div>
+            <div class="form-botones">
+                <button class="btn-primary" onclick="solicitarCambio('password', 'nuevaPassword')">Solicitar cambio</button>
+            </div>
         </div>
     </div>
 </section>
