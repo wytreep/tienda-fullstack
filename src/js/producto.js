@@ -241,7 +241,7 @@ async function cargarResenas() {
     for (const r of resenas) {
         const estrellas = "★".repeat(r.calificacion) + "☆".repeat(5 - r.calificacion)
 
-        // Obtener likes y respuestas
+        // Cargar likes y respuestas
         const [likesRes, respuestasRes] = await Promise.all([
             fetch(API + "/resenas/" + r.id + "/likes", { headers: { "authorization": token } }),
             fetch(API + "/resenas/" + r.id + "/respuestas", { headers: { "authorization": token } })
@@ -273,21 +273,61 @@ async function cargarResenas() {
             <p class="resena-comentario">${r.comentario}</p>
             <div class="resena-acciones">
                 <button class="btn-like ${likesData.liked ? 'liked' : ''}" onclick="toggleLike(${r.id}, this)">
-                    👍 <span class="likes-count">${likesData.total}</span>
+                    👍 <span class="like-count">${likesData.total}</span>
                 </button>
                 <button class="btn-responder" onclick="toggleRespuesta(${r.id})">
                     💬 Responder
                 </button>
             </div>
-            <div class="respuestas-container" id="respuestas-${r.id}">
+            <div class="resena-respuestas" id="respuestas-${r.id}">
                 ${respuestasHTML}
-                <div class="respuesta-form" id="form-respuesta-${r.id}" style="display:none">
-                    <input type="text" placeholder="Escribe tu respuesta..." id="input-respuesta-${r.id}">
-                    <button onclick="enviarRespuesta(${r.id})">Enviar</button>
-                </div>
+            </div>
+            <div class="respuesta-form" id="form-respuesta-${r.id}" style="display:none">
+                <textarea class="respuesta-input" id="input-respuesta-${r.id}" placeholder="Escribe tu respuesta..." rows="2"></textarea>
+                <button class="btn-enviar-respuesta" onclick="enviarRespuesta(${r.id})">Enviar</button>
             </div>
         `
         lista.appendChild(div)
+    }
+}
+
+async function toggleLike(resenaId, btn) {
+    const respuesta = await fetch(API + "/resenas/" + resenaId + "/like", {
+        method: "POST",
+        headers: { "authorization": token }
+    })
+    const datos = await respuesta.json()
+    if (respuesta.ok) {
+        btn.classList.toggle("liked", datos.liked)
+        const count = btn.querySelector(".like-count")
+        count.textContent = parseInt(count.textContent) + (datos.liked ? 1 : -1)
+    }
+}
+
+function toggleRespuesta(resenaId) {
+    const form = document.getElementById("form-respuesta-" + resenaId)
+    form.style.display = form.style.display === "none" ? "block" : "none"
+}
+
+async function enviarRespuesta(resenaId) {
+    const comentario = document.getElementById("input-respuesta-" + resenaId).value.trim()
+    if (!comentario) {
+        mostrarToast("Escribe una respuesta", true)
+        return
+    }
+
+    const respuesta = await fetch(API + "/resenas/" + resenaId + "/respuestas", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ comentario })
+    })
+
+    if (respuesta.ok) {
+        mostrarToast("✓ Respuesta enviada")
+        cargarResenas()
     }
 }
 
