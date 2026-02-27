@@ -1,7 +1,7 @@
-
 console.log("admin.js cargando...")
 console.log("token:", localStorage.getItem("admin-token"))
 console.log("usuario:", localStorage.getItem("admin-usuario"))
+
 const API = "https://mi-servidor-2mff.onrender.com"
 
 const token = localStorage.getItem("admin-token")
@@ -10,7 +10,9 @@ const usuario = JSON.parse(localStorage.getItem("admin-usuario"))
 if (!token || !usuario || (usuario.rol !== "admin" && usuario.rol !== "superadmin")) {
     window.location.href = "admin-login.html"
 }
+
 const esSuperAdmin = usuario.rol === "superadmin"
+
 // Inicializar avatar y rol en sidebar
 const inicial = usuario.nombre.charAt(0).toUpperCase()
 document.getElementById("adminAvatar").textContent = inicial
@@ -18,8 +20,10 @@ document.getElementById("adminRol").textContent = esSuperAdmin ? "Super Admin" :
 
 if (esSuperAdmin) {
     document.getElementById("configDirecta").style.display = "block"
+    document.getElementById("navAdminGroup")?.style.display = "block"
 } else {
     document.getElementById("configSolicitud").style.display = "block"
+    document.getElementById("navAdminGroup")?.style.display = "none"
 }
 
 document.getElementById("adminNombre").textContent = "Admin " + usuario.nombre
@@ -29,6 +33,10 @@ document.getElementById("btnCerrarSesion").addEventListener("click", function() 
     localStorage.removeItem("admin-usuario")
     window.location.href = "admin-login.html"
 })
+
+// ============================================
+// FUNCIONES ORIGINALES (MANTENIDAS)
+// ============================================
 
 //Cambio directo (superadmin)
 async function cambiarDatoDirecto(campo, inputId) {
@@ -65,7 +73,7 @@ function mostrarSeccion(nombre, event) {
     const titulos = {
         dashboard: "Dashboard", ventas: "Ventas", productos: "Productos",
         pedidos: "Pedidos", resenas: "Reseñas", usuarios: "Usuarios",
-        invitaciones: "Invitaciones", configuracion: "Configuración"
+        invitaciones: "Invitaciones", configuracion: "Configuración", novedades: "Novedades"
     }
 
     document.getElementById("tituloSeccion").textContent = titulos[nombre] || nombre
@@ -73,13 +81,14 @@ function mostrarSeccion(nombre, event) {
 
     if (event && event.target) event.target.classList.add("activo")
 
-    if (nombre === "dashboard") cargarEstadisticas()
+    if (nombre === "dashboard") cargarDashboardReal()
     if (nombre === "productos") cargarProductos()
     if (nombre === "pedidos") cargarPedidos()
     if (nombre === "usuarios") cargarUsuarios()
     if (nombre === "ventas") cargarVentas()
     if (nombre === "resenas") cargarResenas()
     if (nombre === "invitaciones") cargarSolicitudes()
+    if (nombre === "novedades") cargarHistorialNovedades()
 }
 
 async function solicitarCambio(campo, inputId) {
@@ -109,89 +118,90 @@ async function solicitarCambio(campo, inputId) {
 }
 
 // Dashboard
-    async function cargarEstadisticas() {
-        const r = await fetch(API + "/estadisticas", {
-            headers: { "authorization": token }
-        })
-        const stats = await r.json()
-        document.getElementById("statProductos").textContent = stats.productos
-        document.getElementById("statPedidos").textContent = stats.pedidos
-        document.getElementById("statUsuarios").textContent = stats.usuarios
-        document.getElementById("statVentas").textContent = "$" + Number(stats.ventas).toLocaleString()
-        cargarPedidosRecientes()
-    }
+async function cargarEstadisticas() {
+    const r = await fetch(API + "/estadisticas", {
+        headers: { "authorization": token }
+    })
+    const stats = await r.json()
+    document.getElementById("statProductos").textContent = stats.productos
+    document.getElementById("statPedidos").textContent = stats.pedidos
+    document.getElementById("statUsuarios").textContent = stats.usuarios
+    document.getElementById("statVentas").textContent = "$" + Number(stats.ventas).toLocaleString()
+    cargarPedidosRecientes()
+}
 
-    async function cargarPedidosRecientes() {
-        const r = await fetch(API + "/pedidos", {
-            headers: { "authorization": token }
-        })
-        const pedidos = await r.json()
-        const tbody = document.getElementById("tbodyPedidosRecientes")
-        const recientes = pedidos.slice(0, 5)
+async function cargarPedidosRecientes() {
+    const r = await fetch(API + "/pedidos", {
+        headers: { "authorization": token }
+    })
+    const pedidos = await r.json()
+    const tbody = document.getElementById("tbodyPedidosRecientes")
+    const recientes = pedidos.slice(0, 5)
 
-        tbody.innerHTML = recientes.map(function(p) {
-            return `
-                <tr>
-                    <td>#${p.id}</td>
-                    <td>${p.usuario}</td>
-                    <td>$${Number(p.total).toLocaleString()}</td>
-                    <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
-                    <td>${new Date(p.created_at).toLocaleDateString()}</td>
-                </tr>
-            `
-        }).join("")
-    }
+    tbody.innerHTML = recientes.map(function(p) {
+        return `
+            <tr>
+                <td>#${p.id}</td>
+                <td>${p.usuario}</td>
+                <td>$${Number(p.total).toLocaleString()}</td>
+                <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
+                <td>${new Date(p.created_at).toLocaleDateString()}</td>
+            </tr>
+        `
+    }).join("")
+}
 
-        let ultimaRevision = new Date().toISOString()
+let ultimaRevision = new Date().toISOString()
 
-    async function verificarCancelaciones() {
-        const r = await fetch(API + "/pedidos", {
-            headers: { "authorization": token }
-        })
-        const pedidos = await r.json()
-        const cancelados = pedidos.filter(p => 
-            p.estado === "cancelado" && 
-            new Date(p.created_at) > new Date(ultimaRevision)
-        )
+async function verificarCancelaciones() {
+    const r = await fetch(API + "/pedidos", {
+        headers: { "authorization": token }
+    })
+    const pedidos = await r.json()
+    const cancelados = pedidos.filter(p => 
+        p.estado === "cancelado" && 
+        new Date(p.created_at) > new Date(ultimaRevision)
+    )
 
-        cancelados.forEach(function(p) {
-            mostrarToast(`❌ Pedido #${p.id} de ${p.usuario} fue cancelado`, true)
-        })
+    cancelados.forEach(function(p) {
+        mostrarToast(`❌ Pedido #${p.id} de ${p.usuario} fue cancelado`, true)
+    })
 
-        if (cancelados.length) ultimaRevision = new Date().toISOString()
-    }
+    if (cancelados.length) ultimaRevision = new Date().toISOString()
+}
 
-    setInterval(verificarCancelaciones, 10000)
+setInterval(verificarCancelaciones, 10000)
 
-    async function cargarVentas() {
-        const r = await fetch(API + "/pedidos", {
-            headers: { "authorization": token }
-        })
-        const pedidos = await r.json()
+async function cargarVentas() {
+    const r = await fetch(API + "/pedidos", {
+        headers: { "authorization": token }
+    })
+    const pedidos = await r.json()
 
-        const total = pedidos.reduce((sum, p) => sum + Number(p.total), 0)
-        const promedio = pedidos.length ? total / pedidos.length : 0
-        const entregados = pedidos.filter(p => p.estado === "entregado").length
-        const pendientes = pedidos.filter(p => p.estado === "pendiente").length
+    const total = pedidos.reduce((sum, p) => sum + Number(p.total), 0)
+    const promedio = pedidos.length ? total / pedidos.length : 0
+    const entregados = pedidos.filter(p => p.estado === "entregado").length
+    const pendientes = pedidos.filter(p => p.estado === "pendiente").length
 
-        document.getElementById("ventaTotal").textContent = "$" + total.toLocaleString()
-        document.getElementById("ventaPromedio").textContent = "$" + Math.round(promedio).toLocaleString()
-        document.getElementById("ventaEntregados").textContent = entregados
-        document.getElementById("ventaPendientes").textContent = pendientes
+    document.getElementById("ventaTotal").textContent = "$" + total.toLocaleString()
+    document.getElementById("ventaPromedio").textContent = "$" + Math.round(promedio).toLocaleString()
+    document.getElementById("ventaEntregados").textContent = entregados
+    document.getElementById("ventaPendientes").textContent = pendientes
 
-        const tbody = document.getElementById("tbodyVentas")
-        tbody.innerHTML = pedidos.map(function(p) {
-            return `
-                <tr>
-                    <td>#${p.id}</td>
-                    <td>${p.usuario}</td>
-                    <td>$${Number(p.total).toLocaleString()}</td>
-                    <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
-                    <td>${new Date(p.created_at).toLocaleDateString()}</td>
-                </tr>
-            `
-        }).join("")
-    }
+    const tbody = document.getElementById("tbodyVentas")
+    tbody.innerHTML = pedidos.map(function(p) {
+        return `
+            <tr>
+                <td>#${p.id}</td>
+                <td>${p.usuario}</td>
+                <td>$${Number(p.total).toLocaleString()}</td>
+                <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
+                <td>${new Date(p.created_at).toLocaleDateString()}</td>
+            </tr>
+        `
+    }).join("")
+}
+
 // Productos
 async function cargarProductos() {
     const r = await fetch(API + "/productos", {
@@ -278,6 +288,7 @@ async function guardarProducto() {
         mostrarToast("✓ Producto guardado correctamente")
     }
 }
+
 async function eliminarProducto(id) {
     if (!confirm("¿Seguro que desea eliminar este producto?")) return
     await fetch(API + "/productos/" + id, {
@@ -337,7 +348,6 @@ async function cargarPedidos() {
 }
 
 async function cargarResenas() {
-    
     const r = await fetch(API + "/resenas", {
         headers: { "authorization": token }
     })
@@ -387,6 +397,7 @@ async function cargarResenas() {
         `
     }).join("")
 }
+
 async function toggleLikeAdmin(resenaId, btn) {
     const respuesta = await fetch(API + "/resenas/" + resenaId + "/like", {
         method: "POST",
@@ -426,6 +437,7 @@ async function enviarRespuestaAdmin(resenaId) {
         document.getElementById("form-admin-respuesta-" + resenaId).style.display = "none"
     }
 }
+
 async function eliminarResena(id) {
     if (!confirm("¿Eliminar esta reseña?")) return
     const r = await fetch(API + "/resenas/" + id, {
@@ -459,24 +471,24 @@ async function cargarUsuarios() {
     const tbody = document.getElementById("tbodyUsuarios")
     tbody.innerHTML = ""
 
-        usuarios.forEach(function(u) {
-            const tr = document.createElement("tr")
-            const esMiCuenta = u.id === usuario.id
-            const esSuperAdminUsuario = u.rol === "superadmin"
+    usuarios.forEach(function(u) {
+        const tr = document.createElement("tr")
+        const esMiCuenta = u.id === usuario.id
+        const esSuperAdminUsuario = u.rol === "superadmin"
 
-            tr.innerHTML = `
-                <td>${u.nombre}</td>
-                <td>${u.email}</td>
-                <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
-                <td>
-                    ${!esMiCuenta && !esSuperAdminUsuario ? `
-                        <button class="btn-rol" onclick="cambiarRol(${u.id}, '${u.rol}')">
-                            ${u.rol === 'admin' ? 'Quitar admin' : 'Hacer admin'}
-                        </button>
-                    ` : "-"}
-                </td>
-            `
-            tbody.appendChild(tr)
+        tr.innerHTML = `
+            <td>${u.nombre}</td>
+            <td>${u.email}</td>
+            <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
+            <td>
+                ${!esMiCuenta && !esSuperAdminUsuario ? `
+                    <button class="btn-rol" onclick="cambiarRol(${u.id}, '${u.rol}')">
+                        ${u.rol === 'admin' ? 'Quitar admin' : 'Hacer admin'}
+                    </button>
+                ` : "-"}
+            </td>
+        `
+        tbody.appendChild(tr)
     })
 }
 
@@ -493,6 +505,7 @@ async function cambiarRol(id, rolActual) {
     cargarUsuarios()
     mostrarToast("✓ Rol actualizado")
 }
+
 async function generarInvitacion() {
     const email = document.getElementById("emailInvitacion").value.trim()
     if (!email) {
@@ -573,7 +586,7 @@ async function responderSolicitud(id, estado) {
     }
 }
 
-function mostrarToast(mensaje) {
+function mostrarToast(mensaje, esError = false) {
     let toast = document.getElementById("toast")
     if (!toast) {
         toast = document.createElement("div")
@@ -588,9 +601,12 @@ function mostrarToast(mensaje) {
         `
         document.body.appendChild(toast)
     }
+    
+    toast.style.background = esError ? '#ef4444' : '#22c55e'
     toast.textContent = mensaje
     toast.style.opacity = "1"
     toast.style.transform = "translateY(0)"
+    
     setTimeout(function() {
         toast.style.opacity = "0"
         toast.style.transform = "translateY(20px)"
@@ -598,131 +614,137 @@ function mostrarToast(mensaje) {
 }
 
 // ============================================
-// FUNCIONES MEJORADAS PARA DASHBOARD REAL
+// FUNCIONES NUEVAS PARA DASHBOARD REAL
 // ============================================
 
 // Cargar TODAS las métricas del dashboard desde la DB
 async function cargarDashboardReal() {
     try {
-        // Mostrar indicador de carga
-        mostrarLoaderDashboard();
+        mostrarLoaderDashboard()
         
         // 1. Cargar estadísticas generales
         const statsRes = await fetch(API + "/estadisticas", {
             headers: { "authorization": token }
-        });
-        const stats = await statsRes.json();
+        })
+        const stats = await statsRes.json()
         
         // 2. Cargar pedidos para métricas más detalladas
         const pedidosRes = await fetch(API + "/pedidos", {
             headers: { "authorization": token }
-        });
-        const pedidos = await pedidosRes.json();
+        })
+        const pedidos = await pedidosRes.json()
         
         // 3. Cargar productos para top ventas
         const productosRes = await fetch(API + "/productos", {
             headers: { "authorization": token }
-        });
-        const productos = await productosRes.json();
+        })
+        const productos = await productosRes.json()
         
         // 4. Cargar reseñas recientes
         const resenasRes = await fetch(API + "/resenas", {
             headers: { "authorization": token }
-        });
-        const resenas = await resenasRes.json();
+        })
+        const resenas = await resenasRes.json()
         
         // 5. Cargar solicitudes pendientes (solo superadmin)
         if (usuario.rol === "superadmin") {
             const solicitudesRes = await fetch(API + "/solicitudes-cambio", {
                 headers: { "authorization": token }
-            });
-            const solicitudes = await solicitudesRes.json();
-            actualizarNovedadesSolicitudes(solicitudes);
+            })
+            const solicitudes = await solicitudesRes.json()
+            actualizarNovedadesConSolicitudes(solicitudes)
         }
         
         // ACTUALIZAR TODAS LAS MÉTRICAS
-        actualizarMetricasPrincipales(stats, pedidos);
-        actualizarTopProductos(productos, pedidos);
-        actualizarTablaPedidosRecientes(pedidos);
-        actualizarProgresoMensual(pedidos, stats);
-        actualizarEventosProximos(pedidos);
-        actualizarNovedadesRecientes(pedidos, resenas, productos);
-        actualizarBannerInfo(usuario, stats);
+        actualizarMetricasPrincipales(stats, pedidos)
+        actualizarTopProductos(productos, pedidos)
+        actualizarTablaPedidosRecientes(pedidos)
+        actualizarProgresoMensual(pedidos, stats)
+        actualizarEventosProximos(pedidos, productos)
+        actualizarNovedadesRecientes(pedidos, resenas, productos)
+        actualizarBannerInfo(usuario, stats)
         
-        // Ocultar loader
-        ocultarLoaderDashboard();
+        ocultarLoaderDashboard()
         
     } catch (error) {
-        console.error("Error cargando dashboard:", error);
-        mostrarToast("Error al cargar datos del dashboard", true);
+        console.error("Error cargando dashboard:", error)
+        ocultarLoaderDashboard()
+        mostrarToast("Error al cargar datos del dashboard", true)
     }
 }
 
-// ============================================
-// ACTUALIZAR CADA SECCIÓN
-// ============================================
-
 function actualizarMetricasPrincipales(stats, pedidos) {
     // Stats cards principales
-    document.getElementById("statProductos").textContent = stats.productos || 0;
-    document.getElementById("statPedidos").textContent = stats.pedidos || 0;
-    document.getElementById("statUsuarios").textContent = stats.usuarios || 0;
+    document.getElementById("statProductos").textContent = stats.productos || 0
+    document.getElementById("statPedidos").textContent = stats.pedidos || 0
+    document.getElementById("statUsuarios").textContent = stats.usuarios || 0
     
     // Formatear ventas
     const ventasFormateadas = new Intl.NumberFormat('es-CO', {
         style: 'currency',
         currency: 'COP',
         minimumFractionDigits: 0
-    }).format(stats.ventas || 0);
-    document.getElementById("statVentas").textContent = ventasFormateadas;
+    }).format(stats.ventas || 0)
+    document.getElementById("statVentas").textContent = ventasFormateadas
     
     // Calcular pedidos pendientes
-    const pendientes = pedidos.filter(p => p.estado === "pendiente").length;
-    const procesando = pedidos.filter(p => p.estado === "procesando").length;
-    const entregados = pedidos.filter(p => p.estado === "entregado").length;
+    const pendientes = pedidos.filter(p => p.estado === "pendiente").length
+    const procesando = pedidos.filter(p => p.estado === "procesando").length
     
-    // Actualizar badges y trends
-    document.getElementById("pedidosPendientes").textContent = 
-        `${pendientes} pendientes, ${procesando} en proceso`;
+    const pedidosPendientesEl = document.getElementById("pedidosPendientes")
+    if (pedidosPendientesEl) {
+        pedidosPendientesEl.textContent = `${pendientes} pendientes, ${procesando} en proceso`
+    }
     
     // Calcular ventas del mes
-    const fechaActual = new Date();
-    const mesActual = fechaActual.getMonth();
-    const añoActual = fechaActual.getFullYear();
+    const fechaActual = new Date()
+    const mesActual = fechaActual.getMonth()
+    const añoActual = fechaActual.getFullYear()
     
     const ventasMes = pedidos
         .filter(p => {
-            const fechaPedido = new Date(p.created_at);
+            const fechaPedido = new Date(p.created_at)
             return fechaPedido.getMonth() === mesActual && 
                    fechaPedido.getFullYear() === añoActual &&
-                   p.estado === "entregado";
+                   p.estado === "entregado"
         })
-        .reduce((sum, p) => sum + Number(p.total), 0);
+        .reduce((sum, p) => sum + Number(p.total), 0)
     
-    document.getElementById("ventasMes").textContent = 
-        `+${Math.round((ventasMes / (stats.ventas || 1)) * 100)}% este mes`;
+    const ventasMesEl = document.getElementById("ventasMes")
+    if (ventasMesEl) {
+        const porcentaje = stats.ventas ? Math.round((ventasMes / stats.ventas) * 100) : 0
+        ventasMesEl.textContent = `+${porcentaje}% este mes`
+    }
     
     // Banner stats
-    document.getElementById("bannerProductos").textContent = stats.productos || 0;
-    document.getElementById("bannerPedidos").textContent = stats.pedidos || 0;
-    document.getElementById("bannerUsuarios").textContent = stats.usuarios || 0;
+    document.getElementById("bannerProductos").textContent = stats.productos || 0
+    document.getElementById("bannerPedidos").textContent = stats.pedidos || 0
+    document.getElementById("bannerUsuarios").textContent = stats.usuarios || 0
+    
+    // Trends
+    const trendProductos = document.getElementById("trendProductos")
+    if (trendProductos) {
+        trendProductos.textContent = stats.productos ? `${stats.productos} activos` : 'Sin productos'
+    }
+    
+    const trendUsuarios = document.getElementById("trendUsuarios")
+    if (trendUsuarios) {
+        trendUsuarios.textContent = stats.usuarios ? `${stats.usuarios} registrados` : 'Sin usuarios'
+    }
 }
 
-function actualizarTopProductos(productos, pedidos) {
-    // Necesitamos obtener los items de cada pedido para saber qué productos se venden
-    fetch(API + "/pedidos", { headers: { "authorization": token } })
-        .then(r => r.json())
-        .then(async pedidosCompletos => {
-            // Crear mapa de ventas por producto
-            const ventasPorProducto = {};
-            
-            // Para cada pedido, necesitamos sus items
-            for (const pedido of pedidosCompletos) {
+async function actualizarTopProductos(productos, pedidos) {
+    try {
+        // Crear mapa de ventas por producto
+        const ventasPorProducto = {}
+        
+        // Para cada pedido, obtener sus items
+        for (const pedido of pedidos) {
+            try {
                 const itemsRes = await fetch(API + `/pedidos/${pedido.id}/items`, {
                     headers: { "authorization": token }
-                }).catch(() => ({ json: () => [] }));
-                
-                const items = await itemsRes.json().catch(() => []);
+                })
+                const items = await itemsRes.json()
                 
                 items.forEach(item => {
                     if (!ventasPorProducto[item.producto_id]) {
@@ -730,45 +752,50 @@ function actualizarTopProductos(productos, pedidos) {
                             nombre: item.nombre,
                             cantidad: 0,
                             total: 0,
-                            id: item.producto_id
-                        };
+                            id: item.producto_id,
+                            precio: item.precio
+                        }
                     }
-                    ventasPorProducto[item.producto_id].cantidad += item.cantidad;
-                    ventasPorProducto[item.producto_id].total += item.precio * item.cantidad;
-                });
+                    ventasPorProducto[item.producto_id].cantidad += item.cantidad
+                    ventasPorProducto[item.producto_id].total += item.precio * item.cantidad
+                })
+            } catch (e) {
+                // Si no hay items, continuar
             }
-            
-            // Convertir a array y ordenar por cantidad vendida
-            const topProductos = Object.values(ventasPorProducto)
-                .sort((a, b) => b.cantidad - a.cantidad)
-                .slice(0, 5);
-            
-            // Si no hay ventas, mostrar productos con stock
-            if (topProductos.length === 0) {
-                const productosConStock = productos
-                    .sort((a, b) => b.stock - a.stock)
-                    .slice(0, 5)
-                    .map(p => ({
-                        nombre: p.nombre,
-                        cantidad: 0,
-                        total: 0,
-                        id: p.id,
-                        stock: p.stock,
-                        precio: p.precio
-                    }));
-                
-                renderTopProductos(productosConStock, true);
-            } else {
-                renderTopProductos(topProductos, false);
-            }
-        });
+        }
+        
+        // Convertir a array y ordenar por cantidad vendida
+        let topProductos = Object.values(ventasPorProducto)
+            .sort((a, b) => b.cantidad - a.cantidad)
+            .slice(0, 5)
+        
+        // Si no hay ventas, mostrar productos con stock
+        if (topProductos.length === 0) {
+            topProductos = productos
+                .sort((a, b) => b.stock - a.stock)
+                .slice(0, 5)
+                .map(p => ({
+                    nombre: p.nombre,
+                    cantidad: 0,
+                    total: 0,
+                    id: p.id,
+                    stock: p.stock,
+                    precio: p.precio
+                }))
+            renderTopProductos(topProductos, true)
+        } else {
+            renderTopProductos(topProductos, false)
+        }
+    } catch (error) {
+        console.error("Error actualizando top productos:", error)
+    }
 }
 
 function renderTopProductos(productos, sinVentas = false) {
-    const colores = ["#2560a8", "#1e7d4e", "#b8922a", "#7d3c98", "#c0392b"];
-    const container = document.getElementById("topProductosContainer");
+    const container = document.getElementById("topProductosContainer")
+    if (!container) return
     
-    if (!container) return;
+    const colores = ["#2560a8", "#1e7d4e", "#b8922a", "#7d3c98", "#c0392b"]
     
     if (productos.length === 0) {
         container.innerHTML = `
@@ -779,29 +806,29 @@ function renderTopProductos(productos, sinVentas = false) {
                 <p style="margin-top: 16px;">No hay productos con ventas aún</p>
                 <p style="font-size: 12px;">Los productos aparecerán aquí cuando tengan pedidos</p>
             </div>
-        `;
-        return;
+        `
+        return
     }
     
     container.innerHTML = productos.map((p, index) => {
         const progreso = sinVentas 
             ? Math.min(100, Math.round((p.stock / 100) * 100))
-            : Math.min(100, Math.round((p.cantidad / 50) * 100)); // Escala relativa
+            : Math.min(100, Math.round((p.cantidad / 50) * 100))
         
         const totalFormateado = new Intl.NumberFormat('es-CO', {
             style: 'currency',
             currency: 'COP',
             minimumFractionDigits: 0
-        }).format(p.total || p.precio * (p.stock || 1));
+        }).format(p.total || p.precio * (p.stock || 1))
         
         const badgeText = sinVentas 
             ? `Stock: ${p.stock}`
-            : `${p.cantidad} vendidos`;
+            : `${p.cantidad} vendidos`
         
-        const badgeClass = sinVentas ? 'badge-ok' : 'badge-pending';
+        const badgeClass = sinVentas ? 'badge-ok' : 'badge-pending'
         
         return `
-            <div class="materia-item" onclick="editarProducto(${p.id})">
+            <div class="materia-item" onclick="editarProducto(${p.id})" style="cursor:pointer;">
                 <div class="materia-color" style="background:${colores[index % colores.length]};"></div>
                 <div class="materia-info">
                     <div class="materia-name">${p.nombre}</div>
@@ -815,15 +842,15 @@ function renderTopProductos(productos, sinVentas = false) {
                     <span class="materia-badge ${badgeClass}">${sinVentas ? 'En stock' : '+ventas'}</span>
                 </div>
             </div>
-        `;
-    }).join("");
+        `
+    }).join("")
 }
 
 function actualizarTablaPedidosRecientes(pedidos) {
-    const tbody = document.getElementById("tbodyPedidosRecientes");
-    if (!tbody) return;
+    const tbody = document.getElementById("tbodyPedidosRecientes")
+    if (!tbody) return
     
-    const recientes = pedidos.slice(0, 5);
+    const recientes = pedidos.slice(0, 5)
     
     if (recientes.length === 0) {
         tbody.innerHTML = `
@@ -832,152 +859,160 @@ function actualizarTablaPedidosRecientes(pedidos) {
                     No hay pedidos recientes
                 </td>
             </tr>
-        `;
-        return;
+        `
+        return
     }
     
     tbody.innerHTML = recientes.map(p => {
-        const fecha = new Date(p.created_at).toLocaleDateString('es-CO');
+        const fecha = new Date(p.created_at).toLocaleDateString('es-CO')
         const total = new Intl.NumberFormat('es-CO', {
             style: 'currency',
             currency: 'COP',
             minimumFractionDigits: 0
-        }).format(p.total);
+        }).format(p.total)
         
-        let badgeClass = 'badge-pendiente';
-        if (p.estado === 'entregado') badgeClass = 'badge-entregado';
-        if (p.estado === 'cancelado') badgeClass = 'badge-cancelado';
-        if (p.estado === 'procesando') badgeClass = 'badge-procesando';
-        if (p.estado === 'enviado') badgeClass = 'badge-enviado';
+        let badgeClass = 'badge-pendiente'
+        if (p.estado === 'entregado') badgeClass = 'badge-entregado'
+        if (p.estado === 'cancelado') badgeClass = 'badge-cancelado'
+        if (p.estado === 'procesando') badgeClass = 'badge-procesando'
+        if (p.estado === 'enviado') badgeClass = 'badge-enviado'
         
         return `
-            <tr onclick="mostrarDetallePedido(${p.id})" style="cursor: pointer;">
+            <tr onclick="mostrarSeccion('pedidos')" style="cursor: pointer;">
                 <td>#${p.id}</td>
                 <td>${p.usuario || 'Cliente'}</td>
                 <td>${total}</td>
                 <td><span class="badge ${badgeClass}">${p.estado.toUpperCase()}</span></td>
                 <td>${fecha}</td>
             </tr>
-        `;
-    }).join("");
+        `
+    }).join("")
 }
 
 function actualizarProgresoMensual(pedidos, stats) {
     // Calcular ventas del mes actual
-    const fechaActual = new Date();
-    const mesActual = fechaActual.getMonth();
-    const añoActual = fechaActual.getFullYear();
+    const fechaActual = new Date()
+    const mesActual = fechaActual.getMonth()
+    const añoActual = fechaActual.getFullYear()
     
     const pedidosMes = pedidos.filter(p => {
-        const fecha = new Date(p.created_at);
-        return fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual;
-    });
+        const fecha = new Date(p.created_at)
+        return fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
+    })
     
     const ventasMes = pedidosMes
         .filter(p => p.estado === "entregado")
-        .reduce((sum, p) => sum + Number(p.total), 0);
+        .reduce((sum, p) => sum + Number(p.total), 0)
     
-    const pedidosCompletados = pedidosMes.filter(p => p.estado === "entregado").length;
-    const totalPedidosMes = pedidosMes.length;
+    const pedidosCompletados = pedidosMes.filter(p => p.estado === "entregado").length
+    const totalPedidosMes = pedidosMes.length
     
-    // Meta mensual (podría venir de configuración o calcularse automáticamente)
-    const metaMensual = stats.ventas ? Math.round(stats.ventas * 0.3) : 5000000; // 30% del total o 5M por defecto
+    // Meta mensual
+    const metaMensual = stats.ventas ? Math.round(stats.ventas * 0.3) : 5000000
     
-    const progreso = Math.min(100, Math.round((ventasMes / metaMensual) * 100));
+    const progreso = Math.min(100, Math.round((ventasMes / metaMensual) * 100))
     
     // Actualizar anillo SVG
-    const ring = document.querySelector('#progresoRing circle:last-child');
+    const ring = document.querySelector('#progresoRing')
     if (ring) {
-        const circumference = 2 * Math.PI * 50;
-        const offset = circumference - (progreso / 100) * circumference;
-        ring.style.strokeDasharray = `${circumference}`;
-        ring.style.strokeDashoffset = offset;
+        const circumference = 2 * Math.PI * 50
+        const offset = circumference - (progreso / 100) * circumference
+        ring.style.strokeDasharray = `${circumference}`
+        ring.style.strokeDashoffset = offset
     }
     
     // Actualizar textos
-    document.querySelector('.ring-pct').textContent = progreso + '%';
-    document.querySelectorAll('.legend-item .legend-val')[0].textContent = 
-        new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(ventasMes);
-    document.querySelectorAll('.legend-item .legend-val')[1].textContent = 
-        `${pedidosCompletados}/${totalPedidosMes}`;
-    document.querySelectorAll('.legend-item .legend-val')[2].textContent = 
-        new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(metaMensual);
+    const ringPct = document.querySelector('.ring-pct')
+    if (ringPct) ringPct.textContent = progreso + '%'
+    
+    const legendVals = document.querySelectorAll('.legend-item .legend-val')
+    if (legendVals.length >= 3) {
+        legendVals[0].textContent = new Intl.NumberFormat('es-CO', { 
+            style: 'currency', currency: 'COP', minimumFractionDigits: 0 
+        }).format(ventasMes)
+        
+        legendVals[1].textContent = `${pedidosCompletados}/${totalPedidosMes}`
+        
+        legendVals[2].textContent = new Intl.NumberFormat('es-CO', { 
+            style: 'currency', currency: 'COP', minimumFractionDigits: 0 
+        }).format(metaMensual)
+    }
 }
 
-function actualizarEventosProximos(pedidos) {
-    const container = document.querySelector('.card-elegant .agenda-items');
-    if (!container) return;
+function actualizarEventosProximos(pedidos, productos) {
+    const container = document.querySelector('.agenda-items')
+    if (!container) return
     
-    // Filtrar pedidos con fecha de entrega (asumiendo que tienen campo fecha_entrega)
-    // Por ahora, usamos pedidos pendientes como "eventos"
-    const eventos = pedidos
+    const eventos = []
+    
+    // Pedidos pendientes como eventos de entrega
+    pedidos
         .filter(p => p.estado === "pendiente" || p.estado === "procesando")
         .slice(0, 3)
-        .map(p => {
-            const fecha = new Date(p.created_at);
-            fecha.setDate(fecha.getDate() + 3); // Entrega estimada en 3 días
+        .forEach(p => {
+            const fecha = new Date(p.created_at)
+            fecha.setDate(fecha.getDate() + 3)
             
-            return {
+            eventos.push({
                 id: p.id,
                 titulo: `Entrega pedido #${p.id}`,
                 fecha: fecha,
                 tipo: 'Entrega',
                 cliente: p.usuario,
                 total: p.total
-            };
-        });
+            })
+        })
     
-    // También agregar eventos de stock bajo
-    fetch(API + "/productos", { headers: { "authorization": token } })
-        .then(r => r.json())
-        .then(productos => {
-            const stockBajo = productos
-                .filter(p => p.stock < 10)
-                .slice(0, 2)
-                .map(p => ({
-                    id: p.id,
-                    titulo: `Stock bajo: ${p.nombre}`,
-                    fecha: new Date(),
-                    tipo: 'Alerta',
-                    stock: p.stock
-                }));
-            
-            const todosEventos = [...eventos, ...stockBajo].sort((a, b) => a.fecha - b.fecha);
-            renderEventos(todosEventos);
-        });
+    // Stock bajo como alertas
+    productos
+        .filter(p => p.stock < 10)
+        .slice(0, 2)
+        .forEach(p => {
+            eventos.push({
+                id: p.id,
+                titulo: `Stock bajo: ${p.nombre}`,
+                fecha: new Date(),
+                tipo: 'Alerta',
+                stock: p.stock
+            })
+        })
+    
+    // Ordenar por fecha
+    eventos.sort((a, b) => a.fecha - b.fecha)
+    renderEventos(eventos)
 }
 
 function renderEventos(eventos) {
-    const container = document.querySelector('.agenda-items');
-    if (!container) return;
+    const container = document.querySelector('.agenda-items')
+    if (!container) return
     
     if (eventos.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 30px; color: #7a7568;">
                 No hay eventos próximos
             </div>
-        `;
-        return;
+        `
+        return
     }
     
-    container.innerHTML = eventos.map(e => {
-        const fecha = e.fecha;
-        const dia = fecha.getDate();
-        const mes = fecha.toLocaleString('es-CO', { month: 'short' }).toUpperCase();
+    container.innerHTML = eventos.slice(0, 3).map(e => {
+        const fecha = new Date(e.fecha)
+        const dia = fecha.getDate()
+        const mes = fecha.toLocaleString('es-CO', { month: 'short' }).toUpperCase()
         
-        let typeClass = 'type-task';
-        if (e.tipo === 'Alerta') typeClass = 'type-exam';
-        if (e.tipo === 'Entrega') typeClass = 'type-class';
+        let typeClass = 'type-task'
+        if (e.tipo === 'Alerta') typeClass = 'type-exam'
+        if (e.tipo === 'Entrega') typeClass = 'type-class'
         
-        let descripcion = '';
+        let descripcion = ''
         if (e.cliente) {
-            descripcion = `${e.cliente} · ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(e.total)}`;
+            descripcion = `${e.cliente} · ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(e.total)}`
         } else if (e.stock) {
-            descripcion = `Quedan ${e.stock} unidades`;
+            descripcion = `Quedan ${e.stock} unidades`
         }
         
         return `
-            <div class="agenda-item" onclick="verDetalleEvento('${e.tipo}', ${e.id})">
+            <div class="agenda-item" onclick="mostrarSeccion('pedidos')">
                 <div class="agenda-date">
                     <div class="agenda-day">${dia}</div>
                     <div class="agenda-mon">${mes}</div>
@@ -990,115 +1025,143 @@ function renderEventos(eventos) {
                     </div>
                 </div>
             </div>
-        `;
-    }).join("");
+        `
+    }).join("")
 }
 
 function actualizarNovedadesRecientes(pedidos, resenas, productos) {
-    const container = document.querySelector('.novedades-items');
-    if (!container) return;
+    const container = document.querySelector('.novedades-items')
+    if (!container) return
     
-    const novedades = [];
+    const novedades = []
     
     // 1. Nuevos pedidos (últimas 24 horas)
-    const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const nuevosPedidos = pedidos.filter(p => new Date(p.created_at) > hace24h);
-    nuevosPedidos.forEach(p => {
-        novedades.push({
-            tipo: 'pedido',
-            titulo: `Nuevo pedido #${p.id}`,
-            descripcion: `${p.usuario || 'Cliente'} · ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(p.total)}`,
-            fecha: new Date(p.created_at),
-            color: 'nov-blue',
-            id: p.id
-        });
-    });
+    const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000)
+    pedidos
+        .filter(p => new Date(p.created_at) > hace24h)
+        .forEach(p => {
+            novedades.push({
+                tipo: 'pedido',
+                titulo: `Nuevo pedido #${p.id}`,
+                descripcion: `${p.usuario || 'Cliente'} · ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(p.total)}`,
+                fecha: new Date(p.created_at),
+                color: 'nov-blue',
+                id: p.id
+            })
+        })
     
-    // 2. Reseñas recientes
-    resenas.forEach(r => {
-        novedades.push({
-            tipo: 'resena',
-            titulo: `Nueva reseña: ${r.producto}`,
-            descripcion: `${r.usuario} · ${'★'.repeat(r.calificacion)} (${r.likes} likes)`,
-            fecha: new Date(r.created_at),
-            color: 'nov-gold',
-            id: r.id
-        });
-    });
+    // 2. Reseñas recientes (últimos 3 días)
+    const hace3dias = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
+    resenas
+        .filter(r => new Date(r.created_at) > hace3dias)
+        .forEach(r => {
+            novedades.push({
+                tipo: 'resena',
+                titulo: `Nueva reseña: ${r.producto}`,
+                descripcion: `${r.usuario} · ${'★'.repeat(r.calificacion)} (${r.likes} likes)`,
+                fecha: new Date(r.created_at),
+                color: 'nov-gold',
+                id: r.id
+            })
+        })
     
     // 3. Stock bajo
-    const stockBajo = productos.filter(p => p.stock < 5);
-    stockBajo.forEach(p => {
-        novedades.push({
-            tipo: 'alerta',
-            titulo: `Stock crítico: ${p.nombre}`,
-            descripcion: `Quedan ${p.stock} unidades`,
-            fecha: new Date(),
-            color: 'nov-red',
-            id: p.id
-        });
-    });
+    productos
+        .filter(p => p.stock < 5)
+        .forEach(p => {
+            novedades.push({
+                tipo: 'alerta',
+                titulo: `Stock crítico: ${p.nombre}`,
+                descripcion: `Quedan ${p.stock} unidades`,
+                fecha: new Date(),
+                color: 'nov-red',
+                id: p.id
+            })
+        })
     
-    // Ordenar por fecha (más reciente primero)
-    novedades.sort((a, b) => b.fecha - a.fecha);
+    // Ordenar por fecha
+    novedades.sort((a, b) => b.fecha - a.fecha)
     
     // Mostrar las 5 más recientes
-    const recientes = novedades.slice(0, 5);
+    const recientes = novedades.slice(0, 5)
     
     if (recientes.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 30px; color: #7a7568;">
                 No hay novedades recientes
             </div>
-        `;
-        return;
+        `
+        return
     }
     
     container.innerHTML = recientes.map(n => {
-        const tiempo = calcularTiempoRelativo(n.fecha);
+        const tiempo = calcularTiempoRelativo(n.fecha)
         
         return `
-            <div class="novedad-item" onclick="verNovedad('${n.tipo}', ${n.id})">
+            <div class="novedad-item" onclick="irANovedad('${n.tipo}', ${n.id})">
                 <div class="nov-dot ${n.color}"></div>
                 <div class="nov-info">
                     <div class="nov-text"><strong>${n.titulo}:</strong> ${n.descripcion}</div>
                     <div class="nov-time">${tiempo}</div>
                 </div>
             </div>
-        `;
-    }).join("");
+        `
+    }).join("")
+}
+
+function actualizarNovedadesConSolicitudes(solicitudes) {
+    // Esta función complementa las novedades con solicitudes pendientes
+    const container = document.querySelector('.novedades-items')
+    if (!container) return
+    
+    // Las solicitudes se manejan aparte, pero podríamos agregarlas si hay espacio
+    if (solicitudes.length > 0) {
+        const novedadExtra = document.createElement('div')
+        novedadExtra.className = 'novedad-item'
+        novedadExtra.innerHTML = `
+            <div class="nov-dot nov-green"></div>
+            <div class="nov-info">
+                <div class="nov-text"><strong>Solicitudes pendientes:</strong> ${solicitudes.length} por revisar</div>
+                <div class="nov-time">Requiere atención</div>
+            </div>
+        `
+        novedadExtra.onclick = () => mostrarSeccion('invitaciones')
+        container.appendChild(novedadExtra)
+    }
 }
 
 function actualizarBannerInfo(usuario, stats) {
-    document.getElementById("adminNombreBanner").textContent = usuario.nombre || 'Admin';
-    document.getElementById("adminRolBanner").textContent = 
-        usuario.rol === 'superadmin' ? 'Super Administrador · Panel de Control' : 'Administrador · Panel de Control';
+    const nombreBanner = document.getElementById("adminNombreBanner")
+    if (nombreBanner) nombreBanner.textContent = usuario.nombre || 'Admin'
+    
+    const rolBanner = document.getElementById("adminRolBanner")
+    if (rolBanner) {
+        rolBanner.textContent = usuario.rol === 'superadmin' 
+            ? 'Super Administrador · Panel de Control' 
+            : 'Administrador · Panel de Control'
+    }
 }
 
-// ============================================
-// FUNCIONES AUXILIARES
-// ============================================
-
 function calcularTiempoRelativo(fecha) {
-    const ahora = new Date();
-    const diffMs = ahora - fecha;
-    const diffMin = Math.round(diffMs / (1000 * 60));
-    const diffHoras = Math.round(diffMs / (1000 * 60 * 60));
-    const diffDias = Math.round(diffMs / (1000 * 60 * 60 * 24));
+    const ahora = new Date()
+    const diffMs = ahora - fecha
+    const diffMin = Math.round(diffMs / (1000 * 60))
+    const diffHoras = Math.round(diffMs / (1000 * 60 * 60))
+    const diffDias = Math.round(diffMs / (1000 * 60 * 60 * 24))
     
-    if (diffMin < 1) return 'Ahora mismo';
-    if (diffMin < 60) return `Hace ${diffMin} ${diffMin === 1 ? 'minuto' : 'minutos'}`;
-    if (diffHoras < 24) return `Hace ${diffHoras} ${diffHoras === 1 ? 'hora' : 'horas'}`;
-    if (diffDias < 7) return `Hace ${diffDias} ${diffDias === 1 ? 'día' : 'días'}`;
+    if (diffMin < 1) return 'Ahora mismo'
+    if (diffMin < 60) return `Hace ${diffMin} ${diffMin === 1 ? 'minuto' : 'minutos'}`
+    if (diffHoras < 24) return `Hace ${diffHoras} ${diffHoras === 1 ? 'hora' : 'horas'}`
+    if (diffDias < 7) return `Hace ${diffDias} ${diffDias === 1 ? 'día' : 'días'}`
     
-    return fecha.toLocaleDateString('es-CO');
+    return fecha.toLocaleDateString('es-CO')
 }
 
 function mostrarLoaderDashboard() {
-    let loader = document.getElementById('dashboard-loader');
+    let loader = document.getElementById('dashboard-loader')
     if (!loader) {
-        loader = document.createElement('div');
-        loader.id = 'dashboard-loader';
+        loader = document.createElement('div')
+        loader.id = 'dashboard-loader'
         loader.innerHTML = `
             <div style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.8); z-index:9999; display:flex; align-items:center; justify-content:center;">
                 <div style="text-align:center;">
@@ -1106,72 +1169,56 @@ function mostrarLoaderDashboard() {
                     <p style="margin-top:16px; color:#0d2247;">Cargando dashboard...</p>
                 </div>
             </div>
-        `;
-        document.body.appendChild(loader);
+        `
+        document.body.appendChild(loader)
     }
-    loader.style.display = 'block';
+    loader.style.display = 'flex'
 }
 
 function ocultarLoaderDashboard() {
-    const loader = document.getElementById('dashboard-loader');
-    if (loader) loader.style.display = 'none';
+    const loader = document.getElementById('dashboard-loader')
+    if (loader) loader.style.display = 'none'
 }
 
-// Funciones de navegación para eventos
-function verDetalleEvento(tipo, id) {
-    if (tipo === 'Entrega' || tipo === 'Pedido') {
-        mostrarSeccion('pedidos');
-        // Opcional: resaltar el pedido específico
-    } else if (tipo === 'Alerta') {
-        mostrarSeccion('productos');
-        // Opcional: resaltar el producto
-    }
-}
-
-function verNovedad(tipo, id) {
+function irANovedad(tipo, id) {
     if (tipo === 'pedido') {
-        mostrarSeccion('pedidos');
+        mostrarSeccion('pedidos')
     } else if (tipo === 'resena') {
-        mostrarSeccion('resenas');
+        mostrarSeccion('resenas')
     } else if (tipo === 'alerta') {
-        mostrarSeccion('productos');
+        mostrarSeccion('productos')
+    } else if (tipo === 'solicitud') {
+        mostrarSeccion('invitaciones')
     }
 }
-
-// Modificar la función cargarEstadisticas original
-const cargarEstadisticasOriginal = window.cargarEstadisticas;
-window.cargarEstadisticas = async function() {
-    await cargarDashboardReal();
-};
-
-// Llamar al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('seccion-dashboard').classList.contains('activo')) {
-        cargarDashboardReal();
-    }
-});
 
 // ============================================
 // FUNCIONES PARA HISTORIAL DE NOVEDADES
 // ============================================
 
-let paginaActualNovedades = 1;
-const itemsPorPagina = 10;
-let todasLasNovedades = [];
+let paginaActualNovedades = 1
+const itemsPorPagina = 10
+let todasLasNovedades = []
 
 async function cargarHistorialNovedades(pagina = 1) {
     try {
-        // Cargar todos los datos necesarios
-        const [pedidos, resenas, productos, solicitudes] = await Promise.all([
+        mostrarLoaderDashboard()
+        
+        const [pedidos, resenas, productos] = await Promise.all([
             fetch(API + "/pedidos", { headers: { "authorization": token } }).then(r => r.json()),
             fetch(API + "/resenas", { headers: { "authorization": token } }).then(r => r.json()),
-            fetch(API + "/productos", { headers: { "authorization": token } }).then(r => r.json()),
-            usuario.rol === "superadmin" 
-                ? fetch(API + "/solicitudes-cambio", { headers: { "authorization": token } }).then(r => r.json())
-                : Promise.resolve([])
-        ]);
+            fetch(API + "/productos", { headers: { "authorization": token } }).then(r => r.json())
+        ])
         
-        todasLasNovedades = [];
+        let solicitudes = []
+        if (usuario.rol === "superadmin") {
+            const solicitudesRes = await fetch(API + "/solicitudes-cambio", {
+                headers: { "authorization": token }
+            })
+            solicitudes = await solicitudesRes.json()
+        }
+        
+        todasLasNovedades = []
         
         // Agregar pedidos
         pedidos.forEach(p => {
@@ -1183,8 +1230,8 @@ async function cargarHistorialNovedades(pagina = 1) {
                 color: 'nov-blue',
                 id: p.id,
                 icono: '📦'
-            });
-        });
+            })
+        })
         
         // Agregar reseñas
         resenas.forEach(r => {
@@ -1196,8 +1243,8 @@ async function cargarHistorialNovedades(pagina = 1) {
                 color: 'nov-gold',
                 id: r.id,
                 icono: '⭐'
-            });
-        });
+            })
+        })
         
         // Agregar alertas de stock
         productos.filter(p => p.stock < 10).forEach(p => {
@@ -1209,8 +1256,8 @@ async function cargarHistorialNovedades(pagina = 1) {
                 color: 'nov-red',
                 id: p.id,
                 icono: '⚠️'
-            });
-        });
+            })
+        })
         
         // Agregar solicitudes (solo superadmin)
         if (usuario.rol === "superadmin") {
@@ -1223,35 +1270,37 @@ async function cargarHistorialNovedades(pagina = 1) {
                     color: 'nov-green',
                     id: s.id,
                     icono: '📝'
-                });
-            });
+                })
+            })
         }
         
-        // Ordenar por fecha (más reciente primero)
-        todasLasNovedades.sort((a, b) => b.fecha - a.fecha);
+        // Ordenar por fecha
+        todasLasNovedades.sort((a, b) => b.fecha - a.fecha)
         
-        mostrarPaginaNovedades(pagina);
+        ocultarLoaderDashboard()
+        mostrarPaginaNovedades(pagina)
         
     } catch (error) {
-        console.error("Error cargando historial:", error);
-        mostrarToast("Error al cargar historial de novedades", true);
+        console.error("Error cargando historial:", error)
+        ocultarLoaderDashboard()
+        mostrarToast("Error al cargar historial de novedades", true)
     }
 }
 
 function mostrarPaginaNovedades(pagina) {
-    const container = document.getElementById('historialNovedades');
-    if (!container) return;
+    const container = document.getElementById('historialNovedades')
+    if (!container) return
     
-    const filtro = document.getElementById('filtroNovedades')?.value || 'todas';
+    const filtro = document.getElementById('filtroNovedades')?.value || 'todas'
     
-    let novedadesFiltradas = todasLasNovedades;
+    let novedadesFiltradas = todasLasNovedades
     if (filtro !== 'todas') {
-        novedadesFiltradas = todasLasNovedades.filter(n => n.tipo === filtro);
+        novedadesFiltradas = todasLasNovedades.filter(n => n.tipo === filtro)
     }
     
-    const inicio = (pagina - 1) * itemsPorPagina;
-    const fin = inicio + itemsPorPagina;
-    const novedadesPagina = novedadesFiltradas.slice(inicio, fin);
+    const inicio = (pagina - 1) * itemsPorPagina
+    const fin = inicio + itemsPorPagina
+    const novedadesPagina = novedadesFiltradas.slice(inicio, fin)
     
     if (novedadesPagina.length === 0) {
         container.innerHTML = `
@@ -1261,9 +1310,9 @@ function mostrarPaginaNovedades(pagina) {
                 </svg>
                 <p style="margin-top:16px;">No hay novedades para mostrar</p>
             </div>
-        `;
-        document.getElementById('paginaActualNovedades').textContent = 'Página 0';
-        return;
+        `
+        document.getElementById('paginaActualNovedades').textContent = 'Página 0'
+        return
     }
     
     container.innerHTML = novedadesPagina.map(n => {
@@ -1273,7 +1322,7 @@ function mostrarPaginaNovedades(pagina) {
             day: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
-        });
+        })
         
         return `
             <div class="novedad-historial-item" onclick="irANovedad('${n.tipo}', ${n.id})">
@@ -1285,180 +1334,55 @@ function mostrarPaginaNovedades(pagina) {
                 </div>
                 <div class="novedad-tipo-badge tipo-${n.tipo}">${n.tipo}</div>
             </div>
-        `;
-    }).join('');
+        `
+    }).join('')
     
-    document.getElementById('paginaActualNovedades').textContent = `Página ${pagina}`;
+    const paginaActualEl = document.getElementById('paginaActualNovedades')
+    if (paginaActualEl) {
+        paginaActualEl.textContent = `Página ${pagina}`
+    }
 }
 
 function filtrarNovedades() {
-    mostrarPaginaNovedades(1);
+    mostrarPaginaNovedades(1)
 }
 
 function cargarPaginaNovedades(direccion) {
-    const filtro = document.getElementById('filtroNovedades')?.value || 'todas';
-    let novedadesFiltradas = todasLasNovedades;
+    const filtro = document.getElementById('filtroNovedades')?.value || 'todas'
+    let novedadesFiltradas = todasLasNovedades
     if (filtro !== 'todas') {
-        novedadesFiltradas = todasLasNovedades.filter(n => n.tipo === filtro);
+        novedadesFiltradas = todasLasNovedades.filter(n => n.tipo === filtro)
     }
     
-    const totalPaginas = Math.ceil(novedadesFiltradas.length / itemsPorPagina);
+    const totalPaginas = Math.ceil(novedadesFiltradas.length / itemsPorPagina)
     
     if (direccion === 'siguiente' && paginaActualNovedades < totalPaginas) {
-        paginaActualNovedades++;
+        paginaActualNovedades++
     } else if (direccion === 'anterior' && paginaActualNovedades > 1) {
-        paginaActualNovedades--;
+        paginaActualNovedades--
     }
     
-    mostrarPaginaNovedades(paginaActualNovedades);
+    mostrarPaginaNovedades(paginaActualNovedades)
 }
 
-function irANovedad(tipo, id) {
-    if (tipo === 'pedido') {
-        mostrarSeccion('pedidos');
-    } else if (tipo === 'resena') {
-        mostrarSeccion('resenas');
-    } else if (tipo === 'alerta') {
-        mostrarSeccion('productos');
-    } else if (tipo === 'solicitud') {
-        mostrarSeccion('invitaciones');
+// Inicialización
+document.addEventListener('DOMContentLoaded', function() {
+    // Actualizar avatar en topbar si existe
+    const avatarSmall = document.getElementById("adminAvatarSmall")
+    if (avatarSmall) {
+        avatarSmall.textContent = usuario.nombre.charAt(0).toUpperCase()
     }
-}
+    
+    const nombreSmall = document.getElementById("adminNombreSmall")
+    if (nombreSmall) {
+        nombreSmall.textContent = usuario.nombre || 'Admin'
+    }
+    
+    // Si estamos en dashboard, cargar datos reales
+    if (document.getElementById("seccion-dashboard")?.classList.contains("activo")) {
+        cargarDashboardReal()
+    }
+})
 
-// CSS para el historial de novedades
-const novedadesHistorialCSS = `
-.novedad-historial-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-soft);
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.novedad-historial-item:hover {
-    background: var(--cream);
-}
-
-.novedad-icono {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-.novedad-icono.nov-blue {
-    background: #e8f0fb;
-    color: #2560a8;
-}
-
-.novedad-icono.nov-gold {
-    background: #faf0d8;
-    color: #b8922a;
-}
-
-.novedad-icono.nov-red {
-    background: #fdecea;
-    color: #c0392b;
-}
-
-.novedad-icono.nov-green {
-    background: #e4f5ec;
-    color: #1e7d4e;
-}
-
-.novedad-contenido {
-    flex: 1;
-}
-
-.novedad-titulo {
-    font-weight: 600;
-    color: var(--navy);
-    margin-bottom: 4px;
-}
-
-.novedad-descripcion {
-    font-size: 13px;
-    color: var(--gray);
-    margin-bottom: 4px;
-}
-
-.novedad-fecha {
-    font-size: 11px;
-    color: var(--gray-light);
-    font-family: 'JetBrains Mono', monospace;
-}
-
-.novedad-tipo-badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: 'JetBrains Mono', monospace;
-    text-transform: uppercase;
-}
-
-.tipo-pedido {
-    background: #e8f0fb;
-    color: #2560a8;
-}
-
-.tipo-resena {
-    background: #faf0d8;
-    color: #b8922a;
-}
-
-.tipo-alerta {
-    background: #fdecea;
-    color: #c0392b;
-}
-
-.tipo-solicitud {
-    background: #e4f5ec;
-    color: #1e7d4e;
-}
-
-.btn-pagination {
-    padding: 8px 16px;
-    border: 1px solid var(--border-soft);
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 12px;
-}
-
-.btn-pagination:hover {
-    background: var(--cream);
-    border-color: var(--mid-blue);
-    color: var(--mid-blue);
-}
-
-body.dark .novedad-historial-item:hover {
-    background: #0f172a;
-}
-
-body.dark .novedad-titulo {
-    color: #f1f5f9;
-}
-
-body.dark .btn-pagination {
-    background: #1e293b;
-    border-color: #334155;
-    color: #cbd5e1;
-}
-
-body.dark .btn-pagination:hover {
-    background: #2560a8;
-    border-color: #3b82f6;
-    color: white;
-}
-`;
-
-// Cargar dashboard al iniciar
-cargarEstadisticas()
+// Sobrescribir función original para usar la nueva
+window.cargarEstadisticas = cargarDashboardReal
