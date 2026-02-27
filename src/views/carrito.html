@@ -52,6 +52,59 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modalDireccion">
+    <div class="modal" style="max-width:540px; max-height:90vh; overflow-y:auto">
+        <h3>Datos de envío</h3>
+
+        <div style="display:flex; gap:0.75rem; margin-bottom:1rem">
+            <button class="btn-tipo-envio activo" id="btnNacional" onclick="cambiarTipoEnvio('nacional')">🚚 Nacional</button>
+            <button class="btn-tipo-envio" id="btnLocal" onclick="cambiarTipoEnvio('local')">🏠 Local</button>
+        </div>
+
+        <div class="form-group">
+            <label>Nombre del destinatario</label>
+            <input type="text" id="envDestinatario" placeholder="Nombre completo">
+        </div>
+        <div class="form-group">
+            <label>Cédula</label>
+            <input type="text" id="envCedula" placeholder="Número de cédula">
+        </div>
+        <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" id="envTelefono" placeholder="Número de contacto">
+        </div>
+
+        <div id="camposNacional">
+            <div class="form-group">
+                <label>Departamento</label>
+                <input type="text" id="envDepartamento" placeholder="Ej: Valle del Cauca">
+            </div>
+            <div class="form-group">
+                <label>Ciudad / Municipio</label>
+                <input type="text" id="envCiudad" placeholder="Ej: Cali">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Barrio</label>
+            <input type="text" id="envBarrio" placeholder="Nombre del barrio">
+        </div>
+        <div class="form-group">
+            <label>Dirección</label>
+            <input type="text" id="envDireccion" placeholder="Ej: Calle 5 # 10-20">
+        </div>
+        <div class="form-group">
+            <label>Indicaciones adicionales <span style="color:#aaa;font-weight:400">(opcional)</span></label>
+            <textarea id="envIndicaciones" rows="2" placeholder="Ej: Casa azul, portón negro..."></textarea>
+        </div>
+
+        <div class="modal-botones" style="gap:0.75rem">
+            <button class="btn-cancelar" id="btnCancelarDireccion">Cancelar</button>
+            <button class="btn-checkout" style="flex:1" onclick="confirmarPedido()">Confirmar pedido</button>
+        </div>
+    </div>
+</div>
+
     <script src="/src/js/darkmode.js"></script>
     <script src="/src/js/carrito.js"></script>
 </body>

@@ -287,12 +287,28 @@ async function cargarPedidos() {
     tbody.innerHTML = ""
 
     pedidos.forEach(function(p) {
+        const direccionCompleta = p.tipo_envio === "nacional"
+            ? `${p.direccion}, ${p.barrio}, ${p.ciudad}, ${p.departamento}`
+            : `${p.direccion}, ${p.barrio}`
+
         const tr = document.createElement("tr")
         tr.innerHTML = `
             <td>#${p.id}</td>
-            <td>${p.usuario}</td>
+            <td>
+                <div>${p.usuario}</div>
+                <div style="font-size:0.75rem;color:#888">${p.email_usuario}</div>
+            </td>
             <td>$${Number(p.total).toLocaleString()}</td>
             <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
+            <td>
+                <div style="font-size:0.8rem">
+                    <div><b>${p.destinatario || '-'}</b> · CC: ${p.cedula || '-'}</div>
+                    <div>📞 ${p.telefono || '-'}</div>
+                    <div>📍 ${p.direccion ? direccionCompleta : 'Sin dirección'}</div>
+                    ${p.indicaciones ? `<div style="color:#888">💬 ${p.indicaciones}</div>` : ''}
+                    <div style="margin-top:2px"><span class="badge ${p.tipo_envio === 'nacional' ? 'badge-enviado' : 'badge-entregado'}">${p.tipo_envio || 'nacional'}</span></div>
+                </div>
+            </td>
             <td>${new Date(p.created_at).toLocaleDateString()}</td>
             <td>
                 <select class="select-estado" onchange="cambiarEstadoPedido(${p.id}, this.value)">

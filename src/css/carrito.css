@@ -267,3 +267,71 @@ body.dark .carrito-resumen { background: #141414; border-color: rgba(255,255,255
 body.dark .carrito-resumen h2 { color: #fff; border-bottom-color: rgba(255,255,255,0.06); }
 body.dark .resumen-linea { color: #555; }
 body.dark .resumen-total { color: #fff; border-top-color: rgba(255,255,255,0.06); }
+.btn-tipo-envio {
+    flex: 1;
+    padding: 10px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #555;
+}
+
+.btn-tipo-envio.activo {
+    background: linear-gradient(135deg, #6366f1, #2563eb);
+    border-color: transparent;
+    color: #fff;
+}
+
+#modalDireccion .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+}
+
+#modalDireccion label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+#modalDireccion input,
+#modalDireccion textarea {
+    padding: 10px 14px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #111;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s;
+    resize: none;
+}
+
+#modalDireccion input:focus,
+#modalDireccion textarea:focus {
+    border-color: #6366f1;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+}
+
+body.dark #modalDireccion input,
+body.dark #modalDireccion textarea {
+    background: #1a1a1a;
+    border-color: rgba(255,255,255,0.08);
+    color: #e2e8f0;
+}
+
+body.dark #modalDireccion label { color: #888; }
+body.dark .btn-tipo-envio {
+    background: #1a1a1a;
+    border-color: rgba(255,255,255,0.08);
+    color: #888;
+}

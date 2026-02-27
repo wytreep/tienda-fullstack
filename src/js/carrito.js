@@ -124,7 +124,7 @@ function cargarCarrito() {
             <span>Total</span>
             <span>$${subtotal.toLocaleString()}</span>
         </div>
-        <button class="btn-checkout" onclick="realizarPedido()">Realizar pedido</button>
+        <button class="btn-checkout" onclick="abrirModalDireccion()">Confirmar pedido</button>
         <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar carrito</button>
     `
 }
@@ -167,33 +167,80 @@ function vaciarCarrito() {
     cargarCarrito()
 }
 
-async function realizarPedido() {
+let tipoEnvioSeleccionado = "nacional"
+
+function cambiarTipoEnvio(tipo) {
+    tipoEnvioSeleccionado = tipo
+    document.getElementById("btnNacional").classList.toggle("activo", tipo === "nacional")
+    document.getElementById("btnLocal").classList.toggle("activo", tipo === "local")
+    document.getElementById("camposNacional").style.display = tipo === "nacional" ? "block" : "none"
+}
+
+function abrirModalDireccion() {
     const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
     if (carrito.length === 0) return
+    document.getElementById("modalDireccion").classList.add("activo")
+}
 
+document.getElementById("btnCancelarDireccion").addEventListener("click", function() {
+    document.getElementById("modalDireccion").classList.remove("activo")
+})
+
+async function confirmarPedido() {
+    const destinatario = document.getElementById("envDestinatario").value.trim()
+    const cedula = document.getElementById("envCedula").value.trim()
+    const telefono = document.getElementById("envTelefono").value.trim()
+    const barrio = document.getElementById("envBarrio").value.trim()
+    const direccion = document.getElementById("envDireccion").value.trim()
+    const indicaciones = document.getElementById("envIndicaciones").value.trim()
+    const departamento = tipoEnvioSeleccionado === "nacional" ? document.getElementById("envDepartamento").value.trim() : ""
+    const ciudad = tipoEnvioSeleccionado === "nacional" ? document.getElementById("envCiudad").value.trim() : ""
+
+    if (!destinatario || !cedula || !telefono || !barrio || !direccion) {
+        mostrarToast("Completa todos los campos obligatorios", true)
+        return
+    }
+
+    if (tipoEnvioSeleccionado === "nacional" && (!departamento || !ciudad)) {
+        mostrarToast("Completa departamento y ciudad", true)
+        return
+    }
+
+    const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
     const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0)
 
-    try {
-        const respuesta = await fetch(API + "/pedidos", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "authorization": token
-            },
-            body: JSON.stringify({ items: carrito, total })
+    const respuesta = await fetch(API + "/pedidos", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({
+            items: carrito,
+            total,
+            tipo_envio: tipoEnvioSeleccionado,
+            destinatario,
+            cedula,
+            telefono,
+            departamento,
+            ciudad,
+            barrio,
+            direccion,
+            indicaciones
         })
+    })
 
-        if (respuesta.ok) {
-            mostrarToast("✓ Pedido realizado. ¡Gracias por tu compra!")
-            setTimeout(function() {
-                localStorage.removeItem("carrito")
-                cargarCarrito()
-            }, 1500)
-        } else {
-            mostrarToast("Error al realizar el pedido")
-        }
-    } catch (error) {
-        mostrarToast("Error al conectar con el servidor")
+    const datos = await respuesta.json()
+
+    if (respuesta.ok) {
+        localStorage.setItem("carrito", "[]")
+        document.getElementById("modalDireccion").classList.remove("activo")
+        mostrarToast("✓ Pedido realizado correctamente")
+        setTimeout(function() {
+            window.location.href = "/src/views/mis-pedidos.html"
+        }, 1500)
+    } else {
+        mostrarToast(datos.error, true)
     }
 }
 function actualizarContador(carrito) {
