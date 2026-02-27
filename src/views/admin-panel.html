@@ -68,33 +68,33 @@
         <div class="admin-content"> <!-- Clase original -->
 
             <!-- DASHBOARD - Sección con IDs originales -->
-<!-- ===== NUEVO DASHBOARD COMPLETO ===== -->
+<!-- ===== DASHBOARD COMPLETO CON DATOS REALES ===== -->
 <section id="seccion-dashboard" class="seccion activo">
 
-    <!-- BANNER DE BIENVENIDA (como el de UNIVIRTUAL) -->
+    <!-- BANNER DE BIENVENIDA CON DATOS REALES -->
     <div class="welcome-banner">
         <div class="welcome-text">
             <div class="welcome-greeting">Bienvenido de nuevo</div>
-            <div class="welcome-name">Admin <em id="adminNombreBanner">Edwin</em></div>
-            <div class="welcome-sub" id="adminRolBanner">Super Administrador · Panel de Control</div>
+            <div class="welcome-name">Admin <em id="adminNombreBanner">Cargando...</em></div>
+            <div class="welcome-sub" id="adminRolBanner">Cargando...</div>
         </div>
         <div class="welcome-stats">
             <div class="welcome-stat">
-                <div class="ws-number" id="bannerProductos">4</div>
+                <div class="ws-number" id="bannerProductos">0</div>
                 <div class="ws-label">Productos</div>
             </div>
             <div class="welcome-stat">
-                <div class="ws-number" id="bannerPedidos">9</div>
+                <div class="ws-number" id="bannerPedidos">0</div>
                 <div class="ws-label">Pedidos</div>
             </div>
             <div class="welcome-stat">
-                <div class="ws-number" id="bannerUsuarios">4</div>
+                <div class="ws-number" id="bannerUsuarios">0</div>
                 <div class="ws-label">Usuarios</div>
             </div>
         </div>
     </div>
 
-    <!-- STAT CARDS MEJORADAS (con iconos y colores) -->
+    <!-- STAT CARDS CON MÉTRICAS REALES -->
     <div class="stats-grid-modern">
         <div class="stat-card-modern" onclick="mostrarSeccion('productos', event)">
             <div class="stat-icon-wrapper blue">
@@ -103,9 +103,9 @@
                 </svg>
             </div>
             <div class="stat-content">
-                <div class="stat-value" id="statProductos">4</div>
+                <div class="stat-value" id="statProductos">0</div>
                 <div class="stat-label">Productos en catálogo</div>
-                <div class="stat-trend positive">↑ 2 este mes</div>
+                <div class="stat-trend positive" id="trendProductos">Cargando...</div>
             </div>
         </div>
 
@@ -116,9 +116,9 @@
                 </svg>
             </div>
             <div class="stat-content">
-                <div class="stat-value" id="statPedidos">9</div>
+                <div class="stat-value" id="statPedidos">0</div>
                 <div class="stat-label">Pedidos totales</div>
-                <div class="stat-trend neutral" id="pedidosPendientes">3 pendientes</div>
+                <div class="stat-trend neutral" id="pedidosPendientes">Cargando...</div>
             </div>
         </div>
 
@@ -129,9 +129,9 @@
                 </svg>
             </div>
             <div class="stat-content">
-                <div class="stat-value" id="statUsuarios">4</div>
+                <div class="stat-value" id="statUsuarios">0</div>
                 <div class="stat-label">Usuarios registrados</div>
-                <div class="stat-trend positive">+1 esta semana</div>
+                <div class="stat-trend positive" id="trendUsuarios">Cargando...</div>
             </div>
         </div>
 
@@ -142,95 +142,40 @@
                 </svg>
             </div>
             <div class="stat-content">
-                <div class="stat-value" id="statVentas">$9.108.600</div>
+                <div class="stat-value" id="statVentas">$0</div>
                 <div class="stat-label">Total ventas</div>
-                <div class="stat-trend positive" id="ventasMes">+32% este mes</div>
+                <div class="stat-trend positive" id="ventasMes">Cargando...</div>
             </div>
         </div>
     </div>
 
-    <!-- GRID PRINCIPAL (2 columnas como UNIVIRTUAL) -->
+    <!-- GRID PRINCIPAL 2 COLUMNAS -->
     <div class="dashboard-grid">
 
         <!-- COLUMNA IZQUIERDA -->
         <div class="grid-left">
 
-            <!-- PRODUCTOS MÁS VENDIDOS (como "Mis Materias") -->
+            <!-- PRODUCTOS MÁS VENDIDOS (DESDE DB) -->
             <div class="card-elegant">
                 <div class="card-header-elegant">
                     <div class="card-title">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                         </svg>
-                        Productos más vendidos — 2026
+                        Productos más vendidos
                     </div>
                     <a class="card-action" href="#" onclick="mostrarSeccion('productos', event)">Ver todos →</a>
                 </div>
-                <div class="card-body" id="topProductosContainer">
-                    <!-- Producto 1 -->
-                    <div class="materia-item" onclick="editarProducto(1)">
-                        <div class="materia-color" style="background:#2560a8;"></div>
-                        <div class="materia-info">
-                            <div class="materia-name">Camiseta Deportiva</div>
-                            <div class="materia-prof">156 ventas · Stock: 45</div>
-                        </div>
-                        <div class="materia-right">
-                            <div class="materia-progress-wrap">
-                                <div class="materia-progress" style="width:85%; background:#2560a8;"></div>
-                            </div>
-                            <div class="materia-pct">$3.120.000</div>
-                            <span class="materia-badge badge-pending">+15%</span>
-                        </div>
-                    </div>
-                    <!-- Producto 2 -->
-                    <div class="materia-item" onclick="editarProducto(2)">
-                        <div class="materia-color" style="background:#1e7d4e;"></div>
-                        <div class="materia-info">
-                            <div class="materia-name">Zapatillas Running</div>
-                            <div class="materia-prof">98 ventas · Stock: 23</div>
-                        </div>
-                        <div class="materia-right">
-                            <div class="materia-progress-wrap">
-                                <div class="materia-progress" style="width:65%; background:#1e7d4e;"></div>
-                            </div>
-                            <div class="materia-pct">$4.900.000</div>
-                            <span class="materia-badge badge-ok">+8%</span>
-                        </div>
-                    </div>
-                    <!-- Producto 3 -->
-                    <div class="materia-item" onclick="editarProducto(3)">
-                        <div class="materia-color" style="background:#b8922a;"></div>
-                        <div class="materia-info">
-                            <div class="materia-name">Smartphone X10</div>
-                            <div class="materia-prof">45 ventas · Stock: 12</div>
-                        </div>
-                        <div class="materia-right">
-                            <div class="materia-progress-wrap">
-                                <div class="materia-progress" style="width:45%; background:#b8922a;"></div>
-                            </div>
-                            <div class="materia-pct">$22.500.000</div>
-                            <span class="materia-badge badge-pending">+25%</span>
-                        </div>
-                    </div>
-                    <!-- Producto 4 -->
-                    <div class="materia-item" onclick="editarProducto(4)">
-                        <div class="materia-color" style="background:#7d3c98;"></div>
-                        <div class="materia-info">
-                            <div class="materia-name">Auriculares Bluetooth</div>
-                            <div class="materia-prof">32 ventas · Stock: 18</div>
-                        </div>
-                        <div class="materia-right">
-                            <div class="materia-progress-wrap">
-                                <div class="materia-progress" style="width:32%; background:#7d3c98;"></div>
-                            </div>
-                            <div class="materia-pct">$1.280.000</div>
-                            <span class="materia-badge badge-ok">+5%</span>
-                        </div>
+                <div class="card-body" id="topProductosContainer" style="padding:0;">
+                    <!-- Se llena con JS -->
+                    <div style="text-align:center; padding:40px;">
+                        <div style="width:40px; height:40px; border:3px solid #f3f3f3; border-top:3px solid #2560a8; border-radius:50%; animation:spin 1s linear infinite; margin:0 auto;"></div>
+                        <p style="margin-top:16px; color:#7a7568;">Cargando productos...</p>
                     </div>
                 </div>
             </div>
 
-            <!-- PEDIDOS RECIENTES (tabla mejorada) -->
+            <!-- PEDIDOS RECIENTES (DESDE DB) -->
             <div class="card-elegant">
                 <div class="card-header-elegant">
                     <div class="card-title">
@@ -254,39 +199,9 @@
                         </thead>
                         <tbody id="tbodyPedidosRecientes">
                             <tr>
-                                <td>#9</td>
-                                <td>Edwin</td>
-                                <td>$36.000</td>
-                                <td><span class="badge badge-pendiente">PENDIENTE</span></td>
-                                <td>26/2/2026</td>
-                            </tr>
-                            <tr>
-                                <td>#8</td>
-                                <td>Jai</td>
-                                <td>$1.500.300</td>
-                                <td><span class="badge badge-pendiente">PENDIENTE</span></td>
-                                <td>26/2/2026</td>
-                            </tr>
-                            <tr>
-                                <td>#7</td>
-                                <td>Rr</td>
-                                <td>$12.000</td>
-                                <td><span class="badge badge-cancelado">CANCELADO</span></td>
-                                <td>24/2/2026</td>
-                            </tr>
-                            <tr>
-                                <td>#6</td>
-                                <td>Rr</td>
-                                <td>$24.000</td>
-                                <td><span class="badge badge-cancelado">CANCELADO</span></td>
-                                <td>24/2/2026</td>
-                            </tr>
-                            <tr>
-                                <td>#5</td>
-                                <td>Edwin</td>
-                                <td>$2.400.000</td>
-                                <td><span class="badge badge-pendiente">PENDIENTE</span></td>
-                                <td>24/2/2026</td>
+                                <td colspan="5" style="text-align:center; padding:30px;">
+                                    <div style="width:30px; height:30px; border:2px solid #f3f3f3; border-top:2px solid #2560a8; border-radius:50%; animation:spin 1s linear infinite; margin:0 auto;"></div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -298,7 +213,7 @@
         <!-- COLUMNA DERECHA -->
         <div class="grid-right">
 
-            <!-- PROGRESO DEL MES (como el anillo de UNIVIRTUAL) -->
+            <!-- PROGRESO DEL MES (CON DATOS REALES) -->
             <div class="card-elegant">
                 <div class="card-header-elegant">
                     <div class="card-title">
@@ -314,10 +229,10 @@
                             <svg width="120" height="120" viewBox="0 0 120 120">
                                 <circle cx="60" cy="60" r="50" fill="none" stroke="#e8eef6" stroke-width="10"/>
                                 <circle cx="60" cy="60" r="50" fill="none" stroke="#2560a8" stroke-width="10"
-                                    stroke-dasharray="314" stroke-dashoffset="94" stroke-linecap="round"/>
+                                    stroke-dasharray="314" stroke-dashoffset="94" stroke-linecap="round" id="progresoRing"/>
                             </svg>
                             <div class="ring-center">
-                                <div class="ring-pct">70%</div>
+                                <div class="ring-pct">0%</div>
                                 <div class="ring-label">meta</div>
                             </div>
                         </div>
@@ -325,24 +240,24 @@
                             <div class="legend-item">
                                 <div class="legend-dot" style="background:#2560a8;"></div>
                                 Ventas del mes
-                                <span class="legend-val">$6.3M</span>
+                                <span class="legend-val">$0</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-dot" style="background:#1e7d4e;"></div>
                                 Pedidos completados
-                                <span class="legend-val">12/18</span>
+                                <span class="legend-val">0/0</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-dot" style="background:#b8922a;"></div>
                                 Meta mensual
-                                <span class="legend-val">$9M</span>
+                                <span class="legend-val">$0</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- PRÓXIMOS EVENTOS (como Agenda en UNIVIRTUAL) -->
+            <!-- PRÓXIMOS EVENTOS (DESDE DB) -->
             <div class="card-elegant">
                 <div class="card-header-elegant">
                     <div class="card-title">
@@ -351,52 +266,17 @@
                         </svg>
                         Próximos Eventos
                     </div>
-                    <a class="card-action" href="#">Ver agenda →</a>
+                    <a class="card-action" href="#" onclick="mostrarSeccion('pedidos', event)">Ver todos →</a>
                 </div>
-                <div class="card-body">
-                    <div class="agenda-item">
-                        <div class="agenda-date">
-                            <div class="agenda-day">27</div>
-                            <div class="agenda-mon">Feb</div>
-                        </div>
-                        <div class="agenda-info">
-                            <div class="agenda-event">Entrega de pedidos #12-15</div>
-                            <div class="agenda-meta">
-                                <span class="agenda-type type-task">Envío</span>
-                                10:00 AM · Logística
-                            </div>
-                        </div>
-                    </div>
-                    <div class="agenda-item">
-                        <div class="agenda-date">
-                            <div class="agenda-day">28</div>
-                            <div class="agenda-mon">Feb</div>
-                        </div>
-                        <div class="agenda-info">
-                            <div class="agenda-event">Reunión con proveedores</div>
-                            <div class="agenda-meta">
-                                <span class="agenda-type type-class">Reunión</span>
-                                3:00 PM · Virtual
-                            </div>
-                        </div>
-                    </div>
-                    <div class="agenda-item">
-                        <div class="agenda-date">
-                            <div class="agenda-day">01</div>
-                            <div class="agenda-mon">Mar</div>
-                        </div>
-                        <div class="agenda-info">
-                            <div class="agenda-event">Inventario mensual</div>
-                            <div class="agenda-meta">
-                                <span class="agenda-type type-exam">Importante</span>
-                                8:00 AM · Bodega
-                            </div>
-                        </div>
+                <div class="card-body agenda-items" style="padding:0;">
+                    <!-- Se llena con JS -->
+                    <div style="text-align:center; padding:30px;">
+                        <div style="width:30px; height:30px; border:2px solid #f3f3f3; border-top:2px solid #2560a8; border-radius:50%; animation:spin 1s linear infinite; margin:0 auto;"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- NOVEDADES RECIENTES -->
+            <!-- NOVEDADES RECIENTES (DESDE DB) -->
             <div class="card-elegant">
                 <div class="card-header-elegant">
                     <div class="card-title">
@@ -405,36 +285,12 @@
                         </svg>
                         Novedades Recientes
                     </div>
-                    <a class="card-action" href="#">Ver todas →</a>
+                    <a class="card-action" href="#" onclick="mostrarSeccion('novedades', event)">Ver historial →</a>
                 </div>
-                <div class="card-body">
-                    <div class="novedad-item">
-                        <div class="nov-dot nov-blue"></div>
-                        <div class="nov-info">
-                            <div class="nov-text"><strong>Pedido #12:</strong> Cliente solicitó cambio de talla</div>
-                            <div class="nov-time">Hace 2 horas</div>
-                        </div>
-                    </div>
-                    <div class="novedad-item">
-                        <div class="nov-dot nov-red"></div>
-                        <div class="nov-info">
-                            <div class="nov-text"><strong>Pago recibido:</strong> Transferencia de $1.500.300</div>
-                            <div class="nov-time">Hace 4 horas</div>
-                        </div>
-                    </div>
-                    <div class="novedad-item">
-                        <div class="nov-dot nov-gold"></div>
-                        <div class="nov-info">
-                            <div class="nov-text"><strong>Stock bajo:</strong> Smartphone X10 (quedan 12)</div>
-                            <div class="nov-time">Hace 1 día</div>
-                        </div>
-                    </div>
-                    <div class="novedad-item">
-                        <div class="nov-dot nov-green"></div>
-                        <div class="nov-info">
-                            <div class="nov-text"><strong>Reseña nueva:</strong> 5 estrellas para Camiseta</div>
-                            <div class="nov-time">Hace 2 días</div>
-                        </div>
+                <div class="card-body novedades-items" style="padding:0;">
+                    <!-- Se llena con JS -->
+                    <div style="text-align:center; padding:30px;">
+                        <div style="width:30px; height:30px; border:2px solid #f3f3f3; border-top:2px solid #2560a8; border-radius:50%; animation:spin 1s linear infinite; margin:0 auto;"></div>
                     </div>
                 </div>
             </div>
@@ -691,7 +547,43 @@
                     </div>
                 </div>
             </section>
-
+            <!-- NOVEDADES - Historial completo -->
+<section id="seccion-novedades" class="seccion">
+    <div class="card-elegant">
+        <div class="card-header-elegant">
+            <div class="card-title">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                Historial de Novedades
+            </div>
+            <div class="filtros-novedades">
+                <select id="filtroNovedades" class="select-estado" onchange="filtrarNovedades()">
+                    <option value="todas">Todas</option>
+                    <option value="pedido">Pedidos</option>
+                    <option value="resena">Reseñas</option>
+                    <option value="alerta">Alertas</option>
+                    <option value="solicitud">Solicitudes</option>
+                </select>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="historialNovedades" class="novedades-historial">
+                <!-- Se llena con JS -->
+                <div style="text-align:center; padding:40px;">
+                    <div style="width:40px; height:40px; border:3px solid #f3f3f3; border-top:3px solid #2560a8; border-radius:50%; animation:spin 1s linear infinite; margin:0 auto;"></div>
+                </div>
+            </div>
+            
+            <!-- Paginación -->
+            <div class="pagination" style="margin-top:20px; display:flex; justify-content:center; gap:8px;">
+                <button class="btn-pagination" onclick="cargarPaginaNovedades('anterior')">← Anterior</button>
+                <span id="paginaActualNovedades" style="padding:5px 10px;">Página 1</span>
+                <button class="btn-pagination" onclick="cargarPaginaNovedades('siguiente')">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+</section>
         </div><!-- fin admin-content -->
     </main>
 </div>
