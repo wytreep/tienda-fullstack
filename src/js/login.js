@@ -59,6 +59,11 @@ if (respuesta.ok) {
     localStorage.setItem("token", datos.token)
     localStorage.setItem("usuario", JSON.stringify(datos.usuario))
 
+    if (datos.usuario.rol === "admin" || datos.usuario.rol === "superadmin") {
+    mostrarToast("Usa el panel de administrador para iniciar sesión", true)
+    return
+}
+
     const recordar = document.getElementById("recordarme").checked
     if (recordar) {
         let cuentas = JSON.parse(localStorage.getItem("cuentas") || "[]")
