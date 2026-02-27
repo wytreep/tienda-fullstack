@@ -68,78 +68,409 @@
         <div class="admin-content"> <!-- Clase original -->
 
             <!-- DASHBOARD - Sección con IDs originales -->
-            <section id="seccion-dashboard" class="seccion activo"> <!-- IDs/clases originales -->
-                <div class="stats-grid"> <!-- Clase original -->
-                    <!-- Stats cards con IDs originales y onclick -->
-                    <div class="stat-card" onclick="mostrarSeccion('productos', event)">
-                        <div class="stat-icono">📦</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="statProductos">0</div> <!-- ID original -->
-                            <div class="stat-label">Productos</div> <!-- Clase original -->
+<!-- ===== NUEVO DASHBOARD COMPLETO ===== -->
+<section id="seccion-dashboard" class="seccion activo">
+
+    <!-- BANNER DE BIENVENIDA (como el de UNIVIRTUAL) -->
+    <div class="welcome-banner">
+        <div class="welcome-text">
+            <div class="welcome-greeting">Bienvenido de nuevo</div>
+            <div class="welcome-name">Admin <em id="adminNombreBanner">Edwin</em></div>
+            <div class="welcome-sub" id="adminRolBanner">Super Administrador · Panel de Control</div>
+        </div>
+        <div class="welcome-stats">
+            <div class="welcome-stat">
+                <div class="ws-number" id="bannerProductos">4</div>
+                <div class="ws-label">Productos</div>
+            </div>
+            <div class="welcome-stat">
+                <div class="ws-number" id="bannerPedidos">9</div>
+                <div class="ws-label">Pedidos</div>
+            </div>
+            <div class="welcome-stat">
+                <div class="ws-number" id="bannerUsuarios">4</div>
+                <div class="ws-label">Usuarios</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAT CARDS MEJORADAS (con iconos y colores) -->
+    <div class="stats-grid-modern">
+        <div class="stat-card-modern" onclick="mostrarSeccion('productos', event)">
+            <div class="stat-icon-wrapper blue">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-value" id="statProductos">4</div>
+                <div class="stat-label">Productos en catálogo</div>
+                <div class="stat-trend positive">↑ 2 este mes</div>
+            </div>
+        </div>
+
+        <div class="stat-card-modern" onclick="mostrarSeccion('pedidos', event)">
+            <div class="stat-icon-wrapper gold">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-value" id="statPedidos">9</div>
+                <div class="stat-label">Pedidos totales</div>
+                <div class="stat-trend neutral" id="pedidosPendientes">3 pendientes</div>
+            </div>
+        </div>
+
+        <div class="stat-card-modern" onclick="mostrarSeccion('usuarios', event)">
+            <div class="stat-icon-wrapper green">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-value" id="statUsuarios">4</div>
+                <div class="stat-label">Usuarios registrados</div>
+                <div class="stat-trend positive">+1 esta semana</div>
+            </div>
+        </div>
+
+        <div class="stat-card-modern" onclick="mostrarSeccion('ventas', event)">
+            <div class="stat-icon-wrapper red">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-value" id="statVentas">$9.108.600</div>
+                <div class="stat-label">Total ventas</div>
+                <div class="stat-trend positive" id="ventasMes">+32% este mes</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRID PRINCIPAL (2 columnas como UNIVIRTUAL) -->
+    <div class="dashboard-grid">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="grid-left">
+
+            <!-- PRODUCTOS MÁS VENDIDOS (como "Mis Materias") -->
+            <div class="card-elegant">
+                <div class="card-header-elegant">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                        Productos más vendidos — 2026
+                    </div>
+                    <a class="card-action" href="#" onclick="mostrarSeccion('productos', event)">Ver todos →</a>
+                </div>
+                <div class="card-body" id="topProductosContainer">
+                    <!-- Producto 1 -->
+                    <div class="materia-item" onclick="editarProducto(1)">
+                        <div class="materia-color" style="background:#2560a8;"></div>
+                        <div class="materia-info">
+                            <div class="materia-name">Camiseta Deportiva</div>
+                            <div class="materia-prof">156 ventas · Stock: 45</div>
+                        </div>
+                        <div class="materia-right">
+                            <div class="materia-progress-wrap">
+                                <div class="materia-progress" style="width:85%; background:#2560a8;"></div>
+                            </div>
+                            <div class="materia-pct">$3.120.000</div>
+                            <span class="materia-badge badge-pending">+15%</span>
                         </div>
                     </div>
-                    <div class="stat-card" onclick="mostrarSeccion('pedidos', event)">
-                        <div class="stat-icono">🛒</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="statPedidos">0</div> <!-- ID original -->
-                            <div class="stat-label">Pedidos</div>
+                    <!-- Producto 2 -->
+                    <div class="materia-item" onclick="editarProducto(2)">
+                        <div class="materia-color" style="background:#1e7d4e;"></div>
+                        <div class="materia-info">
+                            <div class="materia-name">Zapatillas Running</div>
+                            <div class="materia-prof">98 ventas · Stock: 23</div>
+                        </div>
+                        <div class="materia-right">
+                            <div class="materia-progress-wrap">
+                                <div class="materia-progress" style="width:65%; background:#1e7d4e;"></div>
+                            </div>
+                            <div class="materia-pct">$4.900.000</div>
+                            <span class="materia-badge badge-ok">+8%</span>
                         </div>
                     </div>
-                    <div class="stat-card" onclick="mostrarSeccion('usuarios', event)">
-                        <div class="stat-icono">👥</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="statUsuarios">0</div> <!-- ID original -->
-                            <div class="stat-label">Usuarios</div>
+                    <!-- Producto 3 -->
+                    <div class="materia-item" onclick="editarProducto(3)">
+                        <div class="materia-color" style="background:#b8922a;"></div>
+                        <div class="materia-info">
+                            <div class="materia-name">Smartphone X10</div>
+                            <div class="materia-prof">45 ventas · Stock: 12</div>
+                        </div>
+                        <div class="materia-right">
+                            <div class="materia-progress-wrap">
+                                <div class="materia-progress" style="width:45%; background:#b8922a;"></div>
+                            </div>
+                            <div class="materia-pct">$22.500.000</div>
+                            <span class="materia-badge badge-pending">+25%</span>
                         </div>
                     </div>
-                    <div class="stat-card" onclick="mostrarSeccion('ventas', event)">
-                        <div class="stat-icono">💰</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="statVentas">$0</div> <!-- ID original -->
-                            <div class="stat-label">Total ventas</div>
+                    <!-- Producto 4 -->
+                    <div class="materia-item" onclick="editarProducto(4)">
+                        <div class="materia-color" style="background:#7d3c98;"></div>
+                        <div class="materia-info">
+                            <div class="materia-name">Auriculares Bluetooth</div>
+                            <div class="materia-prof">32 ventas · Stock: 18</div>
+                        </div>
+                        <div class="materia-right">
+                            <div class="materia-progress-wrap">
+                                <div class="materia-progress" style="width:32%; background:#7d3c98;"></div>
+                            </div>
+                            <div class="materia-pct">$1.280.000</div>
+                            <span class="materia-badge badge-ok">+5%</span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Pedidos recientes - con IDs originales -->
-                <div class="seccion-header"> <!-- Clase original -->
-                    <h2>Pedidos recientes</h2>
-                    <button class="btn-primary" onclick="mostrarSeccion('pedidos', event)">Ver todos</button> <!-- Clase original -->
+            <!-- PEDIDOS RECIENTES (tabla mejorada) -->
+            <div class="card-elegant">
+                <div class="card-header-elegant">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        Pedidos Recientes
+                    </div>
+                    <a class="card-action" href="#" onclick="mostrarSeccion('pedidos', event)">Ver todos →</a>
                 </div>
-                <table class="admin-table"> <!-- Clase original -->
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Cliente</th>
-                            <th>Total</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbodyPedidosRecientes"></tbody> <!-- ID original -->
-                </table>
+                <div class="card-body" style="padding:0;">
+                    <table class="data-table-elegant">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyPedidosRecientes">
+                            <tr>
+                                <td>#9</td>
+                                <td>Edwin</td>
+                                <td>$36.000</td>
+                                <td><span class="badge badge-pendiente">PENDIENTE</span></td>
+                                <td>26/2/2026</td>
+                            </tr>
+                            <tr>
+                                <td>#8</td>
+                                <td>Jai</td>
+                                <td>$1.500.300</td>
+                                <td><span class="badge badge-pendiente">PENDIENTE</span></td>
+                                <td>26/2/2026</td>
+                            </tr>
+                            <tr>
+                                <td>#7</td>
+                                <td>Rr</td>
+                                <td>$12.000</td>
+                                <td><span class="badge badge-cancelado">CANCELADO</span></td>
+                                <td>24/2/2026</td>
+                            </tr>
+                            <tr>
+                                <td>#6</td>
+                                <td>Rr</td>
+                                <td>$24.000</td>
+                                <td><span class="badge badge-cancelado">CANCELADO</span></td>
+                                <td>24/2/2026</td>
+                            </tr>
+                            <tr>
+                                <td>#5</td>
+                                <td>Edwin</td>
+                                <td>$2.400.000</td>
+                                <td><span class="badge badge-pendiente">PENDIENTE</span></td>
+                                <td>24/2/2026</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                <!-- Acceso Rápido (nuevo, pero no interfiere) -->
-                <div style="margin-top:24px; display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
-                    <div class="quick-btn" onclick="mostrarSeccion('productos', event); mostrarFormProducto()">
-                        <span style="font-size:20px;">➕</span>
-                        <span>Nuevo Producto</span>
-                    </div>
-                    <div class="quick-btn" onclick="mostrarSeccion('pedidos', event)">
-                        <span style="font-size:20px;">📋</span>
-                        <span>Ver Pedidos</span>
-                    </div>
-                    <div class="quick-btn" onclick="mostrarSeccion('invitaciones', event)">
-                        <span style="font-size:20px;">📧</span>
-                        <span>Invitar Admin</span>
-                    </div>
-                    <div class="quick-btn" onclick="mostrarSeccion('configuracion', event)">
-                        <span style="font-size:20px;">⚙️</span>
-                        <span>Configuración</span>
+        </div><!-- fin grid-left -->
+
+        <!-- COLUMNA DERECHA -->
+        <div class="grid-right">
+
+            <!-- PROGRESO DEL MES (como el anillo de UNIVIRTUAL) -->
+            <div class="card-elegant">
+                <div class="card-header-elegant">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        Progreso del Mes
                     </div>
                 </div>
-            </section>
+                <div class="card-body">
+                    <div class="progress-section">
+                        <div class="ring-wrap">
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#e8eef6" stroke-width="10"/>
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#2560a8" stroke-width="10"
+                                    stroke-dasharray="314" stroke-dashoffset="94" stroke-linecap="round"/>
+                            </svg>
+                            <div class="ring-center">
+                                <div class="ring-pct">70%</div>
+                                <div class="ring-label">meta</div>
+                            </div>
+                        </div>
+                        <div class="progress-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background:#2560a8;"></div>
+                                Ventas del mes
+                                <span class="legend-val">$6.3M</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background:#1e7d4e;"></div>
+                                Pedidos completados
+                                <span class="legend-val">12/18</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background:#b8922a;"></div>
+                                Meta mensual
+                                <span class="legend-val">$9M</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- PRÓXIMOS EVENTOS (como Agenda en UNIVIRTUAL) -->
+            <div class="card-elegant">
+                <div class="card-header-elegant">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Próximos Eventos
+                    </div>
+                    <a class="card-action" href="#">Ver agenda →</a>
+                </div>
+                <div class="card-body">
+                    <div class="agenda-item">
+                        <div class="agenda-date">
+                            <div class="agenda-day">27</div>
+                            <div class="agenda-mon">Feb</div>
+                        </div>
+                        <div class="agenda-info">
+                            <div class="agenda-event">Entrega de pedidos #12-15</div>
+                            <div class="agenda-meta">
+                                <span class="agenda-type type-task">Envío</span>
+                                10:00 AM · Logística
+                            </div>
+                        </div>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="agenda-date">
+                            <div class="agenda-day">28</div>
+                            <div class="agenda-mon">Feb</div>
+                        </div>
+                        <div class="agenda-info">
+                            <div class="agenda-event">Reunión con proveedores</div>
+                            <div class="agenda-meta">
+                                <span class="agenda-type type-class">Reunión</span>
+                                3:00 PM · Virtual
+                            </div>
+                        </div>
+                    </div>
+                    <div class="agenda-item">
+                        <div class="agenda-date">
+                            <div class="agenda-day">01</div>
+                            <div class="agenda-mon">Mar</div>
+                        </div>
+                        <div class="agenda-info">
+                            <div class="agenda-event">Inventario mensual</div>
+                            <div class="agenda-meta">
+                                <span class="agenda-type type-exam">Importante</span>
+                                8:00 AM · Bodega
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOVEDADES RECIENTES -->
+            <div class="card-elegant">
+                <div class="card-header-elegant">
+                    <div class="card-title">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        Novedades Recientes
+                    </div>
+                    <a class="card-action" href="#">Ver todas →</a>
+                </div>
+                <div class="card-body">
+                    <div class="novedad-item">
+                        <div class="nov-dot nov-blue"></div>
+                        <div class="nov-info">
+                            <div class="nov-text"><strong>Pedido #12:</strong> Cliente solicitó cambio de talla</div>
+                            <div class="nov-time">Hace 2 horas</div>
+                        </div>
+                    </div>
+                    <div class="novedad-item">
+                        <div class="nov-dot nov-red"></div>
+                        <div class="nov-info">
+                            <div class="nov-text"><strong>Pago recibido:</strong> Transferencia de $1.500.300</div>
+                            <div class="nov-time">Hace 4 horas</div>
+                        </div>
+                    </div>
+                    <div class="novedad-item">
+                        <div class="nov-dot nov-gold"></div>
+                        <div class="nov-info">
+                            <div class="nov-text"><strong>Stock bajo:</strong> Smartphone X10 (quedan 12)</div>
+                            <div class="nov-time">Hace 1 día</div>
+                        </div>
+                    </div>
+                    <div class="novedad-item">
+                        <div class="nov-dot nov-green"></div>
+                        <div class="nov-info">
+                            <div class="nov-text"><strong>Reseña nueva:</strong> 5 estrellas para Camiseta</div>
+                            <div class="nov-time">Hace 2 días</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACCESO RÁPIDO -->
+            <div class="quick-access-grid">
+                <div class="quick-btn" onclick="mostrarFormProducto()">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                    <span>Nuevo Producto</span>
+                </div>
+                <div class="quick-btn" onclick="mostrarSeccion('pedidos', event)">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <span>Ver Pedidos</span>
+                </div>
+                <div class="quick-btn" onclick="generarInvitacion()">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Invitar Admin</span>
+                </div>
+                <div class="quick-btn" onclick="mostrarSeccion('configuracion', event)">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span>Configuración</span>
+                </div>
+            </div>
+
+        </div><!-- fin grid-right -->
+    </div><!-- fin dashboard-grid -->
+</section>
             <!-- VENTAS - Sección con IDs originales -->
             <section id="seccion-ventas" class="seccion"> <!-- ID original -->
                 <div class="stats-grid" style="margin-bottom:24px">
