@@ -310,16 +310,11 @@ async function cargarPedidos() {
 }
 
 async function cargarResenas() {
-        const respuesta = await fetch(API + "/resenas/" + productoId, {
-        headers: { "authorization": token }
-    })
-    const resenas = await respuesta.json()
-    console.log("Reseñas recibidas:", resenas)
-    console.log("Cantidad:", resenas.length)
+    
     const r = await fetch(API + "/resenas", {
         headers: { "authorization": token }
     })
-
+    const resenas = await r.json()
     const tbody = document.getElementById("tbodyResenas")
 
     if (!resenas.length) {

@@ -225,10 +225,13 @@ async function enviarResena() {
 }
 
 async function cargarResenas() {
-    const respuesta = await fetch(API + "/resenas/" + productoId, {
+        const respuesta = await fetch(API + "/resenas/" + productoId, {
         headers: { "authorization": token }
     })
     const resenas = await respuesta.json()
+    console.log("Reseñas recibidas:", resenas)
+    console.log("Cantidad:", resenas.length)
+
     const lista = document.getElementById("listaResenas")
 
     if (resenas.length === 0) {
