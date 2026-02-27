@@ -597,5 +597,173 @@ function mostrarToast(mensaje) {
     }, 3000)
 }
 
+// ===== FUNCIONES NUEVAS PARA EL DISEÑO UNIVIRTUAL =====
+
+// Actualizar estadísticas del dashboard con más detalles
+async function cargarEstadisticasCompletas() {
+    try {
+        const r = await fetch(API + "/estadisticas", {
+            headers: { "authorization": token }
+        });
+        const stats = await r.json();
+        
+        // Actualizar números principales
+        document.getElementById("statProductos").textContent = stats.productos;
+        document.getElementById("statPedidos").textContent = stats.pedidos;
+        document.getElementById("statUsuarios").textContent = stats.usuarios;
+        document.getElementById("statVentas").textContent = "$" + Number(stats.ventas).toLocaleString();
+        
+        // Calcular pedidos pendientes
+        const pedidosR = await fetch(API + "/pedidos", {
+            headers: { "authorization": token }
+        });
+        const pedidos = await pedidosR.json();
+        const pendientes = pedidos.filter(p => p.estado === "pendiente" || p.estado === "procesando").length;
+        document.getElementById("statPedidosPendientes").textContent = pendientes + " pendientes";
+        
+        // Ventas del mes (simulado - puedes ajustar con lógica real)
+        const ventasMes = Math.round(stats.ventas * 0.3); // 30% del total como ejemplo
+        document.getElementById("statVentasMes").textContent = "$" + ventasMes.toLocaleString() + " este mes";
+        
+        // Actualizar badge de pedidos en sidebar
+        if (pendientes > 0) {
+            const badge = document.getElementById("navPedidosBadge");
+            badge.textContent = pendientes;
+            badge.style.display = "inline";
+        }
+        
+        // Cargar top productos
+        await cargarTopProductos();
+        
+        // Actualizar progreso del mes
+        actualizarProgresoMes(stats);
+        
+    } catch (error) {
+        console.error("Error cargando estadísticas:", error);
+    }
+}
+
+// Cargar productos más vendidos (top 5)
+async function cargarTopProductos() {
+    try {
+        const r = await fetch(API + "/productos", {
+            headers: { "authorization": token }
+        });
+        const productos = await r.json();
+        
+        // Ordenar por ventas (asumiendo que tienes un campo ventas)
+        // Si no, usar stock como proxy o pedidos
+        const topProductos = productos.slice(0, 5).map((p, index) => {
+            const colores = ["#2560a8", "#1e7d4e", "#b8922a", "#7d3c98", "#c0392b"];
+            return {
+                ...p,
+                color: colores[index % colores.length],
+                progreso: Math.min(100, Math.round((p.stock / 100) * 100)) // Ejemplo
+            };
+        });
+        
+        const container = document.getElementById("topProductos");
+        if (!container) return;
+        
+        container.innerHTML = topProductos.map(p => `
+            <div class="materia-item" onclick="editarProducto(${p.id})" style="cursor:pointer;">
+                <div class="materia-color" style="background:${p.color};"></div>
+                <div class="materia-info">
+                    <div class="materia-name">${p.nombre}</div>
+                    <div class="materia-prof">Stock: ${p.stock} unidades</div>
+                </div>
+                <div class="materia-right">
+                    <div class="materia-progress-wrap">
+                        <div class="materia-progress" style="width:${p.progreso}%; background:${p.color};"></div>
+                    </div>
+                    <div class="materia-pct">$${Number(p.precio).toLocaleString()}</div>
+                </div>
+            </div>
+        `).join("");
+        
+    } catch (error) {
+        console.error("Error cargando top productos:", error);
+    }
+}
+
+// Actualizar el anillo de progreso
+function actualizarProgresoMes(stats) {
+    const metaMensual = 60000000; // $60M como ejemplo
+    const ventasActuales = stats.ventas || 0;
+    const progreso = Math.min(100, Math.round((ventasActuales / metaMensual) * 100));
+    
+    // Actualizar anillo SVG
+    const ring = document.getElementById("progresoRing");
+    if (ring) {
+        const circumference = 2 * Math.PI * 45; // 2πr, r=45
+        const offset = circumference - (progreso / 100) * circumference;
+        ring.style.strokeDasharray = `${circumference}`;
+        ring.style.strokeDashoffset = offset;
+    }
+    
+    // Actualizar textos
+    document.getElementById("progresoPct").textContent = progreso + "%";
+    document.getElementById("ventasMesVal").textContent = "$" + Number(ventasActuales).toLocaleString();
+    document.getElementById("metaMensualVal").textContent = "$" + metaMensual.toLocaleString();
+    
+    // Calcular pedidos completados (ejemplo)
+    fetch(API + "/pedidos", { headers: { "authorization": token } })
+        .then(r => r.json())
+        .then(pedidos => {
+            const completados = pedidos.filter(p => p.estado === "entregado").length;
+            document.getElementById("pedidosCompletadosVal").textContent = completados;
+        });
+}
+
+// Actualizar avatar en topbar
+function actualizarAvatarTopbar() {
+    const usuario = JSON.parse(localStorage.getItem("admin-usuario") || "{}");
+    const inicial = usuario.nombre ? usuario.nombre.charAt(0).toUpperCase() : "A";
+    
+    const smallAvatar = document.getElementById("adminAvatarSmall");
+    if (smallAvatar) {
+        smallAvatar.textContent = inicial;
+    }
+    
+    const smallName = document.getElementById("adminNombreSmall");
+    if (smallName) {
+        smallName.textContent = usuario.nombre || "Admin";
+    }
+}
+
+// Mostrar/ocultar secciones de admin según rol
+function configurarVisibilidadPorRol() {
+    const usuario = JSON.parse(localStorage.getItem("admin-usuario") || "{}");
+    const esSuperAdmin = usuario.rol === "superadmin";
+    
+    const adminGroup = document.getElementById("navAdminGroup");
+    if (adminGroup) {
+        adminGroup.style.display = esSuperAdmin ? "block" : "none";
+    }
+}
+
+// Sobrescribir la función cargarEstadisticas original para usar la nueva
+const cargarEstadisticasOriginal = cargarEstadisticas;
+cargarEstadisticas = async function() {
+    await cargarEstadisticasCompletas();
+    if (typeof cargarPedidosRecientes === "function") {
+        await cargarPedidosRecientes();
+    }
+};
+
+// Inicializar todo al cargar
+document.addEventListener("DOMContentLoaded", function() {
+    configurarVisibilidadPorRol();
+    actualizarAvatarTopbar();
+    
+    // Si estamos en dashboard, cargar stats completas
+    if (document.getElementById("seccion-dashboard").classList.contains("active")) {
+        cargarEstadisticasCompletas();
+    }
+});
+
+// También necesitamos mantener la función original para otras secciones
+window.cargarEstadisticas = cargarEstadisticas;
+
 // Cargar dashboard al iniciar
 cargarEstadisticas()
