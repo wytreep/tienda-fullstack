@@ -61,18 +61,24 @@ function mostrarSeccion(nombre, event) {
     document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activo"))
     document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("activo"))
     document.getElementById("seccion-" + nombre).classList.add("activo")
-    document.getElementById("tituloSeccion").textContent =
-        nombre.charAt(0).toUpperCase() + nombre.slice(1)
-    if (event) event.target.classList.add("activo")
 
+    const titulos = {
+        dashboard: "Dashboard", ventas: "Ventas", productos: "Productos",
+        pedidos: "Pedidos", resenas: "Reseñas", usuarios: "Usuarios",
+        invitaciones: "Invitaciones", configuracion: "Configuración"
+    }
 
-    if (nombre === "configuracion") {} // no necesita cargar datos
+    document.getElementById("tituloSeccion").textContent = titulos[nombre] || nombre
+    document.getElementById("breadcrumbActual").textContent = titulos[nombre] || nombre
+
+    if (event && event.target) event.target.classList.add("activo")
+
     if (nombre === "dashboard") cargarEstadisticas()
     if (nombre === "productos") cargarProductos()
-    if (nombre === "resenas") cargarResenas()
     if (nombre === "pedidos") cargarPedidos()
-    if (nombre === "ventas") cargarVentas()
     if (nombre === "usuarios") cargarUsuarios()
+    if (nombre === "ventas") cargarVentas()
+    if (nombre === "resenas") cargarResenas()
     if (nombre === "invitaciones") cargarSolicitudes()
 }
 

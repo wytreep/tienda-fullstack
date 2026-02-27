@@ -7,69 +7,81 @@
     <link rel="stylesheet" href="/src/css/admin.css">
 </head>
 <body>
-    <div class="admin-layout">
-       <aside class="sidebar">
-    <div class="sidebar-logo">
-        ⚙️
-        <div>
-            <div>Panel Admin</div>
-            <span>Sistema de gestión</span>
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-titulo">⚙️ <span>Admin</span>Panel</div>
+            <div class="sidebar-logo-sub">Sistema de Gestión</div>
         </div>
-    </div>
-    <div class="sidebar-perfil">
-        <div class="sidebar-avatar" id="adminAvatar">A</div>
-        <div class="sidebar-perfil-info">
-            <div class="sidebar-perfil-nombre" id="adminNombre">Admin</div>
-            <div class="sidebar-perfil-rol" id="adminRol">Administrador</div>
+        <div class="sidebar-perfil">
+            <div class="sidebar-avatar" id="adminAvatar">A</div>
+            <div>
+                <div class="sidebar-perfil-nombre" id="adminNombre">Admin</div>
+                <div class="sidebar-perfil-rol" id="adminRol">Administrador</div>
+            </div>
         </div>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="nav-grupo-label">Principal</div>
-        <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard', event)">📊 Dashboard</a>
-        <a href="#" class="nav-item" onclick="mostrarSeccion('ventas', event)">💰 Ventas</a>
-        <div class="nav-grupo-label">Gestión</div>
-        <a href="#" class="nav-item" onclick="mostrarSeccion('productos', event)">📦 Productos</a>
-        <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos', event)">🛒 Pedidos</a>
-        <a href="#" class="nav-item" onclick="mostrarSeccion('resenas', event)">⭐ Reseñas</a>
-        <div class="nav-grupo-label">Administración</div>
-        <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios', event)">👥 Usuarios</a>
-        <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones', event)">📨 Invitaciones</a>
-        <div class="nav-grupo-label">Cuenta</div>
-        <a href="#" class="nav-item" id="navConfiguracion" onclick="mostrarSeccion('configuracion', event)">⚙️ Configuración</a>
-    </nav>
-    <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙 Modo oscuro</button>
-    <button class="btn-cerrar-admin" id="btnCerrarSesion">← Cerrar sesión</button>
-</aside>
-        <main class="admin-main">
+        <nav class="sidebar-nav">
+            <div class="nav-grupo-label">Principal</div>
+            <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard', event)">📊 Dashboard</a>
+            <a href="#" class="nav-item" onclick="mostrarSeccion('ventas', event)">💰 Ventas</a>
+            <div class="nav-grupo-label">Gestión</div>
+            <a href="#" class="nav-item" onclick="mostrarSeccion('productos', event)">📦 Productos</a>
+            <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos', event)">🛒 Pedidos</a>
+            <a href="#" class="nav-item" onclick="mostrarSeccion('resenas', event)">⭐ Reseñas</a>
+            <div class="nav-grupo-label">Administración</div>
+            <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios', event)">👥 Usuarios</a>
+            <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones', event)">📨 Invitaciones</a>
+            <div class="nav-grupo-label">Cuenta</div>
+            <a href="#" class="nav-item" onclick="mostrarSeccion('configuracion', event)">⚙️ Configuración</a>
+        </nav>
+        <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙 Modo oscuro</button>
+        <button class="btn-cerrar-admin" id="btnCerrarSesion">← Cerrar sesión</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+        <!-- TOPBAR -->
+        <div class="admin-topbar">
             <div class="admin-header">
+                <div class="admin-breadcrumb">Panel Admin › <span id="breadcrumbActual">Inicio</span></div>
                 <h1 id="tituloSeccion">Dashboard</h1>
             </div>
+            <div class="admin-topbar-right">
+                <span class="admin-tag" id="adminTagRol">ADMIN</span>
+            </div>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="admin-content">
 
             <!-- Dashboard -->
             <section id="seccion-dashboard" class="seccion activo">
                 <div class="stats-grid">
-                    <div class="stat-card" onclick="mostrarSeccion('productos', event)" style="cursor:pointer">
+                    <div class="stat-card" onclick="mostrarSeccion('productos', event)" style="animation-delay:0.05s">
                         <div class="stat-icono">📦</div>
                         <div class="stat-info">
                             <div class="stat-valor" id="statProductos">0</div>
                             <div class="stat-label">Productos</div>
                         </div>
                     </div>
-                    <div class="stat-card" onclick="mostrarSeccion('pedidos', event)" style="cursor:pointer">
+                    <div class="stat-card" onclick="mostrarSeccion('pedidos', event)" style="animation-delay:0.1s">
                         <div class="stat-icono">🛒</div>
                         <div class="stat-info">
                             <div class="stat-valor" id="statPedidos">0</div>
                             <div class="stat-label">Pedidos</div>
                         </div>
                     </div>
-                    <div class="stat-card" onclick="mostrarSeccion('usuarios', event)" style="cursor:pointer">
+                    <div class="stat-card" onclick="mostrarSeccion('usuarios', event)" style="animation-delay:0.15s">
                         <div class="stat-icono">👥</div>
                         <div class="stat-info">
                             <div class="stat-valor" id="statUsuarios">0</div>
                             <div class="stat-label">Usuarios</div>
                         </div>
                     </div>
-                    <div class="stat-card" onclick="mostrarSeccion('ventas', event)" style="cursor:pointer">
+                    <div class="stat-card" onclick="mostrarSeccion('ventas', event)" style="animation-delay:0.2s">
                         <div class="stat-icono">💰</div>
                         <div class="stat-info">
                             <div class="stat-valor" id="statVentas">$0</div>
@@ -77,9 +89,7 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Pedidos recientes -->
-                <div class="seccion-header" style="margin-top:2rem">
+                <div class="seccion-header">
                     <h2>Pedidos recientes</h2>
                     <button class="btn-primary" onclick="mostrarSeccion('pedidos', event)">Ver todos</button>
                 </div>
@@ -90,12 +100,51 @@
                             <th>Cliente</th>
                             <th>Total</th>
                             <th>Estado</th>
-                            <th>Dirección</th>
                             <th>Fecha</th>
-                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyPedidosRecientes"></tbody>
+                </table>
+            </section>
+
+            <!-- Ventas -->
+            <section id="seccion-ventas" class="seccion">
+                <div class="stats-grid" style="margin-bottom:24px">
+                    <div class="stat-card">
+                        <div class="stat-icono">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="ventaTotal">$0</div>
+                            <div class="stat-label">Total acumulado</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">📊</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="ventaPromedio">$0</div>
+                            <div class="stat-label">Promedio pedido</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="ventaEntregados">0</div>
+                            <div class="stat-label">Entregados</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">⏳</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="ventaPendientes">0</div>
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="seccion-header"><h2>Historial de ventas</h2></div>
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>#</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr>
+                    </thead>
+                    <tbody id="tbodyVentas"></tbody>
                 </table>
             </section>
 
@@ -109,12 +158,8 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Imagen</th>
-                                <th>Nombre</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
-                                <th>Categoría</th>
-                                <th>Acciones</th>
+                                <th>Imagen</th><th>Nombre</th><th>Precio</th>
+                                <th>Stock</th><th>Categoría</th><th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyProductos"></tbody>
@@ -163,68 +208,48 @@
 
             <!-- Pedidos -->
             <section id="seccion-pedidos" class="seccion">
-                <div class="seccion-header">
-                    <h2>Gestión de pedidos</h2>
-                </div>
+                <div class="seccion-header"><h2>Gestión de pedidos</h2></div>
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Usuario</th>
-                            <th>Total</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                            <th>Acción</th>
+                            <th>#</th><th>Cliente</th><th>Total</th>
+                            <th>Estado</th><th>Dirección</th><th>Fecha</th><th>Acción</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyPedidos"></tbody>
                 </table>
             </section>
-                        <!-- Reseñas -->
+
+            <!-- Reseñas -->
             <section id="seccion-resenas" class="seccion">
-                <div class="seccion-header">
-                    <h2>Reseñas de productos</h2>
-                </div>
+                <div class="seccion-header"><h2>Reseñas de productos</h2></div>
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Producto</th>
-                            <th>Usuario</th>
-                            <th>Calificación</th>
-                            <th>Comentario</th>
-                            <th>Fecha</th>
-                            <th>Acción</th>
+                            <th>Producto</th><th>Usuario</th><th>Calificación</th>
+                            <th>Comentario</th><th>Fecha</th><th>Acción</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyResenas"></tbody>
                 </table>
             </section>
 
-            <!-- Usuarios (solo superadmin) -->
+            <!-- Usuarios -->
             <section id="seccion-usuarios" class="seccion">
-                <div class="seccion-header">
-                    <h2>Gestión de usuarios</h2>
-                </div>
+                <div class="seccion-header"><h2>Gestión de usuarios</h2></div>
                 <table class="admin-table">
                     <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Rol</th>
-                            <th>Acción</th>
-                        </tr>
+                        <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Acción</th></tr>
                     </thead>
                     <tbody id="tbodyUsuarios"></tbody>
                 </table>
             </section>
 
-            <!-- Invitaciones (solo superadmin) -->
+            <!-- Invitaciones -->
             <section id="seccion-invitaciones" class="seccion">
-                <div class="seccion-header">
-                    <h2>Invitar administrador</h2>
-                </div>
-                <div class="form-card" style="max-width:500px">
-                    <div class="form-group">
+                <div class="seccion-header"><h2>Invitar administrador</h2></div>
+                <div class="form-card" style="max-width:520px">
+                    <div class="form-group" style="margin-bottom:1rem">
                         <label>Email del nuevo administrador</label>
                         <input type="email" id="emailInvitacion" placeholder="correo@ejemplo.com">
                     </div>
@@ -232,44 +257,35 @@
                         <button class="btn-primary" onclick="generarInvitacion()">Generar link de invitación</button>
                     </div>
                 </div>
-                <div id="linkGenerado" style="display:none; margin-top:1rem;">
-                    <div class="form-card" style="max-width:500px">
+                <div id="linkGenerado" style="display:none; margin-bottom:20px">
+                    <div class="form-card" style="max-width:520px">
                         <div class="form-group">
                             <label>Link generado — expira en 24 horas</label>
-                            <div style="display:flex; gap:0.5rem; align-items:center;">
+                            <div style="display:flex; gap:8px; align-items:center; margin-top:4px">
                                 <input type="text" id="linkInvitacion" readonly>
                                 <button class="btn-primary" onclick="copiarLink()">Copiar</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="seccion-header" style="margin-top:2rem">
-                    <h2>Solicitudes de cambio</h2>
-                </div>
+                <div class="seccion-header" style="margin-top:8px"><h2>Solicitudes de cambio</h2></div>
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>Admin</th>
-                            <th>Email</th>
-                            <th>Campo</th>
-                            <th>Valor nuevo</th>
-                            <th>Fecha</th>
-                            <th>Acción</th>
+                            <th>Admin</th><th>Email</th><th>Campo</th>
+                            <th>Valor nuevo</th><th>Fecha</th><th>Acción</th>
                         </tr>
                     </thead>
                     <tbody id="tbodySolicitudes"></tbody>
                 </table>
             </section>
-<!-- Configuración -->
-            <section id="seccion-configuracion" class="seccion">
-                <div class="seccion-header">
-                    <h2>Mi configuración</h2>
-                </div>
 
-                <!-- Solo superadmin ve esto -->
+            <!-- Configuración -->
+            <section id="seccion-configuracion" class="seccion">
+                <div class="seccion-header"><h2>Mi configuración</h2></div>
                 <div id="configDirecta" style="display:none">
-                    <div class="form-card" style="max-width:500px">
-                        <div class="form-group">
+                    <div class="form-card" style="max-width:520px">
+                        <div class="form-group" style="margin-bottom:1rem">
                             <label>Cambiar nombre</label>
                             <input type="text" id="superNombre" placeholder="Nuevo nombre">
                         </div>
@@ -277,8 +293,8 @@
                             <button class="btn-primary" onclick="cambiarDatoDirecto('nombre', 'superNombre')">Guardar</button>
                         </div>
                     </div>
-                    <div class="form-card" style="max-width:500px; margin-top:1rem">
-                        <div class="form-group">
+                    <div class="form-card" style="max-width:520px">
+                        <div class="form-group" style="margin-bottom:1rem">
                             <label>Cambiar contraseña</label>
                             <input type="password" id="superPassword" placeholder="Nueva contraseña">
                         </div>
@@ -287,12 +303,12 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Solo admin de bajo nivel ve esto -->
                 <div id="configSolicitud" style="display:none">
-                    <p style="color:#888; font-size:0.9rem; margin-bottom:1.5rem">Los cambios requieren aprobación del superadmin.</p>
-                    <div class="form-card" style="max-width:500px">
-                        <div class="form-group">
+                    <p style="color:var(--gray); font-size:13px; margin-bottom:20px; font-family:'JetBrains Mono',monospace; background:#f8fafc; padding:12px 16px; border-radius:8px; border:1px solid var(--border)">
+                        ℹ️ Los cambios requieren aprobación del superadmin.
+                    </p>
+                    <div class="form-card" style="max-width:520px">
+                        <div class="form-group" style="margin-bottom:1rem">
                             <label>Solicitar cambio de nombre</label>
                             <input type="text" id="nuevoNombre" placeholder="Nuevo nombre">
                         </div>
@@ -300,8 +316,8 @@
                             <button class="btn-primary" onclick="solicitarCambio('nombre', 'nuevoNombre')">Solicitar cambio</button>
                         </div>
                     </div>
-                    <div class="form-card" style="max-width:500px; margin-top:1rem">
-                        <div class="form-group">
+                    <div class="form-card" style="max-width:520px">
+                        <div class="form-group" style="margin-bottom:1rem">
                             <label>Solicitar cambio de contraseña</label>
                             <input type="password" id="nuevaPassword" placeholder="Nueva contraseña">
                         </div>
@@ -311,61 +327,12 @@
                     </div>
                 </div>
             </section>
-            <!-- Ventas -->
-            <section id="seccion-ventas" class="seccion">
-                <div class="seccion-header">
-                    <h2>Historial de ventas</h2>
-                </div>
-                <div class="stats-grid" style="margin-bottom:2rem">
-                    <div class="stat-card">
-                        <div class="stat-icono">💰</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="ventaTotal">$0</div>
-                            <div class="stat-label">Total acumulado</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icono">📦</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="ventaPromedio">$0</div>
-                            <div class="stat-label">Promedio por pedido</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icono">✅</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="ventaEntregados">0</div>
-                            <div class="stat-label">Pedidos entregados</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icono">⏳</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="ventaPendientes">0</div>
-                            <div class="stat-label">Pedidos pendientes</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="seccion-header">
-                    <h2>Todas las ventas</h2>
-                </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Cliente</th>
-                            <th>Total</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbodyVentas"></tbody>
-                </table>
-            </section>
-        </main>
-    </div>
 
-    <script src="/src/js/admin.js"></script>
-    <script src="/src/js/darkmode-admin.js"></script>
+        </div><!-- fin admin-content -->
+    </main>
+</div>
+
+<script src="/src/js/admin.js"></script>
+<script src="/src/js/darkmode-admin.js"></script>
 </body>
 </html>
