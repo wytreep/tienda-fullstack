@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Admin</title>
+    <link rel="stylesheet" href="/src/css/dashboard-extra.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <link rel="stylesheet" href="/src/css/admin.css">
 </head>
 <body>
@@ -28,38 +30,152 @@
             </div>
 
             <!-- Dashboard -->
-            <section id="seccion-dashboard" class="seccion activo">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icono">📦</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="statProductos">0</div>
-                            <div class="stat-label">Productos</div>
+<!-- DASHBOARD SECTION - para insertar en admin-panel.html -->
+<section id="seccion-dashboard" class="seccion activo">
+
+    <!-- WELCOME BANNER -->
+    <div class="dash-banner">
+        <div class="dash-banner-text">
+            <div class="dash-banner-greeting">Bienvenido de nuevo</div>
+            <div class="dash-banner-nombre" id="bannerNombre">Admin</div>
+            <div class="dash-banner-sub">Sistema de gestión de tienda · <span id="bannerFecha"></span></div>
+        </div>
+        <div class="dash-banner-stats">
+            <div class="dash-mini-stat">
+                <div class="dash-mini-num" id="bannerProductos">0</div>
+                <div class="dash-mini-label">Productos</div>
+            </div>
+            <div class="dash-mini-stat">
+                <div class="dash-mini-num" id="bannerPedidos">0</div>
+                <div class="dash-mini-label">Pedidos</div>
+            </div>
+            <div class="dash-mini-stat">
+                <div class="dash-mini-num" id="bannerUsuarios">0</div>
+                <div class="dash-mini-label">Clientes</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-grid">
+        <div class="stat-card" onclick="mostrarSeccion('productos', event)" style="animation-delay:0.05s">
+            <div class="stat-icono">📦</div>
+            <div class="stat-info">
+                <div class="stat-valor" id="statProductos">0</div>
+                <div class="stat-label">Productos</div>
+            </div>
+        </div>
+        <div class="stat-card" onclick="mostrarSeccion('pedidos', event)" style="animation-delay:0.1s">
+            <div class="stat-icono">🛒</div>
+            <div class="stat-info">
+                <div class="stat-valor" id="statPedidos">0</div>
+                <div class="stat-label">Pedidos</div>
+            </div>
+        </div>
+        <div class="stat-card" onclick="mostrarSeccion('usuarios', event)" style="animation-delay:0.15s">
+            <div class="stat-icono">👥</div>
+            <div class="stat-info">
+                <div class="stat-valor" id="statUsuarios">0</div>
+                <div class="stat-label">Clientes</div>
+            </div>
+        </div>
+        <div class="stat-card" onclick="mostrarSeccion('ventas', event)" style="animation-delay:0.2s">
+            <div class="stat-icono">💰</div>
+            <div class="stat-info">
+                <div class="stat-valor" id="statVentas">$0</div>
+                <div class="stat-label">Total ventas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRID PRINCIPAL -->
+    <div class="dash-grid-main">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="dash-col-left">
+
+            <!-- Gráfico ventas por mes -->
+            <div class="card" style="animation-delay:0.1s">
+                <div class="card-header">
+                    <div class="card-title">📈 Ventas por mes</div>
+                    <a class="card-action" onclick="mostrarSeccion('ventas', event)" href="#">Ver detalle →</a>
+                </div>
+                <div class="card-body">
+                    <canvas id="grafVentas" height="120"></canvas>
+                </div>
+            </div>
+
+            <!-- Pedidos recientes -->
+            <div class="card" style="animation-delay:0.15s">
+                <div class="card-header">
+                    <div class="card-title">🛒 Pedidos recientes</div>
+                    <a class="card-action" onclick="mostrarSeccion('pedidos', event)" href="#">Ver todos →</a>
+                </div>
+                <div class="card-body" style="padding:0">
+                    <table class="admin-table" style="border:none;border-radius:0;box-shadow:none">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyPedidosRecientes"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="dash-col-right">
+
+            <!-- Gráfico estados pedidos (dona) -->
+            <div class="card" style="animation-delay:0.12s">
+                <div class="card-header">
+                    <div class="card-title">📊 Estado de pedidos</div>
+                </div>
+                <div class="card-body">
+                    <div style="position:relative; max-width:220px; margin:0 auto">
+                        <canvas id="grafEstados" height="200"></canvas>
+                        <div class="dona-center" id="donaCenterText">
+                            <div class="dona-num" id="donaTotalNum">0</div>
+                            <div class="dona-label">pedidos</div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icono">🛒</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="statPedidos">0</div>
-                            <div class="stat-label">Pedidos</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icono">👥</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="statUsuarios">0</div>
-                            <div class="stat-label">Usuarios</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icono">💰</div>
-                        <div class="stat-info">
-                            <div class="stat-valor" id="statVentas">$0</div>
-                            <div class="stat-label">Total ventas</div>
-                        </div>
+                    <div class="dona-leyenda" id="donaLeyenda"></div>
+                </div>
+            </div>
+
+            <!-- Top productos vendidos -->
+            <div class="card" style="animation-delay:0.18s">
+                <div class="card-header">
+                    <div class="card-title">🏆 Top productos</div>
+                    <a class="card-action" onclick="mostrarSeccion('productos', event)" href="#">Ver todos →</a>
+                </div>
+                <div class="card-body">
+                    <div id="topProductos"></div>
+                </div>
+            </div>
+
+            <!-- Alertas -->
+            <div class="card" style="animation-delay:0.22s">
+                <div class="card-header">
+                    <div class="card-title">🔔 Alertas del sistema</div>
+                </div>
+                <div class="card-body" style="padding:12px 16px">
+                    <div id="alertasSistema">
+                        <div class="dash-alerta dash-alerta-ok">✓ Sistema funcionando correctamente</div>
                     </div>
                 </div>
-            </section>
+            </div>
+
+        </div>
+    </div>
+
+</section>
 
             <!-- Productos -->
             <section id="seccion-productos" class="seccion">
