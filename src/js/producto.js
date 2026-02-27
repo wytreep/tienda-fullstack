@@ -6,6 +6,14 @@ if (!token) window.location.href = "/src/views/login.html"
 const usuario = JSON.parse(localStorage.getItem("usuario"))
 if (usuario) document.getElementById("nombreUsuario").textContent = usuario.nombre
 
+const params = new URLSearchParams(window.location.search)
+const productoId = params.get("id")
+
+let cantidad = 1
+let stockDisponible = 0
+let calificacionSeleccionada = 0
+
+// Navbar
 document.getElementById("btnPerfil").addEventListener("click", function(e) {
     e.stopPropagation()
     document.getElementById("perfilDropdown").classList.toggle("activo")
@@ -22,6 +30,7 @@ document.getElementById("btnCerrarSesion").addEventListener("click", function() 
     localStorage.removeItem("usuario")
     window.location.href = "/src/views/login.html"
 })
+
 document.getElementById("btnCambiarPassword").addEventListener("click", function() {
     window.location.href = "/src/views/cambiar-password.html"
 })
@@ -69,12 +78,7 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
     document.getElementById("modalCuentas").classList.remove("activo")
 })
 
-// Obtener ID del producto de la URL
-const params = new URLSearchParams(window.location.search)
-const productoId = params.get("id")
-
-let cantidad = 1
-
+// Cargar producto y reseñas
 async function cargarProducto() {
     const respuesta = await fetch(API + "/productos/" + productoId, {
         headers: { "authorization": token }
@@ -82,6 +86,7 @@ async function cargarProducto() {
     const producto = await respuesta.json()
     renderProducto(producto)
     actualizarCarrito()
+    cargarResenas()
 }
 
 function renderProducto(producto) {
@@ -91,16 +96,14 @@ function renderProducto(producto) {
 
     contenedor.innerHTML = `
         <div class="producto-detalle-imagen">
-            ${producto.imagen
-                ? `<img src="${API}${producto.imagen}" alt="${producto.nombre}">`
-                : "📦"}
+            ${producto.imagen ? `<img src="${API}${producto.imagen}" alt="${producto.nombre}">` : "📦"}
         </div>
         <div class="producto-detalle-info">
             <p class="producto-detalle-categoria">${producto.categoria || "General"}</p>
             <h1>${producto.nombre}</h1>
             <div class="producto-detalle-precio">$${Number(producto.precio).toLocaleString()}</div>
             <p class="producto-detalle-descripcion">${producto.descripcion || "Sin descripción disponible"}</p>
-            <p class="producto-detalle-stock">${sinStock ? "Sin stock" : producto.stock + " unidades disponibles"}</p>
+            <p class="producto-detalle-stock ${sinStock ? 'sin-stock' : ''}">${sinStock ? "❌ Sin stock" : "✓ " + producto.stock + " unidades disponibles"}</p>
             <div class="cantidad-selector">
                 <button onclick="cambiarCantidad(-1)">−</button>
                 <span id="cantidad">1</span>
@@ -115,8 +118,6 @@ function renderProducto(producto) {
     `
 }
 
-let stockDisponible = 0
-
 function cambiarCantidad(valor) {
     cantidad = Math.max(1, Math.min(stockDisponible, cantidad + valor))
     document.getElementById("cantidad").textContent = cantidad
@@ -124,7 +125,7 @@ function cambiarCantidad(valor) {
 
 function agregarAlCarrito(id, nombre, precio, stock) {
     if (cantidad > stockDisponible) {
-        mostrarToast("No hay suficiente stock")
+        mostrarToast("No hay suficiente stock", true)
         return
     }
 
@@ -142,7 +143,13 @@ function agregarAlCarrito(id, nombre, precio, stock) {
     mostrarToast("✓ Producto agregado al carrito")
 }
 
-function mostrarToast(mensaje) {
+function actualizarCarrito() {
+    const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
+    const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
+    document.getElementById("contadorCarrito").textContent = total
+}
+
+function mostrarToast(mensaje, error = false) {
     let toast = document.getElementById("toast")
     if (!toast) {
         toast = document.createElement("div")
@@ -151,19 +158,12 @@ function mostrarToast(mensaje) {
         document.body.appendChild(toast)
     }
     toast.textContent = mensaje
+    toast.style.background = error ? "#ef4444" : "#22c55e"
     toast.classList.add("activo")
-    setTimeout(function() {
-        toast.classList.remove("activo")
-    }, 3000)
+    setTimeout(function() { toast.classList.remove("activo") }, 3000)
 }
 
-function actualizarCarrito() {
-    const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
-    const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
-    document.getElementById("contadorCarrito").textContent = total
-}
-let calificacionSeleccionada = 0
-
+// Estrellas
 document.querySelectorAll(".estrella").forEach(function(estrella) {
     estrella.addEventListener("mouseover", function() {
         const valor = parseInt(this.dataset.valor)
@@ -225,34 +225,23 @@ async function enviarResena() {
 }
 
 async function cargarResenas() {
-        const respuesta = await fetch(API + "/resenas/" + productoId, {
+    const respuesta = await fetch(API + "/resenas/" + productoId, {
         headers: { "authorization": token }
     })
     const resenas = await respuesta.json()
-    console.log("Reseñas recibidas:", resenas)
-    console.log("Cantidad:", resenas.length)
-
     const lista = document.getElementById("listaResenas")
 
-    if (resenas.length === 0) {
+    if (!Array.isArray(resenas) || resenas.length === 0) {
         lista.innerHTML = "<div class='resenas-vacio'>No hay reseñas aún. ¡Sé el primero!</div>"
         return
     }
 
     lista.innerHTML = ""
 
-    for (const r of resenas) {
+    resenas.forEach(function(r) {
         const estrellas = "★".repeat(r.calificacion) + "☆".repeat(5 - r.calificacion)
 
-        // Cargar likes y respuestas
-        const [likesRes, respuestasRes] = await Promise.all([
-            fetch(API + "/resenas/" + r.id + "/likes", { headers: { "authorization": token } }),
-            fetch(API + "/resenas/" + r.id + "/respuestas", { headers: { "authorization": token } })
-        ])
-        const likesData = await likesRes.json()
-        const respuestas = await respuestasRes.json()
-
-        const respuestasHTML = respuestas.map(function(resp) {
+        const respuestasHTML = (r.respuestas || []).map(function(resp) {
             return `
                 <div class="resena-respuesta ${resp.es_admin ? 'respuesta-admin' : ''}">
                     <div class="respuesta-autor">
@@ -275,8 +264,8 @@ async function cargarResenas() {
             <div class="resena-estrellas">${estrellas}</div>
             <p class="resena-comentario">${r.comentario}</p>
             <div class="resena-acciones">
-                <button class="btn-like ${likesData.liked ? 'liked' : ''}" onclick="toggleLike(${r.id}, this)">
-                    👍 <span class="like-count">${likesData.total}</span>
+                <button class="btn-like ${r.liked ? 'liked' : ''}" onclick="toggleLike(${r.id}, this)">
+                    👍 <span class="like-count">${r.likes || 0}</span>
                 </button>
                 <button class="btn-responder" onclick="toggleRespuesta(${r.id})">
                     💬 Responder
@@ -291,7 +280,7 @@ async function cargarResenas() {
             </div>
         `
         lista.appendChild(div)
-    }
+    })
 }
 
 async function toggleLike(resenaId, btn) {
@@ -309,56 +298,16 @@ async function toggleLike(resenaId, btn) {
 
 function toggleRespuesta(resenaId) {
     const form = document.getElementById("form-respuesta-" + resenaId)
-    form.style.display = form.style.display === "none" ? "block" : "none"
-}
-
-async function enviarRespuesta(resenaId) {
-    const comentario = document.getElementById("input-respuesta-" + resenaId).value.trim()
-    if (!comentario) {
-        mostrarToast("Escribe una respuesta", true)
-        return
-    }
-
-    const respuesta = await fetch(API + "/resenas/" + resenaId + "/respuestas", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "authorization": token
-        },
-        body: JSON.stringify({ comentario })
-    })
-
-    if (respuesta.ok) {
-        mostrarToast("✓ Respuesta enviada")
-        cargarResenas()
-    }
-}
-
-async function toggleLike(resenaId, btn) {
-    const respuesta = await fetch(API + "/resenas/" + resenaId + "/like", {
-        method: "POST",
-        headers: { "authorization": token }
-    })
-    const datos = await respuesta.json()
-    if (respuesta.ok) {
-        const btnActual = document.querySelector(`[onclick="toggleLike(${resenaId}, this)"]`)
-        if (btnActual) {
-            btnActual.classList.toggle("liked", datos.liked)
-            const count = btnActual.querySelector(".like-count")
-            count.textContent = parseInt(count.textContent) + (datos.liked ? 1 : -1)
-        }
-    }
-}
-
-function toggleRespuesta(resenaId) {
-    const form = document.getElementById("form-respuesta-" + resenaId)
     form.style.display = form.style.display === "none" ? "flex" : "none"
 }
 
 async function enviarRespuesta(resenaId) {
     const input = document.getElementById("input-respuesta-" + resenaId)
     const comentario = input.value.trim()
-    if (!comentario) return
+    if (!comentario) {
+        mostrarToast("Escribe una respuesta", true)
+        return
+    }
 
     const respuesta = await fetch(API + "/resenas/" + resenaId + "/respuestas", {
         method: "POST",
