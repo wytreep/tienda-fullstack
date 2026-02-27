@@ -1,343 +1,394 @@
-// ============================================
-// admin.js - VERSIÓN CON DEPURACIÓN
-// ============================================
 
-console.log("🚀 admin.js cargando...");
-
-// ============================================
-// CONFIGURACIÓN - CAMBIA ESTA URL SEGÚN EL PASO 1
-// ============================================
-const API = "https://mi-servidor-2mff.onrender.com"; // <-- CAMBIA ESTO cuando sepas la URL correcta
-
-const token = localStorage.getItem("admin-token");
-const usuario = JSON.parse(localStorage.getItem("admin-usuario"));
+console.log("admin.js cargando...")
+console.log("token:", localStorage.getItem("token"))
+console.log("usuario:", localStorage.getItem("usuario"))
+const API = "https://mi-servidor-2mff.onrender.com"
+const token = localStorage.getItem("token")
+const usuario = JSON.parse(localStorage.getItem("usuario"))
 
 if (!token || !usuario || (usuario.rol !== "admin" && usuario.rol !== "superadmin")) {
-    window.location.href = "admin-login.html";
+    window.location.href = "admin-login.html"
+}
+const esSuperAdmin = usuario.rol === "superadmin"
+
+if (esSuperAdmin) {
+    document.getElementById("configDirecta").style.display = "block"
+} else {
+    document.getElementById("configSolicitud").style.display = "block"
 }
 
-const esSuperAdmin = usuario.rol === "superadmin";
+document.getElementById("adminNombre").textContent = "Admin " + usuario.nombre
 
-// ============================================
-// VARIABLES GLOBALES
-// ============================================
-let productos = [];
-let pedidos = [];
-let usuarios = [];
-let resenas = [];
+document.getElementById("btnCerrarSesion").addEventListener("click", function() {
+    localStorage.removeItem("token")
+    localStorage.removeItem("usuario")
+    window.location.href = "admin-login.html"
+})
 
-// ============================================
-// INICIALIZACIÓN
-// ============================================
-document.addEventListener("DOMContentLoaded", async function() {
-    console.log("📦 Inicializando panel...");
-    
-    // Mostrar información del usuario
-    actualizarInfoUsuario();
-    
-    // Intentar cargar datos del backend
-    await cargarTodosLosDatos();
-    
-    // Configurar botón de cerrar sesión
-    document.getElementById("btnCerrarSesion")?.addEventListener("click", function() {
-        localStorage.removeItem("admin-token");
-        localStorage.removeItem("admin-usuario");
-        window.location.href = "admin-login.html";
-    });
-    
-    // Cargar dashboard si está activo
-    if (document.getElementById("seccion-dashboard")?.classList.contains("activo")) {
-        cargarDashboard();
+//Cambio directo (superadmin)
+async function cambiarDatoDirecto(campo, inputId) {
+    const valor = document.getElementById(inputId).value.trim()
+    if (!valor) {
+        mostrarToast("Escribe un valor", true)
+        return
     }
-});
 
-// ============================================
-// FUNCIÓN PARA CARGAR TODOS LOS DATOS DEL BACKEND
-// ============================================
-async function cargarTodosLosDatos() {
-    console.log("🌐 Intentando conectar al backend:", API);
-    
-    try {
-        // Probar conexión básica
-        const testRes = await fetch(API + "/productos", {
-            headers: { 'authorization': token }
-        });
-        
-        if (!testRes.ok) {
-            throw new Error(`HTTP ${testRes.status}: ${testRes.statusText}`);
-        }
-        
-        console.log("✅ Conexión exitosa al backend");
-        
-        // Cargar productos
-        try {
-            const res = await fetch(API + "/productos", { headers: { 'authorization': token } });
-            productos = await res.json();
-            console.log(`✅ ${productos.length} productos cargados`);
-        } catch (e) {
-            console.error("❌ Error cargando productos:", e);
-        }
-        
-        // Cargar pedidos
-        try {
-            const res = await fetch(API + "/pedidos", { headers: { 'authorization': token } });
-            pedidos = await res.json();
-            console.log(`✅ ${pedidos.length} pedidos cargados`);
-        } catch (e) {
-            console.error("❌ Error cargando pedidos:", e);
-        }
-        
-        // Cargar usuarios
-        try {
-            const res = await fetch(API + "/usuarios", { headers: { 'authorization': token } });
-            usuarios = await res.json();
-            console.log(`✅ ${usuarios.length} usuarios cargados`);
-        } catch (e) {
-            console.error("❌ Error cargando usuarios:", e);
-        }
-        
-        // Cargar reseñas
-        try {
-            const res = await fetch(API + "/resenas", { headers: { 'authorization': token } });
-            resenas = await res.json();
-            console.log(`✅ ${resenas.length} reseñas cargadas`);
-        } catch (e) {
-            console.error("❌ Error cargando reseñas:", e);
-        }
-        
-    } catch (error) {
-        console.error("❌ ERROR CRÍTICO:", error.message);
-        console.error("Posibles causas:");
-        console.error("1. La URL del API es incorrecta:", API);
-        console.error("2. El servidor backend no está corriendo");
-        console.error("3. El servidor está en otra URL (localhost, otro puerto)");
-        console.error("4. Hay un problema de CORS");
-        
-        // Mostrar mensaje en la interfaz
-        mostrarErrorConexion(error.message);
-    }
-}
+    const respuesta = await fetch(API + "/auth/cambiar-dato", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ campo, valor })
+    })
 
-function mostrarErrorConexion(mensaje) {
-    // Crear un mensaje de error visible
-    const errorDiv = document.createElement("div");
-    errorDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #ef4444;
-        color: white;
-        padding: 16px 24px;
-        border-radius: 8px;
-        font-weight: 500;
-        z-index: 10000;
-        max-width: 400px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        font-family: monospace;
-    `;
-    errorDiv.innerHTML = `
-        <strong>❌ Error de conexión</strong><br>
-        ${mensaje}<br><br>
-        URL: ${API}<br>
-        Verifica la consola para más detalles (F12)
-    `;
-    document.body.appendChild(errorDiv);
-    
-    setTimeout(() => errorDiv.remove(), 10000);
-}
-
-// ============================================
-// ACTUALIZAR INFORMACIÓN DEL USUARIO
-// ============================================
-function actualizarInfoUsuario() {
-    const elementos = {
-        adminAvatar: usuario.nombre.charAt(0).toUpperCase(),
-        adminAvatarSmall: usuario.nombre.charAt(0).toUpperCase(),
-        adminNombreBanner: usuario.nombre.charAt(0).toUpperCase(),
-        adminNombre: "Admin " + usuario.nombre,
-        adminNombreSmall: usuario.nombre,
-        adminRol: esSuperAdmin ? "Super Admin" : "Administrador",
-        adminTagRol: esSuperAdmin ? "SUPER ADMIN" : "ADMIN",
-        adminRolBanner: esSuperAdmin ? "Super Administrador" : "Administrador"
-    };
-    
-    for (const [id, valor] of Object.entries(elementos)) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = valor;
-    }
-    
-    // Configuración según rol
-    if (esSuperAdmin) {
-        document.getElementById("configDirecta")?.style.display = "block";
-        document.getElementById("navAdminGroup")?.style.display = "block";
+    const datos = await respuesta.json()
+    if (respuesta.ok) {
+        mostrarToast("✓ " + datos.mensaje)
+        document.getElementById(inputId).value = ""
     } else {
-        document.getElementById("configSolicitud")?.style.display = "block";
-        document.getElementById("navAdminGroup")?.style.display = "none";
+        mostrarToast(datos.error, true)
     }
 }
 
-// ============================================
-// FUNCIONES DE NAVEGACIÓN
-// ============================================
+// Navegación
 function mostrarSeccion(nombre, event) {
-    console.log("📍 Navegando a:", nombre);
-    
-    document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activo"));
-    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("activo"));
-    
-    const seccion = document.getElementById("seccion-" + nombre);
-    if (seccion) seccion.classList.add("activo");
-    
-    const titulos = {
-        dashboard: "Dashboard", ventas: "Ventas", productos: "Productos",
-        pedidos: "Pedidos", resenas: "Reseñas", usuarios: "Usuarios",
-        invitaciones: "Invitaciones", configuracion: "Configuración"
-    };
-    
-    document.getElementById("tituloSeccion").textContent = titulos[nombre] || nombre;
-    document.getElementById("breadcrumbActual").textContent = titulos[nombre] || nombre;
-    
-    if (event?.target) event.target.classList.add("activo");
-    
-    // Cargar datos según la sección
-    switch(nombre) {
-        case "dashboard": cargarDashboard(); break;
-        case "productos": cargarProductos(); break;
-        case "pedidos": cargarPedidos(); break;
-        case "usuarios": cargarUsuarios(); break;
-        case "ventas": cargarVentas(); break;
-        case "resenas": cargarResenas(); break;
-        case "invitaciones": cargarInvitaciones(); break;
+    document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activo"))
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("activo"))
+    document.getElementById("seccion-" + nombre).classList.add("activo")
+    document.getElementById("tituloSeccion").textContent =
+        nombre.charAt(0).toUpperCase() + nombre.slice(1)
+    if (event) event.target.classList.add("activo")
+
+    if (nombre === "configuracion") {} // no necesita cargar datos
+    if (nombre === "dashboard") cargarEstadisticas()
+    if (nombre === "productos") cargarProductos()
+    if (nombre === "pedidos") cargarPedidos()
+    if (nombre === "usuarios") cargarUsuarios()
+    if (nombre === "invitaciones") cargarSolicitudes()
+}
+
+async function solicitarCambio(campo, inputId) {
+    const valor_nuevo = document.getElementById(inputId).value.trim()
+    if (!valor_nuevo) {
+        mostrarToast("Escribe un valor", true)
+        return
+    }
+
+    const respuesta = await fetch(API + "/solicitudes-cambio", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ campo, valor_nuevo })
+    })
+
+    const datos = await respuesta.json()
+
+    if (respuesta.ok) {
+        mostrarToast("✓ Solicitud enviada al superadmin")
+        document.getElementById(inputId).value = ""
+    } else {
+        mostrarToast(datos.error, true)
     }
 }
 
-// ============================================
-// DASHBOARD
-// ============================================
-function cargarDashboard() {
-    console.log("📊 Cargando dashboard...");
-    
-    // Si no hay datos, mostrar valores por defecto
-    const stats = {
-        productos: productos.length || 4,
-        pedidos: pedidos.length || 5,
-        usuarios: usuarios.filter(u => u.rol === 'usuario').length || 3,
-        ventas: pedidos.reduce((sum, p) => sum + (p.total || 0), 0) || 9108600
-    };
-    
-    // Actualizar stats
-    setText("statProductos", stats.productos);
-    setText("statPedidos", stats.pedidos);
-    setText("statUsuarios", stats.usuarios);
-    setText("statVentas", "$" + stats.ventas.toLocaleString());
-    
-    // Banner
-    setText("bannerProductos", stats.productos);
-    setText("bannerPedidos", stats.pedidos);
-    setText("bannerUsuarios", stats.usuarios);
-    
-    // Pendientes
-    const pendientes = pedidos.filter(p => p.estado === "pendiente").length || 3;
-    setText("pedidosPendientes", pendientes + " pendientes");
-    
-    // Trends
-    setText("trendProductos", stats.productos + " activos");
-    setText("trendUsuarios", stats.usuarios + " clientes");
-    setText("ventasMes", "+30% este mes");
-    
-    // Cargar componentes
-    cargarTopProductos();
-    cargarPedidosRecientes();
+// Dashboard
+async function cargarEstadisticas() {
+    const r = await fetch(API + "/estadisticas", {
+        headers: { "authorization": token }
+    })
+    const stats = await r.json()
+    document.getElementById("statProductos").textContent = stats.productos
+    document.getElementById("statPedidos").textContent = stats.pedidos
+    document.getElementById("statUsuarios").textContent = stats.usuarios
+    document.getElementById("statVentas").textContent = "$" + Number(stats.ventas).toLocaleString()
 }
 
-function setText(id, texto) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = texto;
+// Productos
+async function cargarProductos() {
+    const r = await fetch(API + "/productos", {
+        headers: { "authorization": token }
+    })
+    const productos = await r.json()
+    const tbody = document.getElementById("tbodyProductos")
+    tbody.innerHTML = ""
+
+    productos.forEach(function(p) {
+        const tr = document.createElement("tr")
+        tr.innerHTML = `
+            <td>${p.imagen ? `<img src="${API}${p.imagen}">` : "📦"}</td>
+            <td>${p.nombre}</td>
+            <td>$${Number(p.precio).toLocaleString()}</td>
+            <td>${p.stock}</td>
+            <td>${p.categoria || "-"}</td>
+            <td>
+                <button class="btn-accion btn-editar" onclick="editarProducto(${p.id})">Editar</button>
+                <button class="btn-accion btn-eliminar" onclick="eliminarProducto(${p.id})">Eliminar</button>
+            </td>
+        `
+        tbody.appendChild(tr)
+    })
 }
 
-function cargarTopProductos() {
-    const container = document.getElementById("topProductosContainer");
-    if (!container) return;
-    
-    const lista = productos.length ? productos : [
-        { id: 1, nombre: "Monitor", precio: 800000, stock: 21 },
-        { id: 2, nombre: "Mouse", precio: 12000, stock: 0 },
-        { id: 3, nombre: "Teclado", precio: 100000, stock: 19 },
-        { id: 4, nombre: "Laptop", precio: 1500300, stock: 4 }
-    ];
-    
-    const top = lista.slice(0, 4);
-    const colores = ["#2560a8", "#1e7d4e", "#b8922a", "#7d3c98"];
-    
-    container.innerHTML = top.map((p, i) => `
-        <div class="materia-item">
-            <div class="materia-color" style="background:${colores[i]}"></div>
-            <div class="materia-info">
-                <div class="materia-name">${p.nombre}</div>
-                <div class="materia-prof">Stock: ${p.stock}</div>
-            </div>
-            <div class="materia-right">
-                <div class="materia-pct">$${p.precio.toLocaleString()}</div>
-            </div>
-        </div>
-    `).join("");
+function mostrarFormProducto() {
+    document.getElementById("vistaTabla").style.display = "none"
+    document.getElementById("vistaFormulario").style.display = "block"
+    document.getElementById("formTitulo").textContent = "Agregar producto"
+    document.getElementById("productoId").value = ""
+    document.getElementById("pNombre").value = ""
+    document.getElementById("pPrecio").value = ""
+    document.getElementById("pStock").value = ""
+    document.getElementById("pCategoria").value = ""
+    document.getElementById("pDescripcion").value = ""
 }
 
-function cargarPedidosRecientes() {
-    const tbody = document.getElementById("tbodyPedidosRecientes");
-    if (!tbody) return;
-    
-    const lista = pedidos.length ? pedidos : [
-        { id: 9, usuario: "Edwin", total: 36000, estado: "pendiente", fecha: "26/2/2026" },
-        { id: 8, usuario: "Jai", total: 1500300, estado: "pendiente", fecha: "26/2/2026" },
-        { id: 5, usuario: "Edwin", total: 2400000, estado: "pendiente", fecha: "24/2/2026" }
-    ];
-    
-    tbody.innerHTML = lista.slice(0, 5).map(p => `
-        <tr>
+function cancelarFormProducto() {
+    document.getElementById("vistaTabla").style.display = "block"
+    document.getElementById("vistaFormulario").style.display = "none"
+}
+
+async function editarProducto(id) {
+    const r = await fetch(API + "/productos/" + id, {
+        headers: { "authorization": token }
+    })
+    const p = await r.json()
+    document.getElementById("vistaTabla").style.display = "none"
+    document.getElementById("vistaFormulario").style.display = "block"
+    document.getElementById("formTitulo").textContent = "Editar producto"
+    document.getElementById("productoId").value = p.id
+    document.getElementById("pNombre").value = p.nombre
+    document.getElementById("pPrecio").value = p.precio
+    document.getElementById("pStock").value = p.stock
+    document.getElementById("pCategoria").value = p.categoria || ""
+    document.getElementById("pDescripcion").value = p.descripcion || ""
+}
+
+async function guardarProducto() {
+    const id = document.getElementById("productoId").value
+    const formData = new FormData()
+    formData.append("nombre", document.getElementById("pNombre").value)
+    formData.append("precio", document.getElementById("pPrecio").value)
+    formData.append("stock", document.getElementById("pStock").value)
+    formData.append("categoria", document.getElementById("pCategoria").value)
+    formData.append("descripcion", document.getElementById("pDescripcion").value)
+
+    const imagen = document.getElementById("pImagen").files[0]
+    if (imagen) formData.append("imagen", imagen)
+
+    const metodo = id ? "PUT" : "POST"
+    const url = id ? API + "/productos/" + id : API + "/productos"
+
+    const r = await fetch(url, {
+        method: metodo,
+        headers: { "authorization": token },
+        body: formData
+    })
+
+    if (r.ok) {
+        cancelarFormProducto()
+        cargarProductos()
+        mostrarToast("✓ Producto guardado correctamente")
+    }
+}
+async function eliminarProducto(id) {
+    if (!confirm("¿Seguro que desea eliminar este producto?")) return
+    await fetch(API + "/productos/" + id, {
+        method: "DELETE",
+        headers: { "authorization": token }
+    })
+    cargarProductos()
+    mostrarToast("✓ Producto eliminado")
+}
+
+// Pedidos
+async function cargarPedidos() {
+    const r = await fetch(API + "/pedidos", {
+        headers: { "authorization": token }
+    })
+    const pedidos = await r.json()
+    const tbody = document.getElementById("tbodyPedidos")
+    tbody.innerHTML = ""
+
+    pedidos.forEach(function(p) {
+        const tr = document.createElement("tr")
+        tr.innerHTML = `
             <td>#${p.id}</td>
             <td>${p.usuario}</td>
-            <td>$${p.total.toLocaleString()}</td>
+            <td>$${Number(p.total).toLocaleString()}</td>
             <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
-            <td>${p.fecha || new Date().toLocaleDateString()}</td>
-        </tr>
-    `).join("");
-}
-
-// ============================================
-// PRODUCTOS
-// ============================================
-function cargarProductos() {
-    const tbody = document.getElementById("tbodyProductos");
-    if (!tbody) return;
-    
-    const lista = productos.length ? productos : [
-        { id: 1, nombre: "Monitor", precio: 800000, stock: 21 },
-        { id: 2, nombre: "Mouse", precio: 12000, stock: 0 },
-        { id: 3, nombre: "Teclado", precio: 100000, stock: 19 },
-        { id: 4, nombre: "Laptop", precio: 1500300, stock: 4 }
-    ];
-    
-    tbody.innerHTML = lista.map(p => `
-        <tr>
-            <td>📦</td>
-            <td>${p.nombre}</td>
-            <td>$${p.precio.toLocaleString()}</td>
-            <td>${p.stock}</td>
-            <td>${p.categoria || "General"}</td>
+            <td>${new Date(p.created_at).toLocaleDateString()}</td>
             <td>
-                <button class="btn-edit" onclick="editarProducto(${p.id})">Editar</button>
-                <button class="btn-delete" onclick="eliminarProducto(${p.id})">Eliminar</button>
+                <select onchange="cambiarEstadoPedido(${p.id}, this.value)">
+                    <option ${p.estado === 'pendiente' ? 'selected' : ''}>pendiente</option>
+                    <option ${p.estado === 'enviado' ? 'selected' : ''}>enviado</option>
+                    <option ${p.estado === 'entregado' ? 'selected' : ''}>entregado</option>
+                </select>
             </td>
-        </tr>
-    `).join("");
+        `
+        tbody.appendChild(tr)
+    })
 }
 
-// ============================================
-// FUNCIONES GLOBALES
-// ============================================
-window.mostrarSeccion = mostrarSeccion;
-window.editarProducto = (id) => alert(`Editar producto ${id}`);
-window.eliminarProducto = (id) => {
-    if (confirm("¿Eliminar producto?")) alert("Producto eliminado");
-};
+async function cambiarEstadoPedido(id, estado) {
+    await fetch(API + "/pedidos/" + id, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ estado })
+    })
+    mostrarToast("✓ Estado actualizado")
+}
+
+// Usuarios
+async function cargarUsuarios() {
+    const r = await fetch(API + "/usuarios", {
+        headers: { "authorization": token }
+    })
+    const usuarios = await r.json()
+    const tbody = document.getElementById("tbodyUsuarios")
+    tbody.innerHTML = ""
+
+        usuarios.forEach(function(u) {
+            const tr = document.createElement("tr")
+            const esMiCuenta = u.id === usuario.id
+            const esSuperAdminUsuario = u.rol === "superadmin"
+
+            tr.innerHTML = `
+                <td>${u.nombre}</td>
+                <td>${u.email}</td>
+                <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
+                <td>
+                    ${!esMiCuenta && !esSuperAdminUsuario ? `
+                        <button class="btn-rol" onclick="cambiarRol(${u.id}, '${u.rol}')">
+                            ${u.rol === 'admin' ? 'Quitar admin' : 'Hacer admin'}
+                        </button>
+                    ` : "-"}
+                </td>
+            `
+            tbody.appendChild(tr)
+    })
+}
+
+async function cambiarRol(id, rolActual) {
+    const nuevoRol = rolActual === "admin" ? "usuario" : "admin"
+    await fetch(API + "/usuarios/" + id + "/rol", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ rol: nuevoRol })
+    })
+    cargarUsuarios()
+    mostrarToast("✓ Rol actualizado")
+}
+async function generarInvitacion() {
+    const email = document.getElementById("emailInvitacion").value.trim()
+    if (!email) {
+        mostrarToast("Escribe un email", true)
+        return
+    }
+
+    const respuesta = await fetch(API + "/invitaciones", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ email })
+    })
+
+    const datos = await respuesta.json()
+
+    if (respuesta.ok) {
+        document.getElementById("linkGenerado").style.display = "block"
+        document.getElementById("linkInvitacion").value = datos.link
+        mostrarToast("✓ Link generado correctamente")
+    } else {
+        mostrarToast(datos.error, true)
+    }
+}
+
+function copiarLink() {
+    const link = document.getElementById("linkInvitacion")
+    link.select()
+    document.execCommand("copy")
+    mostrarToast("✓ Link copiado")
+}
+
+async function cargarSolicitudes() {
+    const respuesta = await fetch(API + "/solicitudes-cambio", {
+        headers: { "authorization": token }
+    })
+    const solicitudes = await respuesta.json()
+    const tbody = document.getElementById("tbodySolicitudes")
+
+    if (!solicitudes.length) {
+        tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;color:#888'>No hay solicitudes pendientes</td></tr>"
+        return
+    }
+
+    tbody.innerHTML = solicitudes.map(function(s) {
+        const valor = s.campo === "password" ? "••••••••" : s.valor_nuevo
+        return `
+            <tr>
+                <td>${s.nombre}</td>
+                <td>${s.email}</td>
+                <td>${s.campo}</td>
+                <td>${valor}</td>
+                <td>${new Date(s.created_at).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn-edit" onclick="responderSolicitud(${s.id}, 'aprobado')">✓ Aprobar</button>
+                    <button class="btn-delete" onclick="responderSolicitud(${s.id}, 'rechazado')">✕ Rechazar</button>
+                </td>
+            </tr>
+        `
+    }).join("")
+}
+
+async function responderSolicitud(id, estado) {
+    const respuesta = await fetch(API + "/solicitudes-cambio/" + id, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "authorization": token
+        },
+        body: JSON.stringify({ estado })
+    })
+
+    if (respuesta.ok) {
+        mostrarToast(estado === "aprobado" ? "✓ Solicitud aprobada" : "Solicitud rechazada")
+        cargarSolicitudes()
+    }
+}
+
+function mostrarToast(mensaje) {
+    let toast = document.getElementById("toast")
+    if (!toast) {
+        toast = document.createElement("div")
+        toast.id = "toast"
+        toast.style.cssText = `
+            position:fixed; bottom:2rem; right:2rem;
+            background:#22c55e; color:#fff;
+            padding:12px 24px; border-radius:8px;
+            font-weight:500; z-index:9999;
+            opacity:0; transform:translateY(20px);
+            transition:all 0.3s ease;
+        `
+        document.body.appendChild(toast)
+    }
+    toast.textContent = mensaje
+    toast.style.opacity = "1"
+    toast.style.transform = "translateY(0)"
+    setTimeout(function() {
+        toast.style.opacity = "0"
+        toast.style.transform = "translateY(20px)"
+    }, 3000)
+}
+
+// Cargar dashboard al iniciar
+cargarEstadisticas()
