@@ -56,13 +56,15 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         const datos = await respuesta.json()
 
 if (respuesta.ok) {
+    // Primero verificar rol ANTES de guardar
+    if (datos.usuario.rol === "admin" || datos.usuario.rol === "superadmin") {
+        mostrarToast("Usa el panel de administrador para iniciar sesión", true)
+        return
+    }
+
+    // Solo guardar si es usuario normal
     localStorage.setItem("token", datos.token)
     localStorage.setItem("usuario", JSON.stringify(datos.usuario))
-
-    if (datos.usuario.rol === "admin" || datos.usuario.rol === "superadmin") {
-    mostrarToast("Usa el panel de administrador para iniciar sesión", true)
-    return
-}
 
     const recordar = document.getElementById("recordarme").checked
     if (recordar) {
