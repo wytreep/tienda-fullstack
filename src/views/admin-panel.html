@@ -8,23 +8,38 @@
 </head>
 <body>
     <div class="admin-layout">
-        <aside class="sidebar">
-            <div class="sidebar-logo">⚙️ <span id="adminNombre">Admin</span></div>
-            <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙 Modo oscuro</button>
-            
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard', event)">📊 Dashboard</a>
-                <a href="#" class="nav-item" onclick="mostrarSeccion('productos', event)">📦 Productos</a>
-                <a href="#" class="nav-item" onclick="mostrarSeccion('resenas', event)">⭐ Reseñas</a>
-                <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos', event)">🛒 Pedidos</a>
-                <a href="#" class="nav-item" onclick="mostrarSeccion('ventas', event)">💰 Ventas</a>
-                <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios', event)">👥 Usuarios</a>
-                <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones', event)">📨 Invitaciones</a>
-                <a href="#" class="nav-item" id="navConfiguracion" onclick="mostrarSeccion('configuracion', event)">⚙️ Configuración</a>
-            </nav>
-            <button class="btn-cerrar-admin" id="btnCerrarSesion">Cerrar sesión</button>
-        </aside>
-
+       <aside class="sidebar">
+    <div class="sidebar-logo">
+        ⚙️
+        <div>
+            <div>Panel Admin</div>
+            <span>Sistema de gestión</span>
+        </div>
+    </div>
+    <div class="sidebar-perfil">
+        <div class="sidebar-avatar" id="adminAvatar">A</div>
+        <div class="sidebar-perfil-info">
+            <div class="sidebar-perfil-nombre" id="adminNombre">Admin</div>
+            <div class="sidebar-perfil-rol" id="adminRol">Administrador</div>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-grupo-label">Principal</div>
+        <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard', event)">📊 Dashboard</a>
+        <a href="#" class="nav-item" onclick="mostrarSeccion('ventas', event)">💰 Ventas</a>
+        <div class="nav-grupo-label">Gestión</div>
+        <a href="#" class="nav-item" onclick="mostrarSeccion('productos', event)">📦 Productos</a>
+        <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos', event)">🛒 Pedidos</a>
+        <a href="#" class="nav-item" onclick="mostrarSeccion('resenas', event)">⭐ Reseñas</a>
+        <div class="nav-grupo-label">Administración</div>
+        <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios', event)">👥 Usuarios</a>
+        <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones', event)">📨 Invitaciones</a>
+        <div class="nav-grupo-label">Cuenta</div>
+        <a href="#" class="nav-item" id="navConfiguracion" onclick="mostrarSeccion('configuracion', event)">⚙️ Configuración</a>
+    </nav>
+    <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙 Modo oscuro</button>
+    <button class="btn-cerrar-admin" id="btnCerrarSesion">← Cerrar sesión</button>
+</aside>
         <main class="admin-main">
             <div class="admin-header">
                 <h1 id="tituloSeccion">Dashboard</h1>

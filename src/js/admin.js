@@ -11,6 +11,10 @@ if (!token || !usuario || (usuario.rol !== "admin" && usuario.rol !== "superadmi
     window.location.href = "admin-login.html"
 }
 const esSuperAdmin = usuario.rol === "superadmin"
+// Inicializar avatar y rol en sidebar
+const inicial = usuario.nombre.charAt(0).toUpperCase()
+document.getElementById("adminAvatar").textContent = inicial
+document.getElementById("adminRol").textContent = esSuperAdmin ? "Super Admin" : "Administrador"
 
 if (esSuperAdmin) {
     document.getElementById("configDirecta").style.display = "block"
