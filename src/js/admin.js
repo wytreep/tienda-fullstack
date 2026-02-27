@@ -1,10 +1,11 @@
 
 console.log("admin.js cargando...")
-console.log("token:", localStorage.getItem("token"))
-console.log("usuario:", localStorage.getItem("usuario"))
+console.log("token:", localStorage.getItem("admin-token"))
+console.log("usuario:", localStorage.getItem("admin-usuario"))
 const API = "https://mi-servidor-2mff.onrender.com"
-const token = localStorage.getItem("token")
-const usuario = JSON.parse(localStorage.getItem("usuario"))
+
+const token = localStorage.getItem("admin-token")
+const usuario = JSON.parse(localStorage.getItem("admin-usuario"))
 
 if (!token || !usuario || (usuario.rol !== "admin" && usuario.rol !== "superadmin")) {
     window.location.href = "admin-login.html"
@@ -20,8 +21,8 @@ if (esSuperAdmin) {
 document.getElementById("adminNombre").textContent = "Admin " + usuario.nombre
 
 document.getElementById("btnCerrarSesion").addEventListener("click", function() {
-    localStorage.removeItem("token")
-    localStorage.removeItem("usuario")
+    localStorage.removeItem("admin-token")
+    localStorage.removeItem("admin-usuario")
     window.location.href = "admin-login.html"
 })
 

@@ -75,22 +75,38 @@ function estadoIndex(estado) {
     return idx === -1 ? 0 : idx
 }
 
-async function cancelarPedido(id) {
-    if (!confirm("¿Seguro que quieres cancelar este pedido?")) return
+let pedidoACancelar = null
 
-    const respuesta = await fetch(API + "/mis-pedidos/" + id + "/cancelar", {
+function cancelarPedido(id) {
+    pedidoACancelar = id
+    document.getElementById("modalCancelar").classList.add("activo")
+}
+
+document.getElementById("btnNoCancelar").addEventListener("click", function() {
+    document.getElementById("modalCancelar").classList.remove("activo")
+    pedidoACancelar = null
+})
+
+document.getElementById("btnSiCancelar").addEventListener("click", async function() {
+    if (!pedidoACancelar) return
+
+    const respuesta = await fetch(API + "/mis-pedidos/" + pedidoACancelar + "/cancelar", {
         method: "PUT",
         headers: { "authorization": token }
     })
 
     const datos = await respuesta.json()
+    document.getElementById("modalCancelar").classList.remove("activo")
+
     if (respuesta.ok) {
-        mostrarToast("✓ Pedido cancelado")
+        mostrarToast("✓ Pedido cancelado correctamente")
         cargarPedidos()
     } else {
         mostrarToast(datos.error, true)
     }
-}
+
+    pedidoACancelar = null
+})
 
 async function cargarPedidos() {
     const respuesta = await fetch(API + "/mis-pedidos", {

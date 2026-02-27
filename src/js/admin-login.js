@@ -21,8 +21,8 @@ document.getElementById("adminLoginForm").addEventListener("submit", async funct
                 alert("No tienes permisos de administrador")
                 return
             }
-            localStorage.setItem("token", datos.token)
-            localStorage.setItem("usuario", JSON.stringify(datos.usuario))
+            localStorage.setItem("admin-token", datos.token)
+            localStorage.setItem("admin-usuario", JSON.stringify(datos.usuario))
             window.location.href = "admin-panel.html"
         } else {
             alert(datos.error)
