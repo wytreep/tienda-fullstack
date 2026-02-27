@@ -323,12 +323,22 @@ async function cargarResenas() {
 
     tbody.innerHTML = resenas.map(function(r) {
         const estrellas = "★".repeat(r.calificacion) + "☆".repeat(5 - r.calificacion)
+
+        const respuestasHTML = r.respuestas.length ? r.respuestas.map(function(resp) {
+            return `<div style="font-size:0.75rem; color:#888; margin-top:4px">
+                        ${resp.es_admin ? '🏪' : '👤'} <b>${resp.nombre}:</b> ${resp.comentario}
+                    </div>`
+        }).join("") : ""
+
         return `
             <tr>
                 <td>${r.producto}</td>
                 <td>${r.usuario}</td>
-                <td style="color:#f59e0b">${estrellas}</td>
-                <td>${r.comentario}</td>
+                <td style="color:#f59e0b">${estrellas} (${r.likes} 👍)</td>
+                <td>
+                    <div>${r.comentario}</div>
+                    ${respuestasHTML}
+                </td>
                 <td>${new Date(r.created_at).toLocaleDateString()}</td>
                 <td style="display:flex; gap:0.5rem; flex-wrap:wrap">
                     <button class="btn-edit" onclick="toggleLikeAdmin(${r.id}, this)">👍 Like</button>
@@ -349,7 +359,6 @@ async function cargarResenas() {
         `
     }).join("")
 }
-
 async function toggleLikeAdmin(resenaId, btn) {
     const respuesta = await fetch(API + "/resenas/" + resenaId + "/like", {
         method: "POST",
