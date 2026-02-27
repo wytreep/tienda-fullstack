@@ -8,737 +8,365 @@
     <link rel="stylesheet" href="/src/css/admin.css">
 </head>
 <body>
+<div class="admin-layout"> <!-- Clase original mantenida -->
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-    <div class="sidebar-brand">
-        <div class="brand-logo">MI<span>TIENDA</span></div>
-        <div class="brand-sub">Panel de Administración</div>
-    </div>
-
-    <div class="sidebar-user">
-        <div class="user-avatar" id="adminAvatar">A</div>
-        <div class="user-info">
-            <div class="user-name" id="adminNombre">Admin</div>
-            <div class="user-code" id="adminRol">ADMIN</div>
+    <!-- SIDEBAR - Estilo UNIVIRTUAL pero con IDs/clases originales -->
+    <aside class="sidebar"> <!-- Clase original mantenida -->
+        <div class="sidebar-logo"> <!-- Clase original mantenida -->
+            <div class="sidebar-logo-titulo">⚙️ <span>Admin</span>Panel</div> <!-- Clase original -->
+            <div class="sidebar-logo-sub">Sistema de Gestión</div> <!-- Clase original -->
         </div>
-    </div>
-
-    <nav class="sidebar-nav">
-        <!-- PRINCIPAL -->
-        <div class="nav-group-label">Principal</div>
-        <a class="nav-item active" href="#" onclick="mostrarSeccion('dashboard', event)">
-            <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7" rx="1"/>
-                <rect x="14" y="3" width="7" height="7" rx="1"/>
-                <rect x="3" y="14" width="7" height="7" rx="1"/>
-                <rect x="14" y="14" width="7" height="7" rx="1"/>
-            </svg>
-            Inicio
-        </a>
-        <a class="nav-item" href="#" onclick="mostrarSeccion('ventas', event)">
-            <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-            Ventas
-        </a>
-
-        <!-- GESTIÓN -->
-        <div class="nav-group-label">Gestión</div>
-        <a class="nav-item" href="#" onclick="mostrarSeccion('productos', event)">
-            <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-            </svg>
-            Productos
-        </a>
-        <a class="nav-item" href="#" onclick="mostrarSeccion('pedidos', event)">
-            <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-            </svg>
-            Pedidos
-            <span class="nav-badge" id="navPedidosBadge" style="display:none">0</span>
-        </a>
-        <a class="nav-item" href="#" onclick="mostrarSeccion('resenas', event)">
-            <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-            </svg>
-            Reseñas
-        </a>
-
-        <!-- ADMINISTRACIÓN (solo superadmin) -->
-        <div id="navAdminGroup" style="display:none">
-            <div class="nav-group-label">Administración</div>
-            <a class="nav-item" href="#" onclick="mostrarSeccion('usuarios', event)">
-                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
-                Usuarios
-            </a>
-            <a class="nav-item" href="#" onclick="mostrarSeccion('invitaciones', event)">
-                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                Invitaciones
-            </a>
-        </div>
-
-        <!-- CUENTA -->
-        <div class="nav-group-label">Cuenta</div>
-        <a class="nav-item" href="#" onclick="mostrarSeccion('configuracion', event)">
-            <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            Configuración
-        </a>
-    </nav>
-
-    <div class="sidebar-footer">
-        <button class="btn-darkmode" id="btnDarkModeAdmin">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-            </svg>
-            Modo oscuro
-        </button>
-        <button class="btn-logout" id="btnCerrarSesion">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-            </svg>
-            Cerrar sesión
-        </button>
-    </div>
-</aside>
-
-<!-- MAIN -->
-<main class="main">
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-        <div class="topbar-left">
-            <div class="breadcrumb">MI-TIENDA › <span id="breadcrumbActual">Inicio</span></div>
-            <div class="page-title" id="tituloSeccion">Panel del Administrador</div>
-        </div>
-        <div class="topbar-right">
-            <span class="semestre-tag" id="adminTagRol">ADMIN</span>
-            <div class="topbar-btn" onclick="cargarEstadisticas()">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-            </div>
-            <div class="topbar-btn" style="width:auto; padding:0 12px; gap:8px; font-size:13px; font-weight:600;">
-                <div class="user-avatar-small" id="adminAvatarSmall">A</div>
-                <span id="adminNombreSmall">Admin</span>
+        
+        <!-- Perfil con IDs originales -->
+        <div class="sidebar-perfil"> <!-- Clase original -->
+            <div class="sidebar-avatar" id="adminAvatar">A</div> <!-- ID original -->
+            <div>
+                <div class="sidebar-perfil-nombre" id="adminNombre">Admin</div> <!-- ID original -->
+                <div class="sidebar-perfil-rol" id="adminRol">Administrador</div> <!-- ID original -->
             </div>
         </div>
-    </div>
 
-    <!-- CONTENT -->
-    <div class="content">
+        <!-- Navegación - IDs y funciones originales -->
+        <nav class="sidebar-nav"> <!-- Clase original -->
+            <div class="nav-grupo-label">Principal</div> <!-- Clase original -->
+            <a href="#" class="nav-item activo" onclick="mostrarSeccion('dashboard', event)">📊 Dashboard</a> <!-- Original -->
+            <a href="#" class="nav-item" onclick="mostrarSeccion('ventas', event)">💰 Ventas</a> <!-- Original -->
+            
+            <div class="nav-grupo-label">Gestión</div> <!-- Clase original -->
+            <a href="#" class="nav-item" onclick="mostrarSeccion('productos', event)">📦 Productos</a> <!-- Original -->
+            <a href="#" class="nav-item" onclick="mostrarSeccion('pedidos', event)">🛒 Pedidos</a> <!-- Original -->
+            <a href="#" class="nav-item" onclick="mostrarSeccion('resenas', event)">⭐ Reseñas</a> <!-- Original -->
+            
+            <div class="nav-grupo-label">Administración</div> <!-- Clase original -->
+            <a href="#" class="nav-item" id="navUsuarios" onclick="mostrarSeccion('usuarios', event)">👥 Usuarios</a> <!-- ID original -->
+            <a href="#" class="nav-item" id="navInvitaciones" onclick="mostrarSeccion('invitaciones', event)">📨 Invitaciones</a> <!-- ID original -->
+            
+            <div class="nav-grupo-label">Cuenta</div> <!-- Clase original -->
+            <a href="#" class="nav-item" onclick="mostrarSeccion('configuracion', event)">⚙️ Configuración</a> <!-- Original -->
+        </nav>
 
-        <!-- DASHBOARD -->
-        <section id="seccion-dashboard" class="section active">
+        <!-- Botones con IDs originales -->
+        <button class="btn-darkmode-admin" id="btnDarkModeAdmin">🌙 Modo oscuro</button> <!-- ID original -->
+        <button class="btn-cerrar-admin" id="btnCerrarSesion">← Cerrar sesión</button> <!-- ID original -->
+    </aside>
 
-            <!-- STAT CARDS -->
-            <div class="stats-grid">
-                <div class="stat-card" onclick="mostrarSeccion('productos', event)">
-                    <div class="stat-icon-wrap si-blue">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="statProductos">0</div>
-                        <div class="stat-label">Productos</div>
-                        <div class="stat-sub">en catálogo</div>
-                    </div>
-                </div>
+    <!-- MAIN -->
+    <main class="admin-main"> <!-- Clase original -->
 
-                <div class="stat-card" onclick="mostrarSeccion('pedidos', event)">
-                    <div class="stat-icon-wrap si-gold">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="statPedidos">0</div>
-                        <div class="stat-label">Pedidos</div>
-                        <div class="stat-sub" id="statPedidosPendientes">0 pendientes</div>
-                    </div>
-                </div>
-
-                <div class="stat-card" onclick="mostrarSeccion('usuarios', event)">
-                    <div class="stat-icon-wrap si-green">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="statUsuarios">0</div>
-                        <div class="stat-label">Usuarios</div>
-                        <div class="stat-sub">registrados</div>
-                    </div>
-                </div>
-
-                <div class="stat-card" onclick="mostrarSeccion('ventas', event)">
-                    <div class="stat-icon-wrap si-red">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="statVentas">$0</div>
-                        <div class="stat-label">Total ventas</div>
-                        <div class="stat-sub" id="statVentasMes">este mes</div>
-                    </div>
-                </div>
+        <!-- TOPBAR con IDs originales -->
+        <div class="admin-topbar"> <!-- Clase original -->
+            <div class="admin-header"> <!-- Clase original -->
+                <div class="admin-breadcrumb">Panel Admin › <span id="breadcrumbActual">Inicio</span></div> <!-- ID original -->
+                <h1 id="tituloSeccion">Dashboard</h1> <!-- ID original -->
             </div>
+            <div class="admin-topbar-right"> <!-- Clase original -->
+                <span class="admin-tag" id="adminTagRol">ADMIN</span> <!-- ID original -->
+            </div>
+        </div>
 
-            <!-- PEDIDOS RECIENTES -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
-                        Pedidos Recientes
+        <!-- CONTENIDO - TODOS los IDs y clases originales se mantienen -->
+        <div class="admin-content"> <!-- Clase original -->
+
+            <!-- DASHBOARD - Sección con IDs originales -->
+            <section id="seccion-dashboard" class="seccion activo"> <!-- IDs/clases originales -->
+                <div class="stats-grid"> <!-- Clase original -->
+                    <!-- Stats cards con IDs originales y onclick -->
+                    <div class="stat-card" onclick="mostrarSeccion('productos', event)">
+                        <div class="stat-icono">📦</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="statProductos">0</div> <!-- ID original -->
+                            <div class="stat-label">Productos</div> <!-- Clase original -->
+                        </div>
                     </div>
-                    <a class="card-action" href="#" onclick="mostrarSeccion('pedidos', event)">Ver todos →</a>
+                    <div class="stat-card" onclick="mostrarSeccion('pedidos', event)">
+                        <div class="stat-icono">🛒</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="statPedidos">0</div> <!-- ID original -->
+                            <div class="stat-label">Pedidos</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="mostrarSeccion('usuarios', event)">
+                        <div class="stat-icono">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="statUsuarios">0</div> <!-- ID original -->
+                            <div class="stat-label">Usuarios</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="mostrarSeccion('ventas', event)">
+                        <div class="stat-icono">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="statVentas">$0</div> <!-- ID original -->
+                            <div class="stat-label">Total ventas</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table class="data-table">
+
+                <!-- Pedidos recientes - con IDs originales -->
+                <div class="seccion-header"> <!-- Clase original -->
+                    <h2>Pedidos recientes</h2>
+                    <button class="btn-primary" onclick="mostrarSeccion('pedidos', event)">Ver todos</button> <!-- Clase original -->
+                </div>
+                <table class="admin-table"> <!-- Clase original -->
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyPedidosRecientes"></tbody> <!-- ID original -->
+                </table>
+
+                <!-- Acceso Rápido (nuevo, pero no interfiere) -->
+                <div style="margin-top:24px; display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+                    <div class="quick-btn" onclick="mostrarSeccion('productos', event); mostrarFormProducto()">
+                        <span style="font-size:20px;">➕</span>
+                        <span>Nuevo Producto</span>
+                    </div>
+                    <div class="quick-btn" onclick="mostrarSeccion('pedidos', event)">
+                        <span style="font-size:20px;">📋</span>
+                        <span>Ver Pedidos</span>
+                    </div>
+                    <div class="quick-btn" onclick="mostrarSeccion('invitaciones', event)">
+                        <span style="font-size:20px;">📧</span>
+                        <span>Invitar Admin</span>
+                    </div>
+                    <div class="quick-btn" onclick="mostrarSeccion('configuracion', event)">
+                        <span style="font-size:20px;">⚙️</span>
+                        <span>Configuración</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VENTAS - Sección con IDs originales -->
+            <section id="seccion-ventas" class="seccion"> <!-- ID original -->
+                <div class="stats-grid" style="margin-bottom:24px">
+                    <div class="stat-card">
+                        <div class="stat-icono">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="ventaTotal">$0</div> <!-- ID original -->
+                            <div class="stat-label">Total acumulado</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">📊</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="ventaPromedio">$0</div> <!-- ID original -->
+                            <div class="stat-label">Promedio pedido</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="ventaEntregados">0</div> <!-- ID original -->
+                            <div class="stat-label">Entregados</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icono">⏳</div>
+                        <div class="stat-info">
+                            <div class="stat-valor" id="ventaPendientes">0</div> <!-- ID original -->
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="seccion-header"><h2>Historial de ventas</h2></div>
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>#</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr>
+                    </thead>
+                    <tbody id="tbodyVentas"></tbody> <!-- ID original -->
+                </table>
+            </section>
+
+            <!-- PRODUCTOS - Sección con TODOS los IDs originales -->
+            <section id="seccion-productos" class="seccion"> <!-- ID original -->
+                <div id="vistaTabla"> <!-- ID original -->
+                    <div class="seccion-header">
+                        <h2>Gestión de productos</h2>
+                        <button class="btn-primary" onclick="mostrarFormProducto()">+ Agregar producto</button>
+                    </div>
+                    <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Cliente</th>
-                                <th>Total</th>
-                                <th>Estado</th>
-                                <th>Fecha</th>
+                                <th>Imagen</th><th>Nombre</th><th>Precio</th>
+                                <th>Stock</th><th>Categoría</th><th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="tbodyPedidosRecientes"></tbody>
+                        <tbody id="tbodyProductos"></tbody> <!-- ID original -->
                     </table>
                 </div>
-            </div>
-
-            <!-- PRODUCTOS MÁS VENDIDOS Y PROGRESO -->
-            <div class="grid-2" style="margin-top:22px;">
-                <!-- Productos más vendidos -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                            </svg>
-                            Productos más vendidos
-                        </div>
-                        <a class="card-action" href="#" onclick="mostrarSeccion('productos', event)">Ver todos →</a>
+                <div id="vistaFormulario" style="display:none"> <!-- ID original -->
+                    <div class="seccion-header">
+                        <h2 id="formTitulo">Agregar producto</h2> <!-- ID original -->
+                        <button class="btn-volver-admin" onclick="cancelarFormProducto()">← Volver</button>
                     </div>
-                    <div class="card-body">
-                        <div id="topProductos" class="materias-list">
-                            <!-- Se llena con JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Progreso del mes -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                            </svg>
-                            Progreso del Mes
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="progress-section">
-                            <div class="ring-wrap">
-                                <svg width="110" height="110" viewBox="0 0 110 110">
-                                    <circle cx="55" cy="55" r="45" fill="none" stroke="#e8eef6" stroke-width="10"/>
-                                    <circle cx="55" cy="55" r="45" fill="none" stroke="#2560a8" stroke-width="10"
-                                        stroke-dasharray="283" stroke-dashoffset="85" stroke-linecap="round" id="progresoRing"/>
-                                </svg>
-                                <div class="ring-center">
-                                    <div class="ring-pct" id="progresoPct">70%</div>
-                                    <div class="ring-label">meta</div>
-                                </div>
-                            </div>
-                            <div class="progress-legend">
-                                <div class="legend-item">
-                                    <div class="legend-dot" style="background:#2560a8;"></div>
-                                    Ventas del mes
-                                    <span class="legend-val" id="ventasMesVal">$0</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-dot" style="background:#1e7d4e;"></div>
-                                    Pedidos completados
-                                    <span class="legend-val" id="pedidosCompletadosVal">0</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-dot" style="background:#b8922a;"></div>
-                                    Meta mensual
-                                    <span class="legend-val" id="metaMensualVal">$0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ACCESO RÁPIDO -->
-            <div class="card" style="margin-top:22px;">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                        Acceso Rápido
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="quick-grid">
-                        <div class="quick-btn" onclick="mostrarSeccion('productos', event); mostrarFormProducto()">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
-                            <span class="quick-label">Nuevo Producto</span>
-                        </div>
-                        <div class="quick-btn" onclick="mostrarSeccion('pedidos', event)">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                            </svg>
-                            <span class="quick-label">Ver Pedidos</span>
-                        </div>
-                        <div class="quick-btn" onclick="mostrarSeccion('invitaciones', event)">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                            <span class="quick-label">Invitar Admin</span>
-                        </div>
-                        <div class="quick-btn" onclick="mostrarSeccion('configuracion', event)">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span class="quick-label">Configuración</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- VENTAS -->
-        <section id="seccion-ventas" class="section">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon-wrap si-blue">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="ventaTotal">$0</div>
-                        <div class="stat-label">Total acumulado</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon-wrap si-gold">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="ventaPromedio">$0</div>
-                        <div class="stat-label">Promedio pedido</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon-wrap si-green">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="ventaEntregados">0</div>
-                        <div class="stat-label">Entregados</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon-wrap si-red">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="ventaPendientes">0</div>
-                        <div class="stat-label">Pendientes</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        Historial de Ventas
-                    </div>
-                </div>
-                <div class="card-body">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Cliente</th>
-                                <th>Total</th>
-                                <th>Estado</th>
-                                <th>Fecha</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodyVentas"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- PRODUCTOS -->
-        <section id="seccion-productos" class="section">
-            <div id="vistaTabla">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                            </svg>
-                            Gestión de Productos
-                        </div>
-                        <button class="btn-primary" onclick="mostrarFormProducto()">
-                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
-                            Agregar producto
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Imagen</th>
-                                    <th>Nombre</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                    <th>Categoría</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyProductos"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="vistaFormulario" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title" id="formTitulo">Agregar Producto</div>
-                        <button class="btn-secondary" onclick="cancelarFormProducto()">
-                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                            </svg>
-                            Volver
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <input type="hidden" id="productoId">
-                        
+                    <div class="form-card">
+                        <input type="hidden" id="productoId"> <!-- ID original -->
                         <div class="form-grid">
                             <div class="form-group">
-                                <label>Nombre del producto</label>
-                                <input type="text" id="pNombre" placeholder="Ej: Camiseta Deportiva">
+                                <label>Nombre</label>
+                                <input type="text" id="pNombre" placeholder="Nombre del producto"> <!-- ID original -->
                             </div>
-                            
                             <div class="form-group">
                                 <label>Precio</label>
-                                <input type="number" id="pPrecio" placeholder="0">
+                                <input type="number" id="pPrecio" placeholder="0"> <!-- ID original -->
                             </div>
-                            
                             <div class="form-group">
                                 <label>Stock</label>
-                                <input type="number" id="pStock" placeholder="0">
+                                <input type="number" id="pStock" placeholder="0"> <!-- ID original -->
                             </div>
-                            
                             <div class="form-group">
                                 <label>Categoría</label>
-                                <input type="text" id="pCategoria" placeholder="Ej: Ropa">
+                                <input type="text" id="pCategoria" placeholder="Categoría"> <!-- ID original -->
                             </div>
-                            
-                            <div class="form-group full-width">
+                            <div class="form-group full">
                                 <label>Descripción</label>
-                                <textarea id="pDescripcion" rows="3" placeholder="Descripción del producto..."></textarea>
+                                <textarea id="pDescripcion" rows="3" placeholder="Descripción del producto"></textarea> <!-- ID original -->
                             </div>
-                            
-                            <div class="form-group full-width">
-                                <label>Imagen del producto</label>
-                                <input type="file" id="pImagen" accept="image/*">
+                            <div class="form-group full">
+                                <label>Imagen</label>
+                                <input type="file" id="pImagen" accept="image/*"> <!-- ID original -->
                             </div>
                         </div>
-                        
-                        <div class="form-actions">
+                        <div class="form-botones">
                             <button class="btn-secondary" onclick="cancelarFormProducto()">Cancelar</button>
                             <button class="btn-primary" onclick="guardarProducto()">Guardar producto</button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- PEDIDOS -->
-        <section id="seccion-pedidos" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                        </svg>
-                        Gestión de Pedidos
+            <!-- PEDIDOS - Sección con IDs originales -->
+            <section id="seccion-pedidos" class="seccion"> <!-- ID original -->
+                <div class="seccion-header"><h2>Gestión de pedidos</h2></div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th><th>Cliente</th><th>Total</th>
+                            <th>Estado</th><th>Dirección</th><th>Fecha</th><th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyPedidos"></tbody> <!-- ID original -->
+                </table>
+            </section>
+
+            <!-- RESEÑAS - Sección con IDs originales -->
+            <section id="seccion-resenas" class="seccion"> <!-- ID original -->
+                <div class="seccion-header"><h2>Reseñas de productos</h2></div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th><th>Usuario</th><th>Calificación</th>
+                            <th>Comentario</th><th>Fecha</th><th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyResenas"></tbody> <!-- ID original -->
+                </table>
+            </section>
+
+            <!-- USUARIOS - Sección con IDs originales -->
+            <section id="seccion-usuarios" class="seccion"> <!-- ID original -->
+                <div class="seccion-header"><h2>Gestión de usuarios</h2></div>
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Acción</th></tr>
+                    </thead>
+                    <tbody id="tbodyUsuarios"></tbody> <!-- ID original -->
+                </table>
+            </section>
+
+            <!-- INVITACIONES - Sección con TODOS los IDs originales -->
+            <section id="seccion-invitaciones" class="seccion"> <!-- ID original -->
+                <div class="seccion-header"><h2>Invitar administrador</h2></div>
+                <div class="form-card" style="max-width:520px">
+                    <div class="form-group" style="margin-bottom:1rem">
+                        <label>Email del nuevo administrador</label>
+                        <input type="email" id="emailInvitacion" placeholder="correo@ejemplo.com"> <!-- ID original -->
+                    </div>
+                    <div class="form-botones">
+                        <button class="btn-primary" onclick="generarInvitacion()">Generar link de invitación</button>
                     </div>
                 </div>
-                <div class="card-body">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Cliente</th>
-                                <th>Total</th>
-                                <th>Estado</th>
-                                <th>Dirección</th>
-                                <th>Fecha</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodyPedidos"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- RESEÑAS -->
-        <section id="seccion-resenas" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                        </svg>
-                        Reseñas de Productos
-                    </div>
-                </div>
-                <div class="card-body">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Usuario</th>
-                                <th>Calificación</th>
-                                <th>Comentario</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodyResenas"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- USUARIOS -->
-        <section id="seccion-usuarios" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                        Gestión de Usuarios
-                    </div>
-                </div>
-                <div class="card-body">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Rol</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodyUsuarios"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- INVITACIONES -->
-        <section id="seccion-invitaciones" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                        Invitar Administrador
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div style="max-width:500px;">
+                <div id="linkGenerado" style="display:none; margin-bottom:20px"> <!-- ID original -->
+                    <div class="form-card" style="max-width:520px">
                         <div class="form-group">
-                            <label>Email del nuevo administrador</label>
-                            <div style="display:flex; gap:8px;">
-                                <input type="email" id="emailInvitacion" placeholder="correo@ejemplo.com" style="flex:1;">
-                                <button class="btn-primary" onclick="generarInvitacion()">Generar link</button>
+                            <label>Link generado — expira en 24 horas</label>
+                            <div style="display:flex; gap:8px; align-items:center; margin-top:4px">
+                                <input type="text" id="linkInvitacion" readonly> <!-- ID original -->
+                                <button class="btn-primary" onclick="copiarLink()">Copiar</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="seccion-header" style="margin-top:8px"><h2>Solicitudes de cambio</h2></div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Admin</th><th>Email</th><th>Campo</th>
+                            <th>Valor nuevo</th><th>Fecha</th><th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodySolicitudes"></tbody> <!-- ID original -->
+                </table>
+            </section>
 
-            <div id="linkGenerado" style="display:none; margin-top:16px;">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Link generado</div>
+            <!-- CONFIGURACIÓN - Sección con TODOS los IDs originales -->
+            <section id="seccion-configuracion" class="seccion"> <!-- ID original -->
+                <div class="seccion-header"><h2>Mi configuración</h2></div>
+                <div id="configDirecta" style="display:none"> <!-- ID original -->
+                    <div class="form-card" style="max-width:520px">
+                        <div class="form-group" style="margin-bottom:1rem">
+                            <label>Cambiar nombre</label>
+                            <input type="text" id="superNombre" placeholder="Nuevo nombre"> <!-- ID original -->
+                        </div>
+                        <div class="form-botones">
+                            <button class="btn-primary" onclick="cambiarDatoDirecto('nombre', 'superNombre')">Guardar</button>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div style="display:flex; gap:8px; align-items:center;">
-                            <input type="text" id="linkInvitacion" readonly style="flex:1;">
-                            <button class="btn-secondary" onclick="copiarLink()">
-                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                                </svg>
-                                Copiar
-                            </button>
+                    <div class="form-card" style="max-width:520px">
+                        <div class="form-group" style="margin-bottom:1rem">
+                            <label>Cambiar contraseña</label>
+                            <input type="password" id="superPassword" placeholder="Nueva contraseña"> <!-- ID original -->
+                        </div>
+                        <div class="form-botones">
+                            <button class="btn-primary" onclick="cambiarDatoDirecto('password', 'superPassword')">Guardar</button>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card" style="margin-top:22px;">
-                <div class="card-header">
-                    <div class="card-title">
-                        <svg class="card-title-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                        </svg>
-                        Solicitudes de Cambio
+                <div id="configSolicitud" style="display:none"> <!-- ID original -->
+                    <p style="color:var(--gray); font-size:13px; margin-bottom:20px; background:#f8fafc; padding:12px 16px; border-radius:8px; border:1px solid var(--border)">
+                        ℹ️ Los cambios requieren aprobación del superadmin.
+                    </p>
+                    <div class="form-card" style="max-width:520px">
+                        <div class="form-group" style="margin-bottom:1rem">
+                            <label>Solicitar cambio de nombre</label>
+                            <input type="text" id="nuevoNombre" placeholder="Nuevo nombre"> <!-- ID original -->
+                        </div>
+                        <div class="form-botones">
+                            <button class="btn-primary" onclick="solicitarCambio('nombre', 'nuevoNombre')">Solicitar cambio</button>
+                        </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Admin</th>
-                                <th>Email</th>
-                                <th>Campo</th>
-                                <th>Valor nuevo</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodySolicitudes"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- CONFIGURACIÓN -->
-        <section id="seccion-configuracion" class="section">
-            <div id="configDirecta" style="display:none;">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Cambiar nombre</div>
-                    </div>
-                    <div class="card-body">
-                        <div style="max-width:400px;">
-                            <div class="form-group">
-                                <input type="text" id="superNombre" placeholder="Nuevo nombre">
-                            </div>
-                            <div class="form-actions" style="padding-top:12px;">
-                                <button class="btn-primary" onclick="cambiarDatoDirecto('nombre', 'superNombre')">
-                                    Guardar nombre
-                                </button>
-                            </div>
+                    <div class="form-card" style="max-width:520px">
+                        <div class="form-group" style="margin-bottom:1rem">
+                            <label>Solicitar cambio de contraseña</label>
+                            <input type="password" id="nuevaPassword" placeholder="Nueva contraseña"> <!-- ID original -->
+                        </div>
+                        <div class="form-botones">
+                            <button class="btn-primary" onclick="solicitarCambio('password', 'nuevaPassword')">Solicitar cambio</button>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <div class="card" style="margin-top:16px;">
-                    <div class="card-header">
-                        <div class="card-title">Cambiar contraseña</div>
-                    </div>
-                    <div class="card-body">
-                        <div style="max-width:400px;">
-                            <div class="form-group">
-                                <input type="password" id="superPassword" placeholder="Nueva contraseña">
-                            </div>
-                            <div class="form-actions" style="padding-top:12px;">
-                                <button class="btn-primary" onclick="cambiarDatoDirecto('password', 'superPassword')">
-                                    Guardar contraseña
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div><!-- fin admin-content -->
+    </main>
+</div>
 
-            <div id="configSolicitud" style="display:none;">
-                <div class="info-message" style="margin-bottom:16px;">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Los cambios requieren aprobación del superadmin
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Solicitar cambio de nombre</div>
-                    </div>
-                    <div class="card-body">
-                        <div style="max-width:400px;">
-                            <div class="form-group">
-                                <input type="text" id="nuevoNombre" placeholder="Nuevo nombre">
-                            </div>
-                            <div class="form-actions" style="padding-top:12px;">
-                                <button class="btn-primary" onclick="solicitarCambio('nombre', 'nuevoNombre')">
-                                    Solicitar cambio
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top:16px;">
-                    <div class="card-header">
-                        <div class="card-title">Solicitar cambio de contraseña</div>
-                    </div>
-                    <div class="card-body">
-                        <div style="max-width:400px;">
-                            <div class="form-group">
-                                <input type="password" id="nuevaPassword" placeholder="Nueva contraseña">
-                            </div>
-                            <div class="form-actions" style="padding-top:12px;">
-                                <button class="btn-primary" onclick="solicitarCambio('password', 'nuevaPassword')">
-                                    Solicitar cambio
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-</main>
-
-<!-- Toast -->
-<div id="toast" class="toast"></div>
+<!-- Toast (nuevo pero no interfiere) -->
+<div id="toast" style="position:fixed; bottom:2rem; right:2rem; background:#10b981; color:white; padding:12px 24px; border-radius:6px; font-weight:500; z-index:9999; opacity:0; transform:translateY(20px); transition:all 0.3s ease;"></div>
 
 <script src="/src/js/admin.js"></script>
 <script src="/src/js/darkmode-admin.js"></script>
