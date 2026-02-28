@@ -145,10 +145,11 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
             const card = document.createElement("div")
             card.className = "producto-card"
             card.innerHTML = `
+            const imgSrc = producto.imagen
+                ? (producto.imagen.startsWith("http") ? producto.imagen : API + producto.imagen)
+                : null
                 <div class="producto-imagen">
-                    ${producto.imagen
-                        ? `<img src="${API}${producto.imagen}" alt="${producto.nombre}">`
-                        : "📦"}
+                    ${imgSrc ? `<img src="${imgSrc}" alt="${producto.nombre}">` : "📦"}
                 </div>
                 <div class="producto-info">
                     ${producto.categoria ? `<div class="producto-categoria">${producto.categoria}</div>` : ""}
