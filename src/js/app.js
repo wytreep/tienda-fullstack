@@ -145,9 +145,8 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
                 const card = document.createElement("div")
                 card.className = "producto-card"
 
-                const imgSrc = producto.imagen
-                    ? (producto.imagen.startsWith("http") ? producto.imagen : API + producto.imagen)
-                    : null
+
+                    const imgSrc = producto.imagen || null
 
                 card.innerHTML = `
                     <div class="producto-imagen">

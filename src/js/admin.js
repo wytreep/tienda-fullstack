@@ -609,7 +609,7 @@ async function cargarProductos() {
         const tr = document.createElement("tr")
         
             tr.innerHTML = `
-                <td>${p.imagen ? `<img src="${p.imagen.startsWith('http') ? p.imagen : API + p.imagen}">` : "📦"}</td>
+                <td>${p.imagen ? `<img src="${p.imagen}">` : "📦"}</td>
                 <td>${p.nombre}</td>
                 <td>$${Number(p.precio).toLocaleString()}</td>
                 <td>${p.stock}</td>
