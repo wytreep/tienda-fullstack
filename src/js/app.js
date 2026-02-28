@@ -141,23 +141,25 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
             return
         }
 
-        productos.forEach(function(producto) {
-            const card = document.createElement("div")
-            card.className = "producto-card"
-            card.innerHTML = `
-            const imgSrc = producto.imagen
-                ? (producto.imagen.startsWith("http") ? producto.imagen : API + producto.imagen)
-                : null
-                <div class="producto-imagen">
-                    ${imgSrc ? `<img src="${imgSrc}" alt="${producto.nombre}">` : "📦"}
-                </div>
-                <div class="producto-info">
-                    ${producto.categoria ? `<div class="producto-categoria">${producto.categoria}</div>` : ""}
-                    <div class="producto-nombre">${producto.nombre}</div>
-                    <div class="producto-precio">$${Number(producto.precio).toLocaleString()}</div>
-                    <div class="producto-stock">${producto.stock > 0 ? producto.stock + ' disponibles' : 'Sin stock'}</div>
-                </div>
-            `
+            productos.forEach(function(producto) {
+                const card = document.createElement("div")
+                card.className = "producto-card"
+
+                const imgSrc = producto.imagen
+                    ? (producto.imagen.startsWith("http") ? producto.imagen : API + producto.imagen)
+                    : null
+
+                card.innerHTML = `
+                    <div class="producto-imagen">
+                        ${imgSrc ? `<img src="${imgSrc}" alt="${producto.nombre}">` : "📦"}
+                    </div>
+                    <div class="producto-info">
+                        ${producto.categoria ? `<div class="producto-categoria">${producto.categoria}</div>` : ""}
+                        <div class="producto-nombre">${producto.nombre}</div>
+                        <div class="producto-precio">$${Number(producto.precio).toLocaleString()}</div>
+                        <div class="producto-stock">${producto.stock > 0 ? producto.stock + ' disponibles' : 'Sin stock'}</div>
+                    </div>
+                `
             card.addEventListener("click", function() {
                 window.location.href = `/src/views/producto.html?id=${producto.id}`
             })
