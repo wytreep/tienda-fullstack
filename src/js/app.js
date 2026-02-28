@@ -1,6 +1,5 @@
 const API = "https://mi-servidor-2mff.onrender.com"
 const token = localStorage.getItem("token")
-
 if (!token) window.location.href = "/src/views/login.html"
 
 const usuario = JSON.parse(localStorage.getItem("usuario"))
@@ -74,12 +73,35 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
 // Cargar productos
     async function cargarProductos(busqueda = "", categoria = "") {
             document.getElementById("loader").style.display = "flex"
+    document.getElementById("productosGrid").style.display = "none"
+
+    const respuesta = await fetch(API + "/productos", {
+        headers: { "authorization": token }
+    })
+
+    // Si el servidor rechaza el token
+    if (respuesta.status === 401) {
+        localStorage.removeItem("token")
+        localStorage.removeItem("usuario")
+        window.location.href = "/src/views/login.html"
+        return
+    }
+
+    let productos = await respuesta.json()
+
+    // Si la respuesta no es un array
+    if (!Array.isArray(productos)) {
+        console.error("Error al cargar productos:", productos)
+        document.getElementById("loader").style.display = "none"
+        return
+    }
+
+    document.getElementById("loader").style.display = "none"
+    document.getElementById("productosGrid").style.display = "grid"
+    
+        document.getElementById("loader").style.display = "flex"
         document.getElementById("productosGrid").style.display = "none"
 
-        const respuesta = await fetch(API + "/productos", {
-            headers: { "authorization": token }
-        })
-        let productos = await respuesta.json()
 
         document.getElementById("loader").style.display = "none"
         document.getElementById("productosGrid").style.display = "grid"
