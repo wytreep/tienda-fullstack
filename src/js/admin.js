@@ -607,17 +607,17 @@ async function cargarProductos() {
 
     productos.forEach(function(p) {
         const tr = document.createElement("tr")
-        tr.innerHTML = `
-            <td>${p.imagen ? `<img src="${API}${p.imagen}">` : "📦"}</td>
-            <td>${p.nombre}</td>
-            <td>$${Number(p.precio).toLocaleString()}</td>
-            <td>${p.stock}</td>
-            <td>${p.categoria || "-"}</td>
-            <td>
-                <button class="btn-accion btn-editar" onclick="editarProducto(${p.id})">Editar</button>
-                <button class="btn-accion btn-eliminar" onclick="eliminarProducto(${p.id})">Eliminar</button>
-            </td>
-        `
+            tr.innerHTML = `
+                <td>${p.imagen ? `<img src="${API}${p.imagen}">` : "📦"}</td>
+                <td>${p.nombre}</td>
+                <td>$${Number(p.precio).toLocaleString()}</td>
+                <td>${p.stock}</td>
+                <td>${p.categoria || "-"}</td>
+                <td>
+                    <button class="btn-edit" onclick="editarProducto(${p.id})">Editar</button>
+                    <button class="btn-delete" onclick="eliminarProducto(${p.id})">Eliminar</button>
+                </td>
+            `
         tbody.appendChild(tr)
     })
 }
