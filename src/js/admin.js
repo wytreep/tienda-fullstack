@@ -138,6 +138,7 @@ async function cargarVentas() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             onClick: function(e, elements) {
                 if (!elements.length) return
                 const idx = elements[0].index
@@ -435,6 +436,7 @@ async function cargarGraficos() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
                 tooltip: { callbacks: { label: ctx => " $" + Number(ctx.raw).toLocaleString() } }
@@ -484,6 +486,7 @@ async function cargarGraficos() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             cutout: "68%",
             plugins: {
                 legend: { display: false },

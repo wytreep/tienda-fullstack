@@ -149,7 +149,9 @@
                                 <a class="card-action" href="#" onclick="mostrarSeccion('ventas', event)">Ver detalle →</a>
                             </div>
                             <div class="card-body">
-                                <canvas id="grafVentas" height="120"></canvas>
+                                <div style="position:relative; width:100%; height:220px">
+                                    <canvas id="grafVentas"></canvas>
+                                </div>
                             </div>
                         </div>
 
@@ -178,8 +180,8 @@
                                 <div class="card-title">📊 Estado de pedidos</div>
                             </div>
                             <div class="card-body">
-                                <div style="position:relative;max-width:220px;margin:0 auto">
-                                    <canvas id="grafEstados" height="200"></canvas>
+                                <div style="position:relative; width:100%; max-width:220px; height:220px; margin:0 auto">
+                                    <canvas id="grafEstados"></canvas>
                                     <div class="dona-center">
                                         <div class="dona-num" id="donaTotalNum">0</div>
                                         <div class="dona-label">pedidos</div>
@@ -257,7 +259,9 @@
                             <span style="font-size:10px;color:var(--gray);font-family:'JetBrains Mono',monospace">Click en barra = ver detalle</span>
                         </div>
                         <div class="card-body">
-                            <canvas id="grafVentasDetalle" height="180"></canvas>
+                            <div style="position:relative; width:100%; height:260px">
+                                <canvas id="grafVentasDetalle"></canvas>
+                            </div>
                         </div>
                     </div>
 
