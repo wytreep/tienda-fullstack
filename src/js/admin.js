@@ -47,22 +47,276 @@ async function cambiarDatoDirecto(campo, inputId) {
 }
 
 // Navegación
+
+// ---- Reemplazar mostrarSeccion ----
 function mostrarSeccion(nombre, event) {
     document.querySelectorAll(".seccion").forEach(s => s.classList.remove("activo"))
     document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("activo"))
     document.getElementById("seccion-" + nombre).classList.add("activo")
-    document.getElementById("tituloSeccion").textContent =
-        nombre.charAt(0).toUpperCase() + nombre.slice(1)
-    if (event) event.target.classList.add("activo")
 
-    if (nombre === "configuracion") {} // no necesita cargar datos
+    const titulos = {
+        dashboard: "Dashboard", ventas: "Ventas", productos: "Productos",
+        pedidos: "Pedidos", resenas: "Reseñas", usuarios: "Usuarios",
+        invitaciones: "Invitaciones", configuracion: "Configuración"
+    }
+
+    document.getElementById("tituloSeccion").textContent = titulos[nombre] || nombre
+    document.getElementById("breadcrumbActual").textContent = titulos[nombre] || nombre
+
+    // Marcar nav activo buscando por texto del onclick
+    document.querySelectorAll(".nav-item").forEach(function(n) {
+        if (n.getAttribute("onclick") && n.getAttribute("onclick").includes("'" + nombre + "'")) {
+            n.classList.add("activo")
+        }
+    })
+
     if (nombre === "dashboard") cargarEstadisticas()
     if (nombre === "productos") cargarProductos()
     if (nombre === "pedidos") cargarPedidos()
     if (nombre === "usuarios") cargarUsuarios()
+    if (nombre === "ventas") cargarVentas()
+    if (nombre === "resenas") cargarResenas()
     if (nombre === "invitaciones") cargarSolicitudes()
+    if (nombre === "configuracion") {} 
 }
 
+// ---- VENTAS ----
+let grafVentasDetalleChart = null
+
+async function cargarVentas() {
+    const r = await fetch(API + "/pedidos", { headers: { "authorization": token } })
+    const pedidos = await r.json()
+
+    const filtro = document.getElementById("filtroEstadoVentas")?.value || ""
+    const pedidosFiltrados = filtro ? pedidos.filter(p => p.estado === filtro) : pedidos
+    const pedidosValidos = pedidos.filter(p => p.estado !== "cancelado")
+
+    // Stats
+    const totalVentas = pedidosValidos.reduce((s, p) => s + Number(p.total), 0)
+    const entregados = pedidos.filter(p => p.estado === "entregado").length
+    const pendientes = pedidos.filter(p => p.estado === "pendiente").length
+    const promedio = pedidosValidos.length ? totalVentas / pedidosValidos.length : 0
+
+    document.getElementById("ventaTotal").textContent = "$" + totalVentas.toLocaleString()
+    document.getElementById("ventaPromedio").textContent = "$" + Math.round(promedio).toLocaleString()
+    document.getElementById("ventaEntregados").textContent = entregados
+    document.getElementById("ventaPendientes").textContent = pendientes
+
+    // Agrupar por mes
+    const meses = {}
+    pedidosValidos.forEach(function(p) {
+        const fecha = new Date(p.created_at)
+        const key = fecha.toLocaleDateString("es-CO", { month: "short", year: "2-digit" })
+        const keySort = fecha.getFullYear() + "-" + String(fecha.getMonth() + 1).padStart(2, "0")
+        if (!meses[key]) meses[key] = { total: 0, pedidos: [], sort: keySort }
+        meses[key].total += Number(p.total)
+        meses[key].pedidos.push(p)
+    })
+
+    // Ordenar por fecha
+    const mesesOrdenados = Object.entries(meses)
+        .sort((a, b) => a[1].sort.localeCompare(b[1].sort))
+
+    // Gráfico de barras detallado
+    const labels = mesesOrdenados.map(([k]) => k)
+    const data = mesesOrdenados.map(([, v]) => v.total)
+
+    if (grafVentasDetalleChart) grafVentasDetalleChart.destroy()
+    const ctxD = document.getElementById("grafVentasDetalle").getContext("2d")
+
+    grafVentasDetalleChart = new Chart(ctxD, {
+        type: "bar",
+        data: {
+            labels: labels.length ? labels : ["Sin datos"],
+            datasets: [{
+                label: "Ventas",
+                data: data.length ? data : [0],
+                backgroundColor: labels.map((_, i) => i === labels.length - 1 ? "#1a4480" : "#3a7bd5"),
+                borderRadius: 6,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            onClick: function(e, elements) {
+                if (!elements.length) return
+                const idx = elements[0].index
+                const mesKey = labels[idx]
+                const mesData = meses[mesKey]
+                abrirModalMes(mesKey, mesData)
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: { label: ctx => " $" + Number(ctx.raw).toLocaleString() }
+                }
+            },
+            scales: {
+                y: {
+                    grid: { color: "rgba(0,0,0,0.04)" },
+                    ticks: { font: { family: "JetBrains Mono", size: 10 }, color: "#94a3b8", callback: v => "$" + Number(v).toLocaleString() }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { family: "JetBrains Mono", size: 10 }, color: "#94a3b8" }
+                }
+            }
+        }
+    })
+
+    // Tabla resumen por mes
+    const tbodyMes = document.getElementById("tbodyVentasMes")
+    tbodyMes.innerHTML = mesesOrdenados.length ? mesesOrdenados.reverse().map(([mes, data]) => {
+        const prom = data.pedidos.length ? Math.round(data.total / data.pedidos.length) : 0
+        return `
+            <tr onclick="abrirModalMes('${mes}', null)" style="cursor:pointer" title="Click para ver detalle">
+                <td><span style="font-family:'JetBrains Mono',monospace;font-weight:600">${mes}</span></td>
+                <td>${data.pedidos.length}</td>
+                <td><span style="font-family:'Libre Baskerville',serif;font-weight:700;color:var(--navy)">$${Number(data.total).toLocaleString()}</span></td>
+                <td style="color:var(--gray)">$${prom.toLocaleString()}</td>
+            </tr>
+        `
+    }).join("") : `<tr><td colspan="4" style="text-align:center;color:var(--gray);padding:20px;font-family:'JetBrains Mono',monospace;font-size:11px">Sin ventas aún</td></tr>`
+
+    // Historial completo filtrado
+    const tbodyVentas = document.getElementById("tbodyVentas")
+    tbodyVentas.innerHTML = pedidosFiltrados.length ? pedidosFiltrados.map(p => `
+        <tr>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray)">#${p.id}</span></td>
+            <td><div style="font-weight:600">${p.usuario}</div></td>
+            <td><span style="font-family:'Libre Baskerville',serif;font-weight:700;color:var(--navy)">$${Number(p.total).toLocaleString()}</span></td>
+            <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
+            <td><span style="font-size:11px;color:var(--gray);font-family:'JetBrains Mono',monospace">${new Date(p.created_at).toLocaleDateString("es-CO")}</span></td>
+        </tr>
+    `).join("") : `<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:20px;font-family:'JetBrains Mono',monospace;font-size:11px">Sin resultados</td></tr>`
+
+    // Guardar meses globalmente para el modal
+    window._mesesVentas = meses
+}
+
+function abrirModalMes(mesKey, mesData) {
+    const data = mesData || window._mesesVentas?.[mesKey]
+    if (!data) return
+
+    const total = data.total
+    const pedidos = data.pedidos
+    const promedio = pedidos.length ? Math.round(total / pedidos.length) : 0
+
+    document.getElementById("modalMesTitulo").textContent = "Detalle — " + mesKey
+    document.getElementById("modalMesTotal").textContent = "$" + Number(total).toLocaleString()
+    document.getElementById("modalMesPedidos").textContent = pedidos.length
+    document.getElementById("modalMesPromedio").textContent = "$" + promedio.toLocaleString()
+
+    const tbody = document.getElementById("tbodyModalMes")
+    tbody.innerHTML = pedidos.map(p => `
+        <tr>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray)">#${p.id}</span></td>
+            <td><div style="font-weight:600;font-size:13px">${p.usuario}</div></td>
+            <td><span style="font-family:'Libre Baskerville',serif;font-weight:700;color:var(--navy)">$${Number(p.total).toLocaleString()}</span></td>
+            <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
+            <td><span style="font-size:11px;color:var(--gray);font-family:'JetBrains Mono',monospace">${new Date(p.created_at).toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" })}</span></td>
+        </tr>
+    `).join("")
+
+    document.getElementById("modalDetallesMes").classList.add("activo")
+}
+
+// Cerrar modal al hacer click fuera
+document.getElementById("modalDetallesMes").addEventListener("click", function(e) {
+    if (e.target === this) this.classList.remove("activo")
+})
+
+// ---- RESEÑAS ----
+async function cargarResenas() {
+    const r = await fetch(API + "/resenas", { headers: { "authorization": token } })
+    const resenas = await r.json()
+    const tbody = document.getElementById("tbodyResenas")
+
+    if (!resenas.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--gray);padding:20px;font-family:'JetBrains Mono',monospace;font-size:11px">No hay reseñas aún</td></tr>`
+        return
+    }
+
+    tbody.innerHTML = resenas.map(function(r) {
+        const estrellas = "★".repeat(r.calificacion) + "☆".repeat(5 - r.calificacion)
+        const colorEstrella = r.calificacion >= 4 ? "#b8922a" : r.calificacion >= 3 ? "#3a7bd5" : "#c0392b"
+
+        const respuestasHtml = r.respuestas && r.respuestas.length
+            ? r.respuestas.map(resp => `
+                <div style="font-size:11px;margin-top:4px;padding:4px 8px;background:${resp.es_admin ? '#e8f0fb' : '#f8fafc'};border-radius:4px;border-left:2px solid ${resp.es_admin ? '#2560a8' : '#e2e8f0'}">
+                    ${resp.es_admin ? '<span style="color:#1a4480;font-weight:700;font-size:10px">🏪 Admin:</span>' : `<span style="color:var(--gray);font-size:10px">👤 ${resp.nombre}:</span>`}
+                    ${resp.comentario}
+                </div>
+            `).join("")
+            : ""
+
+        return `
+            <tr>
+                <td><div style="font-weight:600;font-size:13px">${r.producto}</div></td>
+                <td><div style="font-size:12px;color:var(--gray)">${r.usuario}</div></td>
+                <td><span style="color:${colorEstrella};font-size:14px;letter-spacing:1px">${estrellas}</span></td>
+                <td>
+                    <div style="font-size:13px;max-width:200px">${r.comentario}</div>
+                    ${respuestasHtml}
+                </td>
+                <td><span style="font-family:'JetBrains Mono',monospace;font-size:11px">❤️ ${r.likes}</span></td>
+                <td><span style="font-size:11px;color:var(--gray);font-family:'JetBrains Mono',monospace">${new Date(r.created_at).toLocaleDateString("es-CO")}</span></td>
+                <td>
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                        <button class="btn-edit" onclick="abrirRespuestaResena(${r.id})">Responder</button>
+                        <button class="btn-delete" onclick="eliminarResena(${r.id})">Eliminar</button>
+                    </div>
+                    <div id="formRespuesta-${r.id}" style="display:none;margin-top:6px">
+                        <textarea id="textoRespuesta-${r.id}" rows="2" placeholder="Escribe tu respuesta..."
+                            style="width:180px;padding:6px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;resize:none;outline:none"></textarea>
+                        <div style="display:flex;gap:4px;margin-top:4px">
+                            <button class="btn-edit" onclick="enviarRespuestaResena(${r.id})">✓ Enviar</button>
+                            <button class="btn-secondary" style="padding:4px 8px;font-size:11px" onclick="cerrarRespuestaResena(${r.id})">✕</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `
+    }).join("")
+}
+
+function abrirRespuestaResena(id) {
+    document.getElementById("formRespuesta-" + id).style.display = "block"
+}
+
+function cerrarRespuestaResena(id) {
+    document.getElementById("formRespuesta-" + id).style.display = "none"
+}
+
+async function enviarRespuestaResena(id) {
+    const comentario = document.getElementById("textoRespuesta-" + id).value.trim()
+    if (!comentario) return mostrarToast("Escribe una respuesta", true)
+
+    const r = await fetch(API + "/resenas/" + id + "/respuestas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "authorization": token },
+        body: JSON.stringify({ comentario })
+    })
+
+    if (r.ok) {
+        mostrarToast("✓ Respuesta enviada")
+        cargarResenas()
+    } else {
+        mostrarToast("Error al enviar", true)
+    }
+}
+
+async function eliminarResena(id) {
+    if (!confirm("¿Eliminar esta reseña?")) return
+    const r = await fetch(API + "/resenas/" + id, {
+        method: "DELETE",
+        headers: { "authorization": token }
+    })
+    if (r.ok) {
+        mostrarToast("✓ Reseña eliminada")
+        cargarResenas()
+    }
+}
 async function solicitarCambio(campo, inputId) {
     const valor_nuevo = document.getElementById(inputId).value.trim()
     if (!valor_nuevo) {
