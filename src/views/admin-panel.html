@@ -12,6 +12,7 @@
 <div class="admin-layout">
 
     <!-- ===== SIDEBAR ===== -->
+    <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('abierto')">☰</button>
     <aside class="sidebar">
         <div class="sidebar-logo">
             <div class="sidebar-logo-titulo">⚙️ Panel<span>Admin</span></div>
@@ -265,17 +266,19 @@
                             <div class="card-title">📅 Resumen por mes</div>
                         </div>
                         <div class="card-body" style="padding:0">
-                            <table class="admin-table" style="border:none;border-radius:0;box-shadow:none">
-                                <thead>
-                                    <tr>
-                                        <th>Mes</th>
-                                        <th>Pedidos</th>
-                                        <th>Total</th>
-                                        <th>Promedio</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyVentasMes"></tbody>
-                            </table>
+                            <div class="table-wrap">
+                                <table class="admin-table" style="border:none;border-radius:0;box-shadow:none">
+                                    <thead>
+                                        <tr>
+                                            <th>Mes</th>
+                                            <th>Pedidos</th>
+                                            <th>Total</th>
+                                            <th>Promedio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyVentasMes"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -295,12 +298,14 @@
                         </select>
                     </div>
                 </div>
+                <div class="table-wrap">
                 <table class="admin-table">
                     <thead>
                         <tr><th>#</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr>
                     </thead>
                     <tbody id="tbodyVentas"></tbody>
                 </table>
+                </div>
             </section>
 
             <!-- ===== PRODUCTOS ===== -->
@@ -310,6 +315,7 @@
                         <h2>Gestión de productos</h2>
                         <button class="btn-primary" onclick="mostrarFormProducto()">+ Agregar producto</button>
                     </div>
+                    <div class="table-wrap">
                     <table class="admin-table">
                         <thead>
                             <tr>
@@ -319,6 +325,7 @@
                         </thead>
                         <tbody id="tbodyProductos"></tbody>
                     </table>
+                    </div>
                 </div>
                 <div id="vistaFormulario" style="display:none">
                     <div class="seccion-header">
@@ -364,6 +371,7 @@
             <!-- ===== PEDIDOS ===== -->
             <section id="seccion-pedidos" class="seccion">
                 <div class="seccion-header"><h2>Gestión de pedidos</h2></div>
+                <div class="table-wrap">
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -373,11 +381,13 @@
                     </thead>
                     <tbody id="tbodyPedidos"></tbody>
                 </table>
+                </div>
             </section>
 
             <!-- ===== RESEÑAS ===== -->
             <section id="seccion-resenas" class="seccion">
                 <div class="seccion-header"><h2>Reseñas de productos</h2></div>
+                <div class="table-wrap">
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -387,17 +397,13 @@
                     </thead>
                     <tbody id="tbodyResenas"></tbody>
                 </table>
+                </div>
             </section>
 
             <!-- ===== USUARIOS ===== -->
             <section id="seccion-usuarios" class="seccion">
                 <div class="seccion-header"><h2>Gestión de usuarios</h2></div>
-                <table class="admin-table">
-                    <thead>
-                        <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Acción</th></tr>
-                    </thead>
-                    <tbody id="tbodyUsuarios"></tbody>
-                </table>
+                <div id="contenedorUsuarios"></div>
             </section>
 
             <!-- ===== INVITACIONES ===== -->
@@ -424,12 +430,15 @@
                     </div>
                 </div>
                 <div class="seccion-header" style="margin-top:8px"><h2>Solicitudes de cambio</h2></div>
+                
+                <div class="table-wrap">
                 <table class="admin-table">
                     <thead>
                         <tr><th>Admin</th><th>Email</th><th>Campo</th><th>Valor nuevo</th><th>Fecha</th><th>Acción</th></tr>
                     </thead>
                     <tbody id="tbodySolicitudes"></tbody>
                 </table>
+                </div>
             </section>
 
             <!-- ===== CONFIGURACIÓN ===== -->
@@ -510,12 +519,15 @@
         </div>
 
         <!-- Lista pedidos del mes -->
+        
+        <div class="table-wrap">
         <table class="admin-table">
             <thead>
                 <tr><th>#</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr>
             </thead>
             <tbody id="tbodyModalMes"></tbody>
         </table>
+        </div>
     </div>
 </div>
 

@@ -689,33 +689,125 @@ async function eliminarProducto(id) {
     mostrarToast("✓ Producto eliminado")
 }
 
-// Pedidos
+// ---- cargarPedidos CORREGIDO (con dirección) ----
 async function cargarPedidos() {
-    const r = await fetch(API + "/pedidos", {
-        headers: { "authorization": token }
-    })
+    const r = await fetch(API + "/pedidos", { headers: { "authorization": token } })
     const pedidos = await r.json()
     const tbody = document.getElementById("tbodyPedidos")
     tbody.innerHTML = ""
 
+    if (!pedidos.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--gray);padding:20px;font-family:'JetBrains Mono',monospace;font-size:11px">No hay pedidos aún</td></tr>`
+        return
+    }
+
     pedidos.forEach(function(p) {
         const tr = document.createElement("tr")
+
+        // Construir dirección
+        let dirHtml = "-"
+        if (p.direccion) {
+            const lugar = p.tipo_envio === "nacional"
+                ? `${p.ciudad}, ${p.departamento}`
+                : p.barrio || ""
+            dirHtml = `
+                <div class="td-dir">
+                    <b>${p.destinatario || "-"}</b>
+                    <span>📞 ${p.telefono || "-"}</span>
+                    <span>📍 ${p.direccion}, ${p.barrio}</span>
+                    ${lugar ? `<span>${lugar}</span>` : ""}
+                    ${p.indicaciones ? `<span>💬 ${p.indicaciones}</span>` : ""}
+                    <span style="margin-top:2px"><span class="badge badge-${p.tipo_envio === 'nacional' ? 'enviado' : 'entregado'}">${p.tipo_envio || "nacional"}</span></span>
+                </div>
+            `
+        }
+
         tr.innerHTML = `
-            <td>#${p.id}</td>
-            <td>${p.usuario}</td>
-            <td>$${Number(p.total).toLocaleString()}</td>
-            <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
-            <td>${new Date(p.created_at).toLocaleDateString()}</td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray)">#${p.id}</span></td>
             <td>
-                <select onchange="cambiarEstadoPedido(${p.id}, this.value)">
-                    <option ${p.estado === 'pendiente' ? 'selected' : ''}>pendiente</option>
-                    <option ${p.estado === 'enviado' ? 'selected' : ''}>enviado</option>
-                    <option ${p.estado === 'entregado' ? 'selected' : ''}>entregado</option>
+                <div style="font-weight:600;font-size:13px">${p.usuario}</div>
+                <div style="font-size:11px;color:var(--gray)">${p.email_usuario || ""}</div>
+            </td>
+            <td><span style="font-family:'Libre Baskerville',serif;font-weight:700;color:var(--navy)">$${Number(p.total).toLocaleString()}</span></td>
+            <td><span class="badge badge-${p.estado}">${p.estado}</span></td>
+            <td>${dirHtml}</td>
+            <td><span style="font-size:11px;color:var(--gray);font-family:'JetBrains Mono',monospace">${new Date(p.created_at).toLocaleDateString("es-CO")}</span></td>
+            <td>
+                <select class="select-estado" onchange="cambiarEstadoPedido(${p.id}, this.value)">
+                    <option ${p.estado === 'pendiente'   ? 'selected' : ''} value="pendiente">Pendiente</option>
+                    <option ${p.estado === 'procesando'  ? 'selected' : ''} value="procesando">Procesando</option>
+                    <option ${p.estado === 'empacado'    ? 'selected' : ''} value="empacado">Empacado</option>
+                    <option ${p.estado === 'enviado'     ? 'selected' : ''} value="enviado">Enviado</option>
+                    <option ${p.estado === 'entregado'   ? 'selected' : ''} value="entregado">Entregado</option>
+                    <option ${p.estado === 'cancelado'   ? 'selected' : ''} value="cancelado">Cancelado</option>
                 </select>
             </td>
         `
         tbody.appendChild(tr)
     })
+}
+
+// ---- cargarUsuarios CORREGIDO (agrupado por rol) ----
+async function cargarUsuarios() {
+    const r = await fetch(API + "/usuarios", { headers: { "authorization": token } })
+    const usuarios = await r.json()
+    const contenedor = document.getElementById("contenedorUsuarios")
+
+    const superadmins = usuarios.filter(u => u.rol === "superadmin")
+    const admins      = usuarios.filter(u => u.rol === "admin")
+    const normales    = usuarios.filter(u => u.rol === "usuario")
+
+    function renderGrupo(lista, titulo, claseGrupo, icono) {
+        if (!lista.length) return ""
+
+        const filas = lista.map(function(u) {
+            const esMiCuenta = u.id === usuario.id
+            const esSuperAdminU = u.rol === "superadmin"
+            return `
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2560a8,#3a7bd5);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;flex-shrink:0">
+                                ${u.nombre.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div style="font-weight:600;font-size:13px">${u.nombre}</div>
+                                ${esMiCuenta ? '<div style="font-size:10px;color:var(--mid-blue);font-family:\'JetBrains Mono\',monospace">← Tú</div>' : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--gray)">${u.email}</td>
+                    <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
+                    <td>
+                        ${!esMiCuenta && !esSuperAdminU ? `
+                            <button class="btn-rol" onclick="cambiarRol(${u.id}, '${u.rol}')">
+                                ${u.rol === 'admin' ? '↓ Quitar admin' : '↑ Hacer admin'}
+                            </button>
+                        ` : '<span style="color:var(--gray);font-size:11px">—</span>'}
+                    </td>
+                </tr>
+            `
+        }).join("")
+
+        return `
+            <div class="usuarios-grupo">
+                <div class="usuarios-grupo-titulo ${claseGrupo}">${icono} ${titulo} <span style="margin-left:auto;font-size:10px;opacity:0.6">${lista.length}</span></div>
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Acción</th></tr>
+                        </thead>
+                        <tbody>${filas}</tbody>
+                    </table>
+                </div>
+            </div>
+        `
+    }
+
+    contenedor.innerHTML =
+        renderGrupo(superadmins, "Super Administradores", "grupo-superadmin", "👑") +
+        renderGrupo(admins,      "Administradores",       "grupo-admin",       "🛡️") +
+        renderGrupo(normales,    "Clientes",              "grupo-usuario",     "👤")
 }
 
 async function cambiarEstadoPedido(id, estado) {
@@ -730,35 +822,7 @@ async function cambiarEstadoPedido(id, estado) {
     mostrarToast("✓ Estado actualizado")
 }
 
-// Usuarios
-async function cargarUsuarios() {
-    const r = await fetch(API + "/usuarios", {
-        headers: { "authorization": token }
-    })
-    const usuarios = await r.json()
-    const tbody = document.getElementById("tbodyUsuarios")
-    tbody.innerHTML = ""
 
-        usuarios.forEach(function(u) {
-            const tr = document.createElement("tr")
-            const esMiCuenta = u.id === usuario.id
-            const esSuperAdminUsuario = u.rol === "superadmin"
-
-            tr.innerHTML = `
-                <td>${u.nombre}</td>
-                <td>${u.email}</td>
-                <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
-                <td>
-                    ${!esMiCuenta && !esSuperAdminUsuario ? `
-                        <button class="btn-rol" onclick="cambiarRol(${u.id}, '${u.rol}')">
-                            ${u.rol === 'admin' ? 'Quitar admin' : 'Hacer admin'}
-                        </button>
-                    ` : "-"}
-                </td>
-            `
-            tbody.appendChild(tr)
-    })
-}
 
 async function cambiarRol(id, rolActual) {
     const nuevoRol = rolActual === "admin" ? "usuario" : "admin"
