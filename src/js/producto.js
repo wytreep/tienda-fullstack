@@ -96,7 +96,7 @@ function renderProducto(producto) {
 
     contenedor.innerHTML = `
         <div class="producto-detalle-imagen">
-            ${producto.imagen ? `<img src="${API}${producto.imagen}" alt="${producto.nombre}">` : "📦"}
+        ${producto.imagen ? `<img src="${producto.imagen}" alt="${producto.nombre}">` : "📦"}
         </div>
         <div class="producto-detalle-info">
             <p class="producto-detalle-categoria">${producto.categoria || "General"}</p>
