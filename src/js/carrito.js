@@ -197,51 +197,55 @@ async function confirmarPedido() {
     const ciudad = tipoEnvioSeleccionado === "nacional" ? document.getElementById("envCiudad").value.trim() : ""
 
     if (!destinatario || !cedula || !telefono || !barrio || !direccion) {
-        mostrarToast("Completa todos los campos obligatorios", true)
+        mostrarToast("Completa todos los campos obligatorios")
         return
     }
 
     if (tipoEnvioSeleccionado === "nacional" && (!departamento || !ciudad)) {
-        mostrarToast("Completa departamento y ciudad", true)
+        mostrarToast("Completa departamento y ciudad")
         return
     }
 
     const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
     const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0)
 
-    const respuesta = await fetch(API + "/pedidos", {
+    // 1 — Crear pedido
+    const respPedido = await fetch(API + "/pedidos", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "authorization": token
-        },
+        headers: { "Content-Type": "application/json", "authorization": token },
         body: JSON.stringify({
-            items: carrito,
-            total,
-            tipo_envio: tipoEnvioSeleccionado,
-            destinatario,
-            cedula,
-            telefono,
-            departamento,
-            ciudad,
-            barrio,
-            direccion,
-            indicaciones
+            items: carrito, total, tipo_envio: tipoEnvioSeleccionado,
+            destinatario, cedula, telefono, departamento, ciudad, barrio, direccion, indicaciones
         })
     })
 
-    const datos = await respuesta.json()
-
-    if (respuesta.ok) {
-        localStorage.setItem("carrito", "[]")
-        document.getElementById("modalDireccion").classList.remove("activo")
-        mostrarToast("✓ Pedido realizado correctamente")
-        setTimeout(function() {
-            window.location.href = "/src/views/mis-pedidos.html"
-        }, 1500)
-    } else {
-        mostrarToast(datos.error, true)
+    const datosPedido = await respPedido.json()
+    if (!respPedido.ok) {
+        mostrarToast(datosPedido.error)
+        return
     }
+
+    // 2 — Crear preferencia de pago en MercadoPago
+    const respMP = await fetch(API + "/mp/crear-preferencia", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "authorization": token },
+        body: JSON.stringify({ items: carrito, pedido_id: datosPedido.id })
+    })
+
+    const datosMP = await respMP.json()
+
+    if (!respMP.ok) {
+        // Si falla MP el pedido ya existe, redirigir a mis pedidos
+        mostrarToast("Pedido creado. Redirigiendo...")
+        localStorage.setItem("carrito", "[]")
+        setTimeout(() => window.location.href = "/src/views/mis-pedidos.html", 1500)
+        return
+    }
+
+    // 3 — Limpiar carrito y redirigir a MercadoPago
+    localStorage.setItem("carrito", "[]")
+    document.getElementById("modalDireccion").classList.remove("activo")
+    window.location.href = datosMP.init_point
 }
 function actualizarContador(carrito) {
     const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
