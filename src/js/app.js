@@ -130,6 +130,33 @@ async function cargarProductos(busqueda = "", categoria = "") {
     actualizarCarrito()
 }
 
+function agregarRapido(id, nombre, precio, stock) {
+    if (stock === 0) return
+    let carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
+    const existente = carrito.find(item => item.id === id)
+    if (existente) {
+        existente.cantidad += 1
+    } else {
+        carrito.push({ id, nombre, precio, cantidad: 1 })
+    }
+    localStorage.setItem("carrito", JSON.stringify(carrito))
+    actualizarCarrito()
+    mostrarToast("✓ Agregado al carrito")
+}
+
+function mostrarToast(mensaje) {
+    let toast = document.getElementById("toast")
+    if (!toast) {
+        toast = document.createElement("div")
+        toast.id = "toast"
+        toast.className = "toast"
+        document.body.appendChild(toast)
+    }
+    toast.textContent = mensaje
+    toast.classList.add("activo")
+    setTimeout(() => toast.classList.remove("activo"), 2800)
+}
+
 // ===== RENDER PRODUCTOS =====
 function renderProductos(productos) {
     const grid = document.getElementById("productosGrid")
@@ -148,15 +175,23 @@ function renderProductos(productos) {
         card.innerHTML = `
             <div class="producto-imagen">
                 ${imgSrc ? `<img src="${imgSrc}" alt="${producto.nombre}">` : "📦"}
+                <div class="producto-imagen-overlay"></div>
             </div>
             <div class="producto-info">
                 ${producto.categoria ? `<div class="producto-categoria">${producto.categoria}</div>` : ""}
                 <div class="producto-nombre">${producto.nombre}</div>
-                <div class="producto-precio">$${Number(producto.precio).toLocaleString()}</div>
                 <div class="producto-stock">${producto.stock > 0 ? producto.stock + ' disponibles' : 'Sin stock'}</div>
+                <div class="producto-footer">
+                    <div class="producto-precio">$${Number(producto.precio).toLocaleString()}</div>
+                    <button class="btn-agregar-rapido" 
+                        title="Agregar al carrito"
+                        ${producto.stock === 0 ? 'disabled' : ''}
+                        onclick="event.stopPropagation(); agregarRapido(${producto.id}, '${producto.nombre.replace(/'/g, "\\'")}', ${producto.precio}, ${producto.stock})">
+                        +
+                    </button>
+                </div>
             </div>
         `
-
         card.addEventListener("click", function() {
             window.location.href = `/src/views/producto.html?id=${producto.id}`
         })
