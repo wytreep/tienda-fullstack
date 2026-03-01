@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda Online</title>
+    <title>Tienda — Drop de hoy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/src/css/styles.css">
     <link rel="stylesheet" href="/src/css/darkmode.css">
 </head>
 <body>
+
+    <!-- NAVBAR -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="/src/views/index.html" class="nav-logo">Tienda</a>
+            <a href="/src/views/index.html" class="nav-logo">STORE</a>
             <div class="nav-acciones">
                 <button class="btn-darkmode" id="btnDarkMode">🌙</button>
                 <a href="/src/views/carrito.html" class="btn-carrito">
-                    🛒 <span id="contadorCarrito">0</span>
+                    BAG&nbsp;<span id="contadorCarrito">0</span>
                 </a>
                 <div class="perfil-menu">
                     <button class="btn-perfil" id="btnPerfil">
@@ -24,7 +28,7 @@
                         <a href="/src/views/mis-pedidos.html">Mis pedidos</a>
                         <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
                         <a href="#" id="btnCambiarPassword">Cambiar contraseña</a>
-                        <a href="/src/views/configuracion.html">⚙️ Configuración</a>
+                        <a href="/src/views/configuracion.html">⚙ Configuración</a>
                         <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
                     </div>
                 </div>
@@ -32,29 +36,76 @@
         </div>
     </nav>
 
+    <!-- HERO -->
     <section class="hero">
-        <div class="hero-badge">✨ Nuevos productos disponibles</div>
-        <h1>Descubre lo que<br><span>necesitas hoy</span></h1>
-        <p>Los mejores productos al mejor precio, con envío rápido y seguro.</p>
+        <div class="hero-content">
+            <div class="hero-badge">⚡ Nuevos drops disponibles</div>
+            <h1>
+                LLEVA TU
+                <span>JUEGO</span>
+                AL LÍMITE
+            </h1>
+            <p>Los mejores productos al mejor precio. Envío rápido, calidad garantizada.</p>
+            <div class="hero-cta">
+                <a href="#productos" class="btn-hero-primary" onclick="document.getElementById('productosGrid').scrollIntoView({behavior:'smooth'});return false;">
+                    Ver catálogo
+                </a>
+                <a href="/src/views/mis-pedidos.html" class="btn-hero-secondary">
+                    Mis pedidos
+                </a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-blob"></div>
+            <div class="hero-img-wrap" id="heroEmoji">🏆</div>
+            <div class="hero-stats">
+                <div class="hero-stats-num" id="heroStatNum">—</div>
+                <div class="hero-stats-label">Productos</div>
+            </div>
+        </div>
     </section>
 
-    <div class="filtros-container">
-        <div class="filtros">
-            <input type="text" id="buscador" placeholder="🔍  Buscar productos...">
-            <select id="filtroCategoria">
-                <option value="">Todas las categorías</option>
-            </select>
+    <!-- TICKER -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item">NUEVOS ARRIVALS <span>✦</span></div>
+            <div class="ticker-item">ENVÍO GRATIS <span>✦</span></div>
+            <div class="ticker-item">CALIDAD GARANTIZADA <span>✦</span></div>
+            <div class="ticker-item">TOP PRODUCTOS <span>✦</span></div>
+            <div class="ticker-item">NUEVOS ARRIVALS <span>✦</span></div>
+            <div class="ticker-item">ENVÍO GRATIS <span>✦</span></div>
+            <div class="ticker-item">CALIDAD GARANTIZADA <span>✦</span></div>
+            <div class="ticker-item">TOP PRODUCTOS <span>✦</span></div>
+            <div class="ticker-item">NUEVOS ARRIVALS <span>✦</span></div>
+            <div class="ticker-item">ENVÍO GRATIS <span>✦</span></div>
+            <div class="ticker-item">CALIDAD GARANTIZADA <span>✦</span></div>
+            <div class="ticker-item">TOP PRODUCTOS <span>✦</span></div>
         </div>
     </div>
 
-    <div class="productos-section">
+    <!-- FILTROS -->
+    <div class="filtros-container">
+        <div class="filtros-header">
+            <div class="filtros-titulo" id="tituloProductos">CATÁLOGO</div>
+            <div class="filtros">
+                <input type="text" id="buscador" placeholder="Buscar productos...">
+                <select id="filtroCategoria">
+                    <option value="">Todas las categorías</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div class="productos-section" id="productos">
         <div id="loader" class="loader-container">
             <div class="loader"></div>
-            <p>Cargando productos...</p>
+            <p>Cargando...</p>
         </div>
         <div class="productos-grid" id="productosGrid" style="display:none"></div>
     </div>
 
+    <!-- MODAL CUENTAS -->
     <div class="modal-overlay" id="modalCuentas">
         <div class="modal">
             <h3>Cambiar cuenta</h3>
@@ -67,5 +118,19 @@
 
     <script src="/src/js/darkmode.js"></script>
     <script src="/src/js/app.js"></script>
+    <script>
+        // Actualizar stat del hero con cantidad de productos
+        const _heroOrig = window.renderProductos
+        document.addEventListener("DOMContentLoaded", function() {
+            const obs = new MutationObserver(function() {
+                const cards = document.querySelectorAll(".producto-card")
+                if (cards.length) {
+                    document.getElementById("heroStatNum").textContent = cards.length
+                }
+            })
+            const grid = document.getElementById("productosGrid")
+            if (grid) obs.observe(grid, { childList: true })
+        })
+    </script>
 </body>
 </html>
