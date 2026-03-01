@@ -56,7 +56,7 @@ function mostrarSeccion(nombre, event) {
 
     const titulos = {
         dashboard: "Dashboard", ventas: "Ventas", productos: "Productos",
-        pedidos: "Pedidos", resenas: "Reseñas", usuarios: "Usuarios",
+        pedidos: "Pedidos",cupones: "Cupones", resenas: "Reseñas", usuarios: "Usuarios",
         invitaciones: "Invitaciones", configuracion: "Configuración"
     }
 
@@ -75,6 +75,7 @@ function mostrarSeccion(nombre, event) {
     if (nombre === "pedidos") cargarPedidos()
     if (nombre === "usuarios") cargarUsuarios()
     if (nombre === "ventas") cargarVentas()
+    if (nombre === "cupones") cargarCupones()
     if (nombre === "resenas") cargarResenas()
     if (nombre === "invitaciones") cargarSolicitudes()
     if (nombre === "configuracion") {} 
@@ -826,7 +827,82 @@ async function cambiarEstadoPedido(id, estado) {
     mostrarToast("✓ Estado actualizado")
 }
 
+async function cargarCupones() {
+    const r = await fetch(API + "/cupones", { headers: { "authorization": token } })
+    const cupones = await r.json()
+    const tbody = document.getElementById("tbodyCupones")
 
+    if (!cupones.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--gray);padding:20px;font-family:'JetBrains Mono',monospace;font-size:11px">No hay cupones aún</td></tr>`
+        return
+    }
+
+    tbody.innerHTML = cupones.map(c => `
+        <tr>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:var(--navy)">${c.codigo}</span></td>
+            <td><span class="badge badge-${c.tipo === 'porcentaje' ? 'enviado' : 'entregado'}">${c.tipo}</span></td>
+            <td><span style="font-weight:600">${c.tipo === 'porcentaje' ? c.valor + '%' : '$' + Number(c.valor).toLocaleString()}</span></td>
+            <td style="font-size:12px;color:var(--gray)">$${Number(c.minimo_compra).toLocaleString()}</td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px">${c.usos_actuales} / ${c.usos_maximos}</span></td>
+            <td style="font-size:11px;color:var(--gray)">${c.expires_at ? new Date(c.expires_at).toLocaleDateString("es-CO") : "Sin límite"}</td>
+            <td>
+                <span class="badge badge-${c.activo ? 'entregado' : 'cancelado'}">${c.activo ? 'Activo' : 'Inactivo'}</span>
+            </td>
+            <td>
+                <button class="btn-edit" onclick="toggleCupon(${c.id}, ${c.activo})">${c.activo ? 'Desactivar' : 'Activar'}</button>
+                <button class="btn-delete" onclick="eliminarCupon(${c.id})">Eliminar</button>
+            </td>
+        </tr>
+    `).join("")
+}
+
+async function crearCupon() {
+    const codigo = document.getElementById("cCodigo").value.trim().toUpperCase()
+    const tipo = document.getElementById("cTipo").value
+    const valor = document.getElementById("cValor").value
+    const minimo = document.getElementById("cMinimo").value
+    const usos = document.getElementById("cUsos").value
+    const expira = document.getElementById("cExpira").value
+
+    if (!codigo || !valor) return mostrarToast("Completa código y valor", true)
+
+    const r = await fetch(API + "/cupones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "authorization": token },
+        body: JSON.stringify({ codigo, tipo, valor, minimo_compra: minimo, usos_maximos: usos, expires_at: expira || null })
+    })
+
+    const datos = await r.json()
+    if (r.ok) {
+        mostrarToast("✓ Cupón creado")
+        document.getElementById("cCodigo").value = ""
+        document.getElementById("cValor").value = ""
+        document.getElementById("cMinimo").value = ""
+        document.getElementById("cUsos").value = ""
+        document.getElementById("cExpira").value = ""
+        cargarCupones()
+    } else {
+        mostrarToast(datos.error, true)
+    }
+}
+
+async function toggleCupon(id, activo) {
+    const r = await fetch(API + "/cupones/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "authorization": token },
+        body: JSON.stringify({ activo: activo ? 0 : 1 })
+    })
+    if (r.ok) { mostrarToast("✓ Cupón actualizado"); cargarCupones() }
+}
+
+async function eliminarCupon(id) {
+    if (!confirm("¿Eliminar este cupón?")) return
+    const r = await fetch(API + "/cupones/" + id, {
+        method: "DELETE",
+        headers: { "authorization": token }
+    })
+    if (r.ok) { mostrarToast("✓ Cupón eliminado"); cargarCupones() }
+}
 
 async function cambiarRol(id, rolActual) {
     const nuevoRol = rolActual === "admin" ? "usuario" : "admin"

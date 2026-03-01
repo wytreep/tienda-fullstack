@@ -43,6 +43,9 @@
             <a href="#" class="nav-item" onclick="mostrarSeccion('ventas', event)">
                 <span>💰</span> Ventas
             </a>
+            <a href="#" class="nav-item" onclick="mostrarSeccion('cupones', event)">
+            <span>🎟️</span> Cupones
+            </a>
 
             <div class="nav-grupo-label">Comunidad</div>
             <a href="#" class="nav-item" onclick="mostrarSeccion('resenas', event)">
@@ -385,6 +388,73 @@
                     </thead>
                     <tbody id="tbodyPedidos"></tbody>
                 </table>
+                </div>
+            </section>
+            //cupones
+            <section id="seccion-cupones" class="seccion">
+                <div class="seccion-header">
+                    <h2>Cupones de descuento</h2>
+                </div>
+
+                <!-- Formulario nuevo cupón -->
+                <div class="card" style="margin-bottom:1.5rem">
+                    <div class="card-header"><h3>Crear cupón</h3></div>
+                    <div class="card-body">
+                        <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem">
+                            <div class="form-group">
+                                <label>Código</label>
+                                <input type="text" id="cCodigo" placeholder="Ej: VERANO20" style="text-transform:uppercase">
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo</label>
+                                <select id="cTipo">
+                                    <option value="porcentaje">Porcentaje (%)</option>
+                                    <option value="fijo">Fijo ($)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Valor</label>
+                                <input type="number" id="cValor" placeholder="Ej: 20">
+                            </div>
+                            <div class="form-group">
+                                <label>Mínimo de compra</label>
+                                <input type="number" id="cMinimo" placeholder="Ej: 50000">
+                            </div>
+                            <div class="form-group">
+                                <label>Usos máximos</label>
+                                <input type="number" id="cUsos" placeholder="Ej: 100">
+                            </div>
+                            <div class="form-group">
+                                <label>Expira (opcional)</label>
+                                <input type="datetime-local" id="cExpira">
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="crearCupon()" style="margin-top:1rem">Crear cupón</button>
+                    </div>
+                </div>
+
+                <!-- Tabla cupones -->
+                <div class="card">
+                    <div class="card-header"><h3>Cupones activos</h3></div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Tipo</th>
+                                        <th>Valor</th>
+                                        <th>Mínimo</th>
+                                        <th>Usos</th>
+                                        <th>Expira</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyCupones"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </section>
 
