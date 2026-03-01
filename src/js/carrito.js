@@ -84,7 +84,38 @@ function cargarCarrito() {
                 <a href="index.html" style="color:#2563eb">Ver productos</a>
             </div>
         `
-        resumen.innerHTML = ""
+        resumen.innerHTML = `
+            <h2>Resumen del pedido</h2>
+            <div class="resumen-linea">
+                <span>Subtotal</span>
+                <span>$${subtotal.toLocaleString()}</span>
+            </div>
+            <div class="resumen-cupon">
+                <div class="cupon-input-wrap">
+                    <input type="text" id="inputCupon" placeholder="Código de descuento" 
+                        style="flex:1;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;outline:none">
+                    <button onclick="aplicarCupon()" 
+                        style="padding:9px 14px;background:#1a4480;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">
+                        Aplicar
+                    </button>
+                </div>
+                <div id="cuponMensaje"></div>
+            </div>
+            <div id="lineaDescuento" style="display:none" class="resumen-linea">
+                <span style="color:#16a34a">Descuento</span>
+                <span style="color:#16a34a" id="valorDescuento">-$0</span>
+            </div>
+            <div class="resumen-linea">
+                <span>Envío</span>
+                <span>Gratis</span>
+            </div>
+            <div class="resumen-total">
+                <span>Total</span>
+                <span id="totalFinal">$${subtotal.toLocaleString()}</span>
+            </div>
+            <button class="btn-checkout" onclick="abrirModalDireccion()">Confirmar pedido</button>
+            <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar carrito</button>
+        `
         return
     }
 
@@ -167,6 +198,40 @@ function vaciarCarrito() {
     cargarCarrito()
 }
 
+let cuponAplicado = null
+
+async function aplicarCupon() {
+    const codigo = document.getElementById("inputCupon").value.trim().toUpperCase()
+    const mensaje = document.getElementById("cuponMensaje")
+
+    if (!codigo) return
+
+    const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
+    const subtotal = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0)
+
+    const r = await fetch(API + "/cupones/verificar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "authorization": token },
+        body: JSON.stringify({ codigo, total: subtotal })
+    })
+
+    const datos = await r.json()
+
+    if (!r.ok) {
+        mensaje.innerHTML = `<span style="color:#ef4444;font-size:12px">❌ ${datos.error}</span>`
+        cuponAplicado = null
+        document.getElementById("lineaDescuento").style.display = "none"
+        document.getElementById("totalFinal").textContent = "$" + subtotal.toLocaleString()
+        return
+    }
+
+    cuponAplicado = datos
+    mensaje.innerHTML = `<span style="color:#16a34a;font-size:12px">✓ Cupón aplicado — ${datos.tipo === 'porcentaje' ? datos.valor + '%' : '$' + Number(datos.valor).toLocaleString()} de descuento</span>`
+    document.getElementById("lineaDescuento").style.display = "flex"
+    document.getElementById("valorDescuento").textContent = "-$" + Number(datos.descuento).toLocaleString()
+    document.getElementById("totalFinal").textContent = "$" + Number(datos.total_final).toLocaleString()
+}
+
 let tipoEnvioSeleccionado = "nacional"
 
 function cambiarTipoEnvio(tipo) {
@@ -213,11 +278,14 @@ async function confirmarPedido() {
     if (btnConfirmar) { btnConfirmar.disabled = true; btnConfirmar.textContent = "Procesando..." }
 
     try {
+        const subtotal = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0)
+        const total_final = cuponAplicado ? cuponAplicado.total_final : subtotal
         const respMP = await fetch(API + "/mp/crear-preferencia", {
+            
             method: "POST",
             headers: { "Content-Type": "application/json", "authorization": token },
             body: JSON.stringify({
-                items: carrito, total, tipo_envio: tipoEnvioSeleccionado,
+                items: carrito, total, total_final, tipo_envio: tipoEnvioSeleccionado,
                 destinatario, cedula, telefono, departamento,
                 ciudad, barrio, direccion, indicaciones
             })
