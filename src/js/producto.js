@@ -96,28 +96,30 @@ function renderProducto(producto) {
 
     contenedor.innerHTML = `
         <div class="producto-detalle-imagen">
-        ${producto.imagen ? `<img src="${producto.imagen}" alt="${producto.nombre}">` : "📦"}
+            ${producto.imagen ? `<img src="${producto.imagen}" alt="${producto.nombre}">` : "📦"}
         </div>
         <div class="producto-detalle-info">
             <p class="producto-detalle-categoria">${producto.categoria || "General"}</p>
             <h1>${producto.nombre}</h1>
             <div class="producto-detalle-precio">$${Number(producto.precio).toLocaleString()}</div>
-            <p class="producto-detalle-descripcion">${producto.descripcion || "Sin descripción disponible"}</p>
-            <p class="producto-detalle-stock ${sinStock ? 'sin-stock' : ''}">${sinStock ? "❌ Sin stock" : "✓ " + producto.stock + " unidades disponibles"}</p>
+            <p class="producto-detalle-descripcion">${producto.descripcion || "Sin descripción disponible."}</p>
+            <p class="producto-detalle-stock ${sinStock ? 'sin-stock' : ''}">
+                ${sinStock ? "❌ Sin stock" : "✓ " + producto.stock + " unidades disponibles"}
+            </p>
+            <div class="cantidad-label">Cantidad</div>
             <div class="cantidad-selector">
                 <button onclick="cambiarCantidad(-1)">−</button>
                 <span id="cantidad">1</span>
                 <button onclick="cambiarCantidad(1)">+</button>
             </div>
-            <button class="btn-agregar-carrito" 
-                onclick="agregarAlCarrito(${producto.id}, '${producto.nombre}', ${producto.precio}, ${producto.stock})"
+            <button class="btn-agregar-carrito"
+                onclick="agregarAlCarrito(${producto.id}, '${producto.nombre.replace(/'/g, "\\'")}', ${producto.precio}, ${producto.stock})"
                 ${sinStock ? "disabled" : ""}>
                 ${sinStock ? "Sin stock" : "Agregar al carrito"}
             </button>
         </div>
     `
 }
-
 function cambiarCantidad(valor) {
     cantidad = Math.max(1, Math.min(stockDisponible, cantidad + valor))
     document.getElementById("cantidad").textContent = cantidad

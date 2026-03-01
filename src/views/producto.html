@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Producto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/src/css/styles.css">
     <link rel="stylesheet" href="/src/css/producto.css">
     <link rel="stylesheet" href="/src/css/darkmode.css">
@@ -11,7 +13,7 @@
 <body>
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="/src/views/index.html" class="nav-logo">Tienda</a>
+            <a href="/src/views/index.html" class="nav-logo">Tienda.</a>
             <div class="nav-acciones">
                 <button class="btn-darkmode" id="btnDarkMode">🌙</button>
                 <a href="/src/views/carrito.html" class="btn-carrito">
@@ -34,26 +36,29 @@
     </nav>
 
     <main class="main">
-        <a href="/src/views/index.html" class="btn-volver">← Volver a productos</a>
+        <a href="/src/views/index.html" class="btn-volver">← Volver al catálogo</a>
+
         <div class="producto-detalle" id="productoDetalle">
-            <p>Cargando producto...</p>
+            <p style="color:var(--gray)">Cargando producto...</p>
         </div>
 
         <div class="resenas-seccion" id="resenasSeccion">
             <h2>Reseñas</h2>
-            <div class="resena-form">
-                <h3>Deja tu reseña</h3>
-                <div class="estrellas-selector" id="estrellasSelector">
-                    <span class="estrella" data-valor="1">★</span>
-                    <span class="estrella" data-valor="2">★</span>
-                    <span class="estrella" data-valor="3">★</span>
-                    <span class="estrella" data-valor="4">★</span>
-                    <span class="estrella" data-valor="5">★</span>
+            <div class="resenas-grid">
+                <div class="resena-form">
+                    <h3>Deja tu reseña</h3>
+                    <div class="estrellas-selector" id="estrellasSelector">
+                        <span class="estrella" data-valor="1">★</span>
+                        <span class="estrella" data-valor="2">★</span>
+                        <span class="estrella" data-valor="3">★</span>
+                        <span class="estrella" data-valor="4">★</span>
+                        <span class="estrella" data-valor="5">★</span>
+                    </div>
+                    <textarea id="comentarioResena" placeholder="¿Qué te pareció este producto?" rows="3"></textarea>
+                    <button class="btn-resena" onclick="enviarResena()">Publicar reseña</button>
                 </div>
-                <textarea id="comentarioResena" placeholder="¿Qué te pareció este producto?" rows="3"></textarea>
-                <button class="btn-resena" onclick="enviarResena()">Publicar reseña</button>
+                <div id="listaResenas"></div>
             </div>
-            <div id="listaResenas"></div>
         </div>
     </main>
 

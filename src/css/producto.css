@@ -1,53 +1,52 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-    background: #f8fafc;
-    color: #111;
-    min-height: 100vh;
-}
-
 .main {
-    max-width: 680px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 80px 2rem 4rem;
+    padding: 88px 2.5rem 5rem;
 }
 
 .btn-volver {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: #888;
+    color: var(--gray);
     text-decoration: none;
-    font-size: 0.875rem;
-    margin-bottom: 2rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     transition: color 0.2s;
 }
 
-.btn-volver:hover { color: #111; }
+.btn-volver:hover { color: var(--black); }
 
-/* Card principal */
+/* ===== LAYOUT DETALLE ===== */
 .producto-detalle {
-    background: #fff;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-    border: 1px solid #f0f0f0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-bottom: 5rem;
 }
 
-/* Imagen arriba */
+@media (max-width: 768px) {
+    .producto-detalle { grid-template-columns: 1fr; gap: 2rem; }
+    .main { padding: 88px 1.25rem 4rem; }
+}
+
+/* ===== IMAGEN ===== */
 .producto-detalle-imagen {
+    position: sticky;
+    top: 88px;
     width: 100%;
-    aspect-ratio: 4/3;
-    background: #f1f5f9;
+    aspect-ratio: 4/5;
+    background: var(--cream-dark);
+    border-radius: 20px;
+    border: 1px solid var(--cream-border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 8rem;
+    font-size: 9rem;
     overflow: hidden;
 }
 
@@ -55,74 +54,94 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
 }
 
-/* Info abajo */
+.producto-detalle-imagen:hover img { transform: scale(1.04); }
+
+/* ===== INFO ===== */
 .producto-detalle-info {
-    padding: 2rem;
+    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .producto-detalle-categoria {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #6366f1;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--gray);
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.75rem;
 }
 
 .producto-detalle-info h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--black);
+    margin-bottom: 1rem;
     letter-spacing: -0.5px;
-    color: #111;
-    margin-bottom: 0.5rem;
 }
 
 .producto-detalle-precio {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #111;
-    letter-spacing: -1px;
-    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--black);
+    margin-bottom: 1.25rem;
 }
 
 .producto-detalle-descripcion {
     font-size: 0.95rem;
-    color: #666;
-    line-height: 1.7;
+    color: var(--gray);
+    line-height: 1.8;
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--cream-border);
 }
 
 .producto-detalle-stock {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 5px 12px;
+    padding: 6px 14px;
     background: #f0fdf4;
     color: #16a34a;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    margin-bottom: 1.5rem;
+    border-radius: 40px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 1.75rem;
+    width: fit-content;
+    border: 1px solid #bbf7d0;
 }
 
 .producto-detalle-stock.sin-stock {
     background: #fef2f2;
     color: #dc2626;
+    border-color: #fecaca;
 }
 
-/* Selector cantidad */
+/* ===== CANTIDAD ===== */
+.cantidad-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.6rem;
+}
+
 .cantidad-selector {
     display: inline-flex;
     align-items: center;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    background: var(--white);
+    border: 1.5px solid var(--cream-border);
+    border-radius: 40px;
     overflow: hidden;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 .cantidad-selector button {
@@ -130,144 +149,175 @@ body {
     height: 44px;
     background: transparent;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    color: #111;
+    color: var(--black);
     transition: background 0.15s;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.cantidad-selector button:hover { background: #e5e7eb; }
+.cantidad-selector button:hover { background: var(--cream-dark); }
 
 .cantidad-selector span {
     min-width: 48px;
     text-align: center;
     font-size: 1rem;
-    font-weight: 600;
-    color: #111;
+    font-weight: 700;
+    color: var(--black);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
 }
 
-/* Botón agregar */
+/* ===== BOTÓN AGREGAR ===== */
 .btn-agregar-carrito {
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, #6366f1, #2563eb);
-    color: #fff;
+    background: var(--black);
+    color: var(--cream);
     border: none;
-    border-radius: 14px;
-    font-size: 1rem;
-    font-weight: 600;
+    border-radius: 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
     letter-spacing: 0.3px;
-    margin-top: 0.5rem;
 }
 
 .btn-agregar-carrito:hover {
+    background: var(--black-soft);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+    box-shadow: 0 8px 24px rgba(17,16,8,0.2);
 }
 
 .btn-agregar-carrito:disabled {
-    background: #e5e7eb;
-    color: #aaa;
+    background: var(--cream-border);
+    color: var(--gray-light);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-/* Reseñas */
+/* ===== RESEÑAS ===== */
 .resenas-seccion {
-    margin-top: 2rem;
-    background: #fff;
-    border-radius: 24px;
-    padding: 2rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-    border: 1px solid #f0f0f0;
+    border-top: 1px solid var(--cream-border);
+    padding-top: 3rem;
 }
 
-.resenas-seccion h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 1.5rem;
-    color: #111;
-}
-
-.resena-form {
-    background: #f8fafc;
-    border-radius: 14px;
-    padding: 1.25rem;
+.resenas-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--black);
     margin-bottom: 2rem;
+    letter-spacing: -0.5px;
+}
+
+/* Alias para h2 dentro de resenas-seccion */
+.resenas-seccion h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--black);
+    margin-bottom: 2rem;
+    letter-spacing: -0.5px;
+}
+
+.resenas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .resenas-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* Form reseña */
+.resena-form {
+    background: var(--white);
+    border: 1px solid var(--cream-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: sticky;
+    top: 88px;
 }
 
 .resena-form h3 {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #888;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gray);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.75rem;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
 }
 
 .estrellas-selector {
     display: flex;
-    gap: 0.2rem;
-    margin-bottom: 0.75rem;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
 }
 
 .estrella {
-    font-size: 1.5rem;
-    color: #e5e7eb;
+    font-size: 1.6rem;
+    color: var(--cream-border);
     cursor: pointer;
     transition: all 0.1s;
 }
 
-.estrella.activa { color: #f59e0b; }
-.estrella:hover { color: #f59e0b; transform: scale(1.1); }
+.estrella.activa { color: #d97706; }
+.estrella:hover { color: #d97706; transform: scale(1.15); }
 
 .resena-form textarea {
     width: 100%;
     padding: 10px 14px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--cream);
+    border: 1.5px solid var(--cream-border);
     border-radius: 10px;
     font-size: 0.9rem;
-    font-family: inherit;
+    font-family: 'DM Sans', sans-serif;
     resize: vertical;
-    margin-bottom: 0.75rem;
-    color: #111;
+    margin-bottom: 1rem;
+    color: var(--black);
     outline: none;
     transition: all 0.2s;
+    min-height: 90px;
 }
 
 .resena-form textarea:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    border-color: var(--black);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(17,16,8,0.05);
 }
 
 .btn-resena {
-    padding: 9px 20px;
-    background: linear-gradient(135deg, #6366f1, #2563eb);
-    color: #fff;
+    width: 100%;
+    padding: 11px 20px;
+    background: var(--black);
+    color: var(--cream);
     border: none;
-    border-radius: 8px;
+    border-radius: 40px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.875rem;
+    font-family: 'DM Sans', sans-serif;
     transition: all 0.2s;
 }
 
 .btn-resena:hover {
+    background: var(--black-soft);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99,102,241,0.4);
 }
 
+/* Lista reseñas */
 .resena-card {
-    padding: 1rem 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--cream-border);
 }
 
 .resena-card:last-child { border-bottom: none; }
@@ -276,173 +326,26 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
 }
 
-.resena-autor { font-weight: 600; font-size: 0.9rem; color: #111; }
-.resena-fecha { font-size: 0.78rem; color: #aaa; }
-.resena-estrellas { color: #f59e0b; font-size: 0.85rem; margin-bottom: 0.4rem; }
-.resena-comentario { font-size: 0.9rem; color: #555; line-height: 1.6; }
-.resenas-vacio { text-align: center; color: #aaa; padding: 2rem; font-size: 0.9rem; }
+.resena-autor { font-weight: 700; font-size: 0.9rem; color: var(--black); }
+.resena-fecha { font-size: 0.75rem; color: var(--gray-light); font-weight: 500; }
+.resena-estrellas { color: #d97706; font-size: 0.9rem; margin-bottom: 0.5rem; letter-spacing: 1px; }
+.resena-comentario { font-size: 0.9rem; color: var(--gray); line-height: 1.7; }
 
-/* Dark mode */
-body.dark { background: #0a0a0a; }
-body.dark .btn-volver { color: #555; }
-body.dark .btn-volver:hover { color: #e2e8f0; }
-body.dark .producto-detalle { background: #141414; border-color: rgba(255,255,255,0.06); box-shadow: none; }
-body.dark .producto-detalle-imagen { background: #1a1a1a; }
-body.dark .producto-detalle-info h1 { color: #fff; }
-body.dark .producto-detalle-precio { color: #fff; }
-body.dark .producto-detalle-descripcion { color: #888; border-bottom-color: rgba(255,255,255,0.06); }
-body.dark .cantidad-selector { background: #1a1a1a; border-color: rgba(255,255,255,0.08); }
-body.dark .cantidad-selector button { color: #e2e8f0; }
-body.dark .cantidad-selector button:hover { background: rgba(255,255,255,0.06); }
-body.dark .cantidad-selector span { color: #e2e8f0; }
-body.dark .resenas-seccion { background: #141414; border-color: rgba(255,255,255,0.06); box-shadow: none; }
-body.dark .resenas-seccion h2 { color: #fff; }
-body.dark .resena-form { background: #1a1a1a; }
-body.dark .resena-form textarea { background: #141414; border-color: rgba(255,255,255,0.08); color: #e2e8f0; }
-body.dark .resena-card { border-bottom-color: rgba(255,255,255,0.06); }
-body.dark .resena-autor { color: #e2e8f0; }
-body.dark .resena-comentario { color: #888; }
-
-/* Likes y respuestas */
-.resena-acciones {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
-}
-
-.btn-like {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 5px 12px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: #555;
-}
-
-.btn-like:hover { background: #e5e7eb; }
-.btn-like.liked { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
-
-.btn-responder {
-    padding: 5px 12px;
-    background: transparent;
-    border: 1px solid #e5e7eb;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    color: #555;
-    transition: all 0.2s;
-}
-
-.btn-responder:hover { background: #f8fafc; }
-
-.respuestas-container {
-    margin-top: 0.75rem;
-    padding-left: 1rem;
-    border-left: 2px solid #f0f0f0;
-}
-
-.resena-respuesta {
-    padding: 0.75rem;
-    background: #f8fafc;
-    border-radius: 10px;
-    margin-bottom: 0.5rem;
-}
-
-.respuesta-admin {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-}
-
-.respuesta-autor {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #111;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 0.3rem;
-}
-
-.badge-admin {
-    padding: 2px 8px;
-    background: #2563eb;
-    color: #fff;
-    border-radius: 20px;
-    font-size: 0.7rem;
-}
-
-.respuesta-texto {
-    font-size: 0.875rem;
-    color: #555;
-    line-height: 1.5;
-}
-
-.respuesta-fecha {
-    font-size: 0.75rem;
-    color: #aaa;
-    margin-top: 0.3rem;
-}
-
-.respuesta-form {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.respuesta-form input {
-    flex: 1;
-    padding: 8px 12px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    outline: none;
-    font-family: inherit;
-    transition: all 0.2s;
-}
-
-.respuesta-form input:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
-}
-
-.respuesta-form button {
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #6366f1, #2563eb);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.875rem;
+.resenas-vacio {
+    text-align: center;
+    color: var(--gray-light);
+    padding: 3rem 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
 }
 
-.respuesta-form button:hover { transform: translateY(-1px); }
-
-/* Dark mode likes y respuestas */
-body.dark .btn-like { background: #1a1a1a; border-color: rgba(255,255,255,0.08); color: #888; }
-body.dark .btn-like.liked { background: #1e3a5f; border-color: #2563eb; color: #60a5fa; }
-body.dark .btn-responder { border-color: rgba(255,255,255,0.08); color: #888; }
-body.dark .btn-responder:hover { background: #1a1a1a; }
-body.dark .respuestas-container { border-left-color: rgba(255,255,255,0.06); }
-body.dark .resena-respuesta { background: #1a1a1a; }
-body.dark .respuesta-admin { background: #1e3a5f; border-color: #2563eb; }
-body.dark .respuesta-autor { color: #e2e8f0; }
-body.dark .respuesta-texto { color: #888; }
-body.dark .respuesta-form input { background: #1a1a1a; border-color: rgba(255,255,255,0.08); color: #e2e8f0; }
-
+/* Acciones */
 .resena-acciones {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.6rem;
     margin-top: 0.75rem;
 }
 
@@ -451,83 +354,73 @@ body.dark .respuesta-form input { background: #1a1a1a; border-color: rgba(255,25
     align-items: center;
     gap: 0.3rem;
     padding: 5px 12px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    background: var(--cream);
+    border: 1px solid var(--cream-border);
+    border-radius: 40px;
+    font-size: 0.78rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
-    color: #555;
+    transition: all 0.15s;
+    color: var(--gray);
 }
 
-.btn-like:hover { background: #e5e7eb; }
-.btn-like.liked {
-    background: #eff6ff;
-    border-color: #bfdbfe;
-    color: #2563eb;
-}
+.btn-like:hover { background: var(--cream-dark); }
+.btn-like.liked { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
 
 .btn-responder {
     padding: 5px 12px;
     background: transparent;
-    border: 1px solid #e5e7eb;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    border: 1px solid var(--cream-border);
+    border-radius: 40px;
+    font-size: 0.78rem;
+    font-weight: 600;
     cursor: pointer;
-    color: #555;
-    transition: all 0.2s;
+    color: var(--gray);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
 }
 
-.btn-responder:hover { background: #f3f4f6; }
+.btn-responder:hover { background: var(--cream-dark); }
 
+/* Respuestas */
 .resena-respuestas {
     margin-top: 0.75rem;
     padding-left: 1rem;
-    border-left: 2px solid #f0f0f0;
+    border-left: 2px solid var(--cream-border);
 }
 
 .resena-respuesta {
     padding: 0.75rem;
-    background: #f8fafc;
+    background: var(--cream);
     border-radius: 10px;
     margin-bottom: 0.5rem;
+    border: 1px solid var(--cream-border);
 }
 
-.respuesta-admin {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-}
+.respuesta-admin { background: #fefce8; border-color: #fde68a; }
 
 .respuesta-autor {
     font-size: 0.8rem;
-    font-weight: 600;
-    color: #111;
-    margin-bottom: 0.25rem;
+    font-weight: 700;
+    color: var(--black);
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    margin-bottom: 0.3rem;
 }
 
 .badge-admin {
     padding: 2px 8px;
-    background: #2563eb;
-    color: #fff;
-    border-radius: 10px;
-    font-size: 0.7rem;
-    font-weight: 600;
+    background: var(--black);
+    color: var(--cream);
+    border-radius: 40px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
-.respuesta-texto {
-    font-size: 0.875rem;
-    color: #555;
-    line-height: 1.5;
-}
-
-.respuesta-fecha {
-    font-size: 0.75rem;
-    color: #aaa;
-    margin-top: 0.25rem;
-}
+.respuesta-texto { font-size: 0.875rem; color: var(--gray); line-height: 1.6; }
+.respuesta-fecha { font-size: 0.72rem; color: var(--gray-light); margin-top: 0.3rem; font-weight: 500; }
 
 .respuesta-form {
     margin-top: 0.75rem;
@@ -539,59 +432,61 @@ body.dark .respuesta-form input { background: #1a1a1a; border-color: rgba(255,25
 .respuesta-input {
     width: 100%;
     padding: 10px 14px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
+    background: var(--white);
+    border: 1.5px solid var(--cream-border);
     border-radius: 10px;
     font-size: 0.875rem;
-    font-family: inherit;
+    font-family: 'DM Sans', sans-serif;
     resize: none;
     outline: none;
     transition: all 0.2s;
+    color: var(--black);
 }
 
-.respuesta-input:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
-}
+.respuesta-input:focus { border-color: var(--black); box-shadow: 0 0 0 3px rgba(17,16,8,0.05); }
 
 .btn-enviar-respuesta {
     align-self: flex-end;
-    padding: 7px 16px;
-    background: linear-gradient(135deg, #6366f1, #2563eb);
-    color: #fff;
+    padding: 8px 18px;
+    background: var(--black);
+    color: var(--cream);
     border: none;
-    border-radius: 8px;
+    border-radius: 40px;
     font-size: 0.8rem;
-    font-weight: 500;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.btn-enviar-respuesta:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99,102,241,0.4);
-}
+.btn-enviar-respuesta:hover { background: var(--black-soft); transform: translateY(-1px); }
 
-/* Dark mode */
-body.dark .btn-like { background: #1a1a1a; border-color: rgba(255,255,255,0.08); color: #888; }
-body.dark .btn-like.liked { background: rgba(37,99,235,0.1); border-color: rgba(37,99,235,0.3); color: #60a5fa; }
-body.dark .btn-responder { border-color: rgba(255,255,255,0.08); color: #888; }
-body.dark .btn-responder:hover { background: rgba(255,255,255,0.06); }
-body.dark .resena-respuestas { border-left-color: rgba(255,255,255,0.06); }
-body.dark .resena-respuesta { background: #1a1a1a; }
-body.dark .respuesta-admin { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.2); }
-body.dark .respuesta-autor { color: #e2e8f0; }
-body.dark .respuesta-texto { color: #888; }
-body.dark .respuesta-input { background: #1a1a1a; border-color: rgba(255,255,255,0.08); color: #e2e8f0; }
-
-.resumen-cupon {
-    margin: 12px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.cupon-input-wrap {
-    display: flex;
-    gap: 8px;
-}
+/* ===== DARK MODE ===== */
+body.dark .btn-volver { color: #7A766E; }
+body.dark .btn-volver:hover { color: #F0EDE6; }
+body.dark .producto-detalle-imagen { background: #1C1A16; border-color: #2A2720; }
+body.dark .producto-detalle-info h1 { color: #F0EDE6; }
+body.dark .producto-detalle-precio { color: #F0EDE6; }
+body.dark .producto-detalle-descripcion { color: #7A766E; border-bottom-color: #2A2720; }
+body.dark .cantidad-selector { background: #1C1A16; border-color: #2A2720; }
+body.dark .cantidad-selector button { color: #F0EDE6; }
+body.dark .cantidad-selector button:hover { background: #2A2720; }
+body.dark .cantidad-selector span { color: #F0EDE6; }
+body.dark .resenas-seccion { border-top-color: #2A2720; }
+body.dark .resenas-seccion h2 { color: #F0EDE6; }
+body.dark .resena-form { background: #1C1A16; border-color: #2A2720; }
+body.dark .resena-form textarea { background: #141210; border-color: #2A2720; color: #F0EDE6; }
+body.dark .resena-form textarea:focus { border-color: #F0EDE6; background: #1C1A16; }
+body.dark .resena-card { border-bottom-color: #2A2720; }
+body.dark .resena-autor { color: #F0EDE6; }
+body.dark .resena-comentario { color: #7A766E; }
+body.dark .btn-like { background: #1C1A16; border-color: #2A2720; color: #7A766E; }
+body.dark .btn-like.liked { background: #2A1F0A; border-color: #78350f; color: #fcd34d; }
+body.dark .btn-responder { border-color: #2A2720; color: #7A766E; }
+body.dark .btn-responder:hover { background: #1C1A16; }
+body.dark .resena-respuestas { border-left-color: #2A2720; }
+body.dark .resena-respuesta { background: #1C1A16; border-color: #2A2720; }
+body.dark .respuesta-admin { background: #1A1A0A; border-color: #78350f; }
+body.dark .respuesta-autor { color: #F0EDE6; }
+body.dark .respuesta-texto { color: #7A766E; }
+body.dark .respuesta-input { background: #1C1A16; border-color: #2A2720; color: #F0EDE6; }
