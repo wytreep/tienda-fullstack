@@ -5,7 +5,14 @@ if (!token) window.location.href = "/src/views/login.html"
 const usuario = JSON.parse(localStorage.getItem("usuario"))
 if (usuario) document.getElementById("nombreUsuario").textContent = usuario.nombre
 
-// Dropdown perfil
+// ===== NAVBAR SCROLL =====
+window.addEventListener("scroll", function() {
+    const navbar = document.getElementById("navbar")
+    if (window.scrollY > 20) navbar.classList.add("scrolled")
+    else navbar.classList.remove("scrolled")
+})
+
+// ===== DROPDOWN PERFIL =====
 document.getElementById("btnPerfil").addEventListener("click", function(e) {
     e.stopPropagation()
     document.getElementById("perfilDropdown").classList.toggle("activo")
@@ -24,7 +31,7 @@ document.getElementById("btnCerrarSesion").addEventListener("click", function() 
 })
 
 document.getElementById("btnCambiarPassword").addEventListener("click", function() {
-    window.location.href = "login/cambiar-password.html"
+    window.location.href = "/src/views/cambiar-password.html"
 })
 
 document.getElementById("btnCambiarCuenta").addEventListener("click", function() {
@@ -70,16 +77,15 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
     document.getElementById("modalCuentas").classList.remove("activo")
 })
 
-// Cargar productos
-    async function cargarProductos(busqueda = "", categoria = "") {
-            document.getElementById("loader").style.display = "flex"
+// ===== CARGAR PRODUCTOS =====
+async function cargarProductos(busqueda = "", categoria = "") {
+    document.getElementById("loader").style.display = "flex"
     document.getElementById("productosGrid").style.display = "none"
 
     const respuesta = await fetch(API + "/productos", {
         headers: { "authorization": token }
     })
 
-    // Si el servidor rechaza el token
     if (respuesta.status === 401) {
         localStorage.removeItem("token")
         localStorage.removeItem("usuario")
@@ -89,7 +95,6 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
 
     let productos = await respuesta.json()
 
-    // Si la respuesta no es un array
     if (!Array.isArray(productos)) {
         console.error("Error al cargar productos:", productos)
         document.getElementById("loader").style.display = "none"
@@ -98,118 +103,150 @@ document.getElementById("btnCancelarCuentas").addEventListener("click", function
 
     document.getElementById("loader").style.display = "none"
     document.getElementById("productosGrid").style.display = "grid"
-    
-        document.getElementById("loader").style.display = "flex"
-        document.getElementById("productosGrid").style.display = "none"
 
+    // Poblar categorías
+    const selectCategoria = document.getElementById("filtroCategoria")
+    const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))]
+    selectCategoria.innerHTML = '<option value="">Todas las categorías</option>'
+    categorias.forEach(function(cat) {
+        const option = document.createElement("option")
+        option.value = cat
+        option.textContent = cat
+        if (cat === categoria) option.selected = true
+        selectCategoria.appendChild(option)
+    })
 
-        document.getElementById("loader").style.display = "none"
-        document.getElementById("productosGrid").style.display = "grid"
+    // Filtrar
+    if (busqueda && typeof busqueda === "string") {
+        productos = productos.filter(p =>
+            p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+        )
+    }
+    if (categoria) {
+        productos = productos.filter(p => p.categoria === categoria)
+    }
 
+    renderProductos(productos)
+    actualizarCarrito()
+}
 
+// ===== RENDER PRODUCTOS =====
+function renderProductos(productos) {
+    const grid = document.getElementById("productosGrid")
+    grid.innerHTML = ""
 
-        const selectCategoria = document.getElementById("filtroCategoria")
-        const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))]
-        selectCategoria.innerHTML = '<option value="">Todas las categorías</option>'
-        categorias.forEach(function(cat) {
-            const option = document.createElement("option")
-            option.value = cat
-            option.textContent = cat
-            if (cat === categoria) option.selected = true
-            selectCategoria.appendChild(option)
+    if (productos.length === 0) {
+        grid.innerHTML = "<p style='color:var(--gray-light);text-align:center;padding:3rem;font-weight:500'>No se encontraron productos</p>"
+        return
+    }
+
+    productos.forEach(function(producto) {
+        const card = document.createElement("div")
+        card.className = "producto-card"
+        const imgSrc = producto.imagen || null
+
+        card.innerHTML = `
+            <div class="producto-imagen">
+                ${imgSrc ? `<img src="${imgSrc}" alt="${producto.nombre}">` : "📦"}
+            </div>
+            <div class="producto-info">
+                ${producto.categoria ? `<div class="producto-categoria">${producto.categoria}</div>` : ""}
+                <div class="producto-nombre">${producto.nombre}</div>
+                <div class="producto-precio">$${Number(producto.precio).toLocaleString()}</div>
+                <div class="producto-stock">${producto.stock > 0 ? producto.stock + ' disponibles' : 'Sin stock'}</div>
+            </div>
+        `
+
+        card.addEventListener("click", function() {
+            window.location.href = `/src/views/producto.html?id=${producto.id}`
         })
 
-        if (busqueda && typeof busqueda === "string") {
-            productos = productos.filter(p =>
-                p.nombre.toLowerCase().includes(busqueda.toLowerCase())
-            )
-        }
+        grid.appendChild(card)
+    })
 
-        if (categoria) {
-            productos = productos.filter(p => p.categoria === categoria)
-        }
-
-        renderProductos(productos)
-        actualizarCarrito()
-    }
-    function renderProductos(productos) {
-        const grid = document.getElementById("productosGrid")
-        grid.innerHTML = ""
-
-        if (productos.length === 0) {
-            grid.innerHTML = "<p style='color:#aaa; text-align:center; padding:3rem'>No se encontraron productos</p>"
-            return
-        }
-
-            productos.forEach(function(producto) {
-                const card = document.createElement("div")
-                card.className = "producto-card"
-
-
-                    const imgSrc = producto.imagen || null
-
-                card.innerHTML = `
-                    <div class="producto-imagen">
-                        ${imgSrc ? `<img src="${imgSrc}" alt="${producto.nombre}">` : "📦"}
-                    </div>
-                    <div class="producto-info">
-                        ${producto.categoria ? `<div class="producto-categoria">${producto.categoria}</div>` : ""}
-                        <div class="producto-nombre">${producto.nombre}</div>
-                        <div class="producto-precio">$${Number(producto.precio).toLocaleString()}</div>
-                        <div class="producto-stock">${producto.stock > 0 ? producto.stock + ' disponibles' : 'Sin stock'}</div>
-                    </div>
-                `
-            card.addEventListener("click", function() {
-                window.location.href = `/src/views/producto.html?id=${producto.id}`
-            })
-            grid.appendChild(card)
-        })
-
-        observarProductos()
+    // Ticker dinámico con productos más vendidos
+    const tickerWrap = document.getElementById("tickerWrap")
+    const tickerInner = document.getElementById("tickerInner")
+    if (tickerWrap && tickerInner) {
+        tickerWrap.style.display = "block"
+        const top = productos.slice()
+            .sort((a, b) => (b.veces_vendido || 0) - (a.veces_vendido || 0))
+            .slice(0, 8)
+        const items = [...top, ...top].map(function(p) {
+            return `<div class="ticker-item">
+                <strong>${p.nombre}</strong>
+                <span class="ticker-sep">✦</span>
+                <span style="font-style:italic;font-family:'Playfair Display',serif;color:rgba(245,240,232,0.5);font-size:0.82rem">$${Number(p.precio).toLocaleString()}</span>
+                <span class="ticker-sep">·</span>
+            </div>`
+        }).join("")
+        tickerInner.innerHTML = items
     }
 
-    function actualizarCarrito() {
-        const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
-        const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
-        document.getElementById("contadorCarrito").textContent = total
-    }
+    // Stat del hero
+    const heroStat = document.getElementById("heroStatNum")
+    if (heroStat) heroStat.textContent = productos.length
 
-document.getElementById("buscador").addEventListener("input", function() {
-    const categoria = document.getElementById("filtroCategoria").value
-    cargarProductos(this.value, categoria)
-})
+    observarProductos()
+}
 
-document.getElementById("filtroCategoria").addEventListener("change", function() {
-    const busqueda = document.getElementById("buscador").value
-    cargarProductos(busqueda, this.value)
-})
-
-document.addEventListener("DOMContentLoaded", cargarProductos)
-
-
-
-// Navbar scroll effect
-window.addEventListener("scroll", function() {
-    const navbar = document.getElementById("navbar")
-    if (window.scrollY > 20) {
-        navbar.classList.add("scrolled")
-    } else {
-        navbar.classList.remove("scrolled")
-    }
-})
-
-// Intersection Observer para animación de tarjetas
+// ===== SCROLL REVEAL + TILT 3D =====
 function observarProductos() {
     const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
+        entries.forEach(function(entry, i) {
             if (entry.isIntersecting) {
-                entry.target.classList.add("visible")
+                setTimeout(function() {
+                    entry.target.classList.add("visible")
+                    aplicarTilt(entry.target)
+                }, i * 55)
                 observer.unobserve(entry.target)
             }
         })
-    }, { threshold: 0.1 })
+    }, { threshold: 0.08, rootMargin: "0px 0px -30px 0px" })
 
-    document.querySelectorAll(".producto-card").forEach(function(card) {
+    document.querySelectorAll(".producto-card:not(.visible)").forEach(function(card) {
         observer.observe(card)
     })
 }
+
+function aplicarTilt(card) {
+    if (card._tiltActivo) return
+    card._tiltActivo = true
+
+    card.addEventListener("mousemove", function(e) {
+        const rect = card.getBoundingClientRect()
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+        const cx = rect.width / 2
+        const cy = rect.height / 2
+        const rotY = ((x - cx) / cx) * 10
+        const rotX = ((cy - y) / cy) * 8
+        card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.03)`
+        card.style.boxShadow = `${-rotY * 1.5}px ${rotX * 1.5}px 28px rgba(17,16,8,0.13)`
+        card.style.transition = "transform 0.08s ease, box-shadow 0.08s ease"
+    })
+
+    card.addEventListener("mouseleave", function() {
+        card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)"
+        card.style.boxShadow = ""
+        card.style.transition = "transform 0.4s ease, box-shadow 0.4s ease"
+    })
+}
+
+// ===== CARRITO =====
+function actualizarCarrito() {
+    const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
+    const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
+    document.getElementById("contadorCarrito").textContent = total
+}
+
+// ===== BUSCADOR Y FILTRO =====
+document.getElementById("buscador").addEventListener("input", function() {
+    cargarProductos(this.value, document.getElementById("filtroCategoria").value)
+})
+
+document.getElementById("filtroCategoria").addEventListener("change", function() {
+    cargarProductos(document.getElementById("buscador").value, this.value)
+})
+
+document.addEventListener("DOMContentLoaded", cargarProductos)
