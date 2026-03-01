@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda — Drop de hoy</title>
+    <title>Tienda</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/src/css/styles.css">
@@ -11,14 +11,13 @@
 </head>
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="/src/views/index.html" class="nav-logo">STORE</a>
+            <a href="/src/views/index.html" class="nav-logo">Tienda.</a>
             <div class="nav-acciones">
                 <button class="btn-darkmode" id="btnDarkMode">🌙</button>
                 <a href="/src/views/carrito.html" class="btn-carrito">
-                    BAG&nbsp;<span id="contadorCarrito">0</span>
+                    🛒 <span id="contadorCarrito">0</span>
                 </a>
                 <div class="perfil-menu">
                     <button class="btn-perfil" id="btnPerfil">
@@ -28,7 +27,7 @@
                         <a href="/src/views/mis-pedidos.html">Mis pedidos</a>
                         <a href="#" id="btnCambiarCuenta">Cambiar cuenta</a>
                         <a href="#" id="btnCambiarPassword">Cambiar contraseña</a>
-                        <a href="/src/views/configuracion.html">⚙ Configuración</a>
+                        <a href="/src/views/configuracion.html">⚙️ Configuración</a>
                         <a href="#" id="btnCerrarSesion">Cerrar sesión</a>
                     </div>
                 </div>
@@ -36,18 +35,17 @@
         </div>
     </nav>
 
-    <!-- HERO -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-badge">⚡ Nuevos drops disponibles</div>
+            <div class="hero-badge">✦ Nuevos productos disponibles</div>
             <h1>
-                LLEVA TU
-                <span>JUEGO</span>
-                AL LÍMITE
+                Descubre<br>
+                lo que <span>necesitas</span><br>
+                <em>hoy</em>
             </h1>
-            <p>Los mejores productos al mejor precio. Envío rápido, calidad garantizada.</p>
+            <p>Los mejores productos al mejor precio. Envío rápido y seguro a todo el país.</p>
             <div class="hero-cta">
-                <a href="#productos" class="btn-hero-primary" onclick="document.getElementById('productosGrid').scrollIntoView({behavior:'smooth'});return false;">
+                <a href="#productos" class="btn-hero-primary" onclick="document.getElementById('productos').scrollIntoView({behavior:'smooth'});return false;">
                     Ver catálogo
                 </a>
                 <a href="/src/views/mis-pedidos.html" class="btn-hero-secondary">
@@ -57,38 +55,25 @@
         </div>
         <div class="hero-visual">
             <div class="hero-blob"></div>
-            <div class="hero-img-wrap" id="heroEmoji">🏆</div>
-            <div class="hero-stats">
-                <div class="hero-stats-num" id="heroStatNum">—</div>
-                <div class="hero-stats-label">Productos</div>
+            <div class="hero-img-wrap">🛍️</div>
+            <div class="hero-tag">
+                <div class="hero-tag-num" id="heroStatNum">—</div>
+                <div class="hero-tag-label">Productos</div>
             </div>
+            <div class="hero-tag2" id="heroTag2">Envío gratis ✦</div>
         </div>
     </section>
 
-    <!-- TICKER -->
-    <div class="ticker-wrap">
-        <div class="ticker">
-            <div class="ticker-item">NUEVOS ARRIVALS <span>✦</span></div>
-            <div class="ticker-item">ENVÍO GRATIS <span>✦</span></div>
-            <div class="ticker-item">CALIDAD GARANTIZADA <span>✦</span></div>
-            <div class="ticker-item">TOP PRODUCTOS <span>✦</span></div>
-            <div class="ticker-item">NUEVOS ARRIVALS <span>✦</span></div>
-            <div class="ticker-item">ENVÍO GRATIS <span>✦</span></div>
-            <div class="ticker-item">CALIDAD GARANTIZADA <span>✦</span></div>
-            <div class="ticker-item">TOP PRODUCTOS <span>✦</span></div>
-            <div class="ticker-item">NUEVOS ARRIVALS <span>✦</span></div>
-            <div class="ticker-item">ENVÍO GRATIS <span>✦</span></div>
-            <div class="ticker-item">CALIDAD GARANTIZADA <span>✦</span></div>
-            <div class="ticker-item">TOP PRODUCTOS <span>✦</span></div>
-        </div>
+    <!-- TICKER DINÁMICO -->
+    <div class="ticker-wrap" id="tickerWrap" style="display:none">
+        <div class="ticker" id="tickerInner"></div>
     </div>
 
-    <!-- FILTROS -->
     <div class="filtros-container">
         <div class="filtros-header">
-            <div class="filtros-titulo" id="tituloProductos">CATÁLOGO</div>
+            <div class="filtros-titulo">Catálogo</div>
             <div class="filtros">
-                <input type="text" id="buscador" placeholder="Buscar productos...">
+                <input type="text" id="buscador" placeholder="🔍 Buscar productos...">
                 <select id="filtroCategoria">
                     <option value="">Todas las categorías</option>
                 </select>
@@ -96,16 +81,14 @@
         </div>
     </div>
 
-    <!-- PRODUCTOS -->
     <div class="productos-section" id="productos">
         <div id="loader" class="loader-container">
             <div class="loader"></div>
-            <p>Cargando...</p>
+            <p>Cargando productos...</p>
         </div>
         <div class="productos-grid" id="productosGrid" style="display:none"></div>
     </div>
 
-    <!-- MODAL CUENTAS -->
     <div class="modal-overlay" id="modalCuentas">
         <div class="modal">
             <h3>Cambiar cuenta</h3>
@@ -118,19 +101,84 @@
 
     <script src="/src/js/darkmode.js"></script>
     <script src="/src/js/app.js"></script>
+
     <script>
-        // Actualizar stat del hero con cantidad de productos
-        const _heroOrig = window.renderProductos
-        document.addEventListener("DOMContentLoaded", function() {
-            const obs = new MutationObserver(function() {
-                const cards = document.querySelectorAll(".producto-card")
-                if (cards.length) {
-                    document.getElementById("heroStatNum").textContent = cards.length
-                }
+    // ===== TILT 3D =====
+    function aplicarTilt() {
+        document.querySelectorAll(".producto-card.visible").forEach(function(card) {
+            if (card._tiltActivo) return
+            card._tiltActivo = true
+
+            card.addEventListener("mousemove", function(e) {
+                const rect = card.getBoundingClientRect()
+                const x = e.clientX - rect.left
+                const y = e.clientY - rect.top
+                const cx = rect.width / 2
+                const cy = rect.height / 2
+                const rotY = ((x - cx) / cx) * 10
+                const rotX = ((cy - y) / cy) * 8
+                card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.03)`
+                card.style.boxShadow = `${-rotY * 2}px ${rotX * 2}px 32px rgba(17,16,8,0.14)`
+                card.style.transition = "transform 0.08s ease, box-shadow 0.08s ease"
             })
-            const grid = document.getElementById("productosGrid")
-            if (grid) obs.observe(grid, { childList: true })
+
+            card.addEventListener("mouseleave", function() {
+                card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)"
+                card.style.boxShadow = ""
+                card.style.transition = "transform 0.4s ease, box-shadow 0.4s ease"
+            })
         })
+    }
+
+    // ===== SCROLL REVEAL =====
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry, i) {
+            if (entry.isIntersecting) {
+                setTimeout(function() {
+                    entry.target.classList.add("visible")
+                    aplicarTilt()
+                }, i * 60)
+                observer.unobserve(entry.target)
+            }
+        })
+    }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" })
+
+    // Override observarProductos
+    window._observarProductosOrig = window.observarProductos
+    window.observarProductos = function() {
+        document.querySelectorAll(".producto-card:not(.visible)").forEach(function(card) {
+            observer.observe(card)
+        })
+    }
+
+    // ===== TICKER DINÁMICO =====
+    window._renderProductosOrig = window.renderProductos
+    window.renderProductos = function(productos) {
+        if (window._renderProductosOrig) window._renderProductosOrig(productos)
+
+        // Actualizar stat del hero
+        document.getElementById("heroStatNum").textContent = productos.length
+
+        // Construir ticker con productos
+        if (!productos.length) return
+        const wrap = document.getElementById("tickerWrap")
+        const inner = document.getElementById("tickerInner")
+        wrap.style.display = "block"
+
+        const top = productos.slice().sort((a, b) => (b.veces_vendido || 0) - (a.veces_vendido || 0)).slice(0, 8)
+        const items = [...top, ...top].map(function(p) {
+            return `
+                <div class="ticker-item">
+                    <strong>${p.nombre}</strong>
+                    <span class="ticker-sep">✦</span>
+                    <span style="font-style:italic;font-family:'Playfair Display',serif;color:rgba(245,240,232,0.5);font-size:0.82rem">$${Number(p.precio).toLocaleString()}</span>
+                    <span class="ticker-sep">·</span>
+                </div>
+            `
+        }).join("")
+
+        inner.innerHTML = items
+    }
     </script>
 </body>
 </html>
