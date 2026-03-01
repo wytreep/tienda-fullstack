@@ -254,15 +254,15 @@ function aplicarTilt(card) {
         const y = e.clientY - rect.top
         const cx = rect.width / 2
         const cy = rect.height / 2
-        const rotY = ((x - cx) / cx) * 10
-        const rotX = ((cy - y) / cy) * 8
-        card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.03)`
+        const rotY = ((x - cx) / cx) * 4
+        const rotX = ((cy - y) / cy) * 3
+        card.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.015)`
         card.style.boxShadow = `${-rotY * 1.5}px ${rotX * 1.5}px 28px rgba(17,16,8,0.13)`
         card.style.transition = "transform 0.08s ease, box-shadow 0.08s ease"
     })
 
     card.addEventListener("mouseleave", function() {
-        card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)"
+        card.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1)"
         card.style.boxShadow = ""
         card.style.transition = "transform 0.4s ease, box-shadow 0.4s ease"
     })
