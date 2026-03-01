@@ -84,38 +84,7 @@ function cargarCarrito() {
                 <a href="index.html" style="color:#2563eb">Ver productos</a>
             </div>
         `
-        resumen.innerHTML = `
-            <h2>Resumen del pedido</h2>
-            <div class="resumen-linea">
-                <span>Subtotal</span>
-                <span>$${subtotal.toLocaleString()}</span>
-            </div>
-            <div class="resumen-cupon">
-                <div class="cupon-input-wrap">
-                    <input type="text" id="inputCupon" placeholder="Código de descuento" 
-                        style="flex:1;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;outline:none">
-                    <button onclick="aplicarCupon()" 
-                        style="padding:9px 14px;background:#1a4480;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">
-                        Aplicar
-                    </button>
-                </div>
-                <div id="cuponMensaje"></div>
-            </div>
-            <div id="lineaDescuento" style="display:none" class="resumen-linea">
-                <span style="color:#16a34a">Descuento</span>
-                <span style="color:#16a34a" id="valorDescuento">-$0</span>
-            </div>
-            <div class="resumen-linea">
-                <span>Envío</span>
-                <span>Gratis</span>
-            </div>
-            <div class="resumen-total">
-                <span>Total</span>
-                <span id="totalFinal">$${subtotal.toLocaleString()}</span>
-            </div>
-            <button class="btn-checkout" onclick="abrirModalDireccion()">Confirmar pedido</button>
-            <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar carrito</button>
-        `
+        resumen.innerHTML = ""
         return
     }
 
@@ -141,23 +110,34 @@ function cargarCarrito() {
 
     const subtotal = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0)
 
-    resumen.innerHTML = `
-        <h2>Resumen del pedido</h2>
-        <div class="resumen-linea">
-            <span>Subtotal</span>
-            <span>$${subtotal.toLocaleString()}</span>
+resumen.innerHTML = `
+    <h2>Resumen del pedido</h2>
+    <div class="resumen-linea">
+        <span>Subtotal</span>
+        <span>$${subtotal.toLocaleString()}</span>
+    </div>
+    <div class="resumen-cupon">
+        <div class="cupon-input-wrap">
+            <input type="text" id="inputCupon" placeholder="Código de descuento">
+            <button onclick="aplicarCupon()">Aplicar</button>
         </div>
-        <div class="resumen-linea">
-            <span>Envío</span>
-            <span>Gratis</span>
-        </div>
-        <div class="resumen-total">
-            <span>Total</span>
-            <span>$${subtotal.toLocaleString()}</span>
-        </div>
-        <button class="btn-checkout" onclick="abrirModalDireccion()">Confirmar pedido</button>
-        <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar carrito</button>
-    `
+        <div id="cuponMensaje"></div>
+    </div>
+    <div id="lineaDescuento" style="display:none" class="resumen-linea">
+        <span style="color:#16a34a">Descuento</span>
+        <span style="color:#16a34a" id="valorDescuento">-$0</span>
+    </div>
+    <div class="resumen-linea">
+        <span>Envío</span>
+        <span>Gratis</span>
+    </div>
+    <div class="resumen-total">
+        <span>Total</span>
+        <span id="totalFinal">$${subtotal.toLocaleString()}</span>
+    </div>
+    <button class="btn-checkout" onclick="abrirModalDireccion()">Confirmar pedido</button>
+    <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar carrito</button>
+`
 }
 
 function cambiarCantidad(id, valor) {
