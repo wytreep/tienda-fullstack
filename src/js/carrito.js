@@ -209,43 +209,35 @@ async function confirmarPedido() {
     const carrito = JSON.parse(localStorage.getItem("carrito") || "[]")
     const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0)
 
-    // 1 — Crear pedido
-    const respPedido = await fetch(API + "/pedidos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "authorization": token },
-        body: JSON.stringify({
-            items: carrito, total, tipo_envio: tipoEnvioSeleccionado,
-            destinatario, cedula, telefono, departamento, ciudad, barrio, direccion, indicaciones
+    const btnConfirmar = document.getElementById("btnConfirmarPedido")
+    if (btnConfirmar) { btnConfirmar.disabled = true; btnConfirmar.textContent = "Procesando..." }
+
+    try {
+        const respMP = await fetch(API + "/mp/crear-preferencia", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "authorization": token },
+            body: JSON.stringify({
+                items: carrito, total, tipo_envio: tipoEnvioSeleccionado,
+                destinatario, cedula, telefono, departamento,
+                ciudad, barrio, direccion, indicaciones
+            })
         })
-    })
 
-    const datosPedido = await respPedido.json()
-    if (!respPedido.ok) {
-        mostrarToast(datosPedido.error)
-        return
-    }
+        const datosMP = await respMP.json()
 
-    // 2 — Crear preferencia de pago en MercadoPago
-    const respMP = await fetch(API + "/mp/crear-preferencia", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "authorization": token },
-        body: JSON.stringify({ items: carrito, pedido_id: datosPedido.id })
-    })
+        if (!respMP.ok) {
+            mostrarToast(datosMP.error || "Error al procesar pago")
+            if (btnConfirmar) { btnConfirmar.disabled = false; btnConfirmar.textContent = "Confirmar pedido" }
+            return
+        }
 
-    const datosMP = await respMP.json()
-
-    if (!respMP.ok) {
-        // Si falla MP el pedido ya existe, redirigir a mis pedidos
-        mostrarToast("Pedido creado. Redirigiendo...")
         localStorage.setItem("carrito", "[]")
-        setTimeout(() => window.location.href = "/src/views/mis-pedidos.html", 1500)
-        return
-    }
+        window.location.href = datosMP.init_point
 
-    // 3 — Limpiar carrito y redirigir a MercadoPago
-    localStorage.setItem("carrito", "[]")
-    document.getElementById("modalDireccion").classList.remove("activo")
-    window.location.href = datosMP.init_point
+    } catch (error) {
+        mostrarToast("Error de conexión")
+        if (btnConfirmar) { btnConfirmar.disabled = false; btnConfirmar.textContent = "Confirmar pedido" }
+    }
 }
 function actualizarContador(carrito) {
     const total = carrito.reduce((sum, item) => sum + item.cantidad, 0)
